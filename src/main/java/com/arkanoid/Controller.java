@@ -36,6 +36,8 @@ public class Controller implements Initializable {
 
     private ArrayList<Brick> bricks = new ArrayList<>();
 
+    private int brick_remain;
+
     private ArrayList<PowerUps> powerUps = new ArrayList<>();
 
     private int powerUpState;
@@ -54,10 +56,11 @@ public class Controller implements Initializable {
             circle.setLayoutX(circle.getLayoutX() + deltaX);
             circle.setLayoutY(circle.getLayoutY() + deltaY);
 
-            if (!bricks.isEmpty()) {
+            if (brick_remain > 0) {
                 bricks.removeIf(brick -> {
                     brick.checkCollisionBrick(circle);
                    if (brick.getHP() == 0) {
+                       brick_remain--;
                        scene.getChildren().remove(brick.getPos());
                        createPowerUps(brick);
                        return true;
@@ -119,6 +122,8 @@ public class Controller implements Initializable {
 
         int spaceCheck = 1;
 
+        brick_remain = 0;
+
         Color[] ColorSamples = new Color[9];
         ColorSamples[0] = Color.WHITE;
         ColorSamples[1] = Color.GREEN;
@@ -136,9 +141,11 @@ public class Controller implements Initializable {
                     Brick brick = new Brick(j, i, 30, 30, (int)(Math.random() * 3) + 1);
                     switch (brick.getHP()) {
                         case 1:
+                            brick_remain++;
                             brick.getPos().setFill(ColorSamples[(int)(Math.random() * 7)]);
                             break;
                         case 3:
+                            brick_remain++;
                             brick.getPos().setFill(ColorSamples[7]);
                             break;
                         default:
