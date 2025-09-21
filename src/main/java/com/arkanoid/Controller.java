@@ -14,7 +14,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.robot.Robot;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -27,7 +26,7 @@ public class Controller implements Initializable {
     private Circle circle;
 
     @FXML
-    private Rectangle paddle;
+    private Paddle paddle;
 
     @FXML
     private Rectangle bottomZone;
@@ -35,30 +34,41 @@ public class Controller implements Initializable {
     @FXML
     private Button startButton;
 
-    Robot robot = new Robot();
+    private ArrayList<Brick> bricks = new ArrayList<>();
 
-    private ArrayList<Rectangle> bricks = new ArrayList<>();
+    private ArrayList<PowerUps> powerUps = new ArrayList<>();
 
-    double deltaX = 2;
-    double deltaY = 2;
+    private int powerUpState;
+
+    public static double deltaX = 2;
+    public static double deltaY = 2;
 
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
 
         @Override
         public void handle(ActionEvent actionEvent) {
-            movepaddle();
+            paddle.update(scene);
 
-            checkCollisionPaddle(paddle);
+            paddle.checkCollisionPaddle(circle);
 
             circle.setLayoutX(circle.getLayoutX() + deltaX);
             circle.setLayoutY(circle.getLayoutY() + deltaY);
 
             if (!bricks.isEmpty()) {
-                bricks.removeIf(brick -> checkCollisionBrick(brick));
+                bricks.removeIf(brick -> {
+                   if (brick.checkCollisionBrick(circle)) {
+                       scene.getChildren().remove(brick.getPos());
+                       createPowerUps(brick);
+                       return true;
+                   }
+                   return false;
+                });
             } else {
                 startButton.setVisible(true);
                 timeline.stop();
             }
+
+            movePowerUps();
 
             checkCollisionScene(scene);
             checkCollisionBottomZone();
@@ -73,13 +83,15 @@ public class Controller implements Initializable {
     @FXML
     void startGameButtonAction(ActionEvent event) {
         startButton.setVisible(false);
-        startGame();
-    }
 
-    public void startGame() {
         circle.setLayoutX(10);
         circle.setLayoutY(10);
+
         createBricks();
+
+        paddle = new Paddle(244, 360, 80, 10);
+        scene.getChildren().add(paddle.getPos());
+
         timeline.play();
     }
 
@@ -100,41 +112,19 @@ public class Controller implements Initializable {
 
     }
 
-    public boolean checkCollisionBrick(Rectangle brick){
-
-        if(circle.getBoundsInParent().intersects(brick.getBoundsInParent())){
-            boolean rightBorder = circle.getLayoutX() >= ((brick.getX() + brick.getWidth()) - circle.getRadius());
-            boolean leftBorder = circle.getLayoutX() <= (brick.getX() + circle.getRadius());
-            boolean bottomBorder = circle.getLayoutY() >= ((brick.getY() + brick.getHeight()) - circle.getRadius());
-            boolean topBorder = circle.getLayoutY() <= (brick.getY() + circle.getRadius());
-
-            if (rightBorder || leftBorder) {
-                deltaX *= -1;
-            }
-            if (bottomBorder || topBorder) {
-                deltaY *= -1;
-            }
-
-            scene.getChildren().remove(brick);
-
-            return true;
-        }
-        return false;
-    }
-
     public void createBricks() {
-        double width = 560;
-        double height = 200;
+        int width = 560;
+        int height = 200;
 
         int spaceCheck = 1;
 
-        for (double i = height; i > 0; i -= 50) {
-            for (double j = width; j > 0; j -= 25) {
+        for (int i = height; i > 0; i -= 50) {
+            for (int j = width; j > 0; j -= 25) {
                 if (spaceCheck % 2 == 0) {
-                    Rectangle rectangle = new Rectangle(j, i, 30, 30);
-                    rectangle.setFill(Color.RED);
-                    scene.getChildren().add(rectangle);
-                    bricks.add(rectangle);
+                    Brick brick = new Brick(j, i, 30, 30);
+                    brick.getPos().setFill(Color.RED);
+                    scene.getChildren().add(brick.getPos());
+                    bricks.add(brick);
                 }
                 spaceCheck++;
             }
@@ -144,43 +134,34 @@ public class Controller implements Initializable {
     public void checkCollisionBottomZone() {
         if (circle.getBoundsInParent().intersects(bottomZone.getBoundsInParent())) {
             timeline.stop();
-            for (Rectangle brick : bricks) {
-                scene.getChildren().remove(brick);
+            for (Brick brick : bricks) {
+                scene.getChildren().remove(brick.getPos());
             }
             bricks.clear();
+            scene.getChildren().remove(paddle.getPos());
             startButton.setVisible(true);
         }
     }
 
-    public void movepaddle() {
-        Bounds bounds = scene.localToScreen(scene.getBoundsInLocal());
-        double sceneXPos = bounds.getMinX();
+    public void createPowerUps(Brick brick) {
+        PowerUps powerUp = new PowerUps(brick.getPos().getX(), brick.getPos().getY(), brick.getPos().getWidth(), 10);
+        powerUps.add(powerUp);
 
-        double xPos = robot.getMouseX();
-        double paddleWidth = paddle.getWidth();
-
-        if (xPos >= sceneXPos + (paddleWidth / 2) && xPos <= (sceneXPos + scene.getWidth()) - (paddleWidth / 2)) {
-            paddle.setLayoutX(xPos - sceneXPos - (paddleWidth / 2));
-        } else if (xPos < sceneXPos + (paddleWidth / 2)) {
-            paddle.setLayoutX(0);
-        } else if (xPos > (sceneXPos + scene.getWidth()) - (paddleWidth / 2)) {
-            paddle.setLayoutX(scene.getWidth() - paddleWidth);
-        }
+        scene.getChildren().add(powerUp.getPos());
     }
 
-    public void checkCollisionPaddle(Rectangle paddle) {
-        if (circle.getBoundsInParent().intersects(paddle.getBoundsInParent())) {
+    public void movePowerUps() {
+        for (PowerUps powerUp : powerUps) {
+            powerUp.update(scene);
+        }
+        checkCollisionPowerUps();
+    }
 
-            boolean rightBorder = circle.getLayoutX() >= ((paddle.getLayoutX() + paddle.getWidth()) - circle.getRadius());
-            boolean leftBorder = circle.getLayoutX() <= (paddle.getLayoutX() + circle.getRadius());
-            boolean bottomBorder = circle.getLayoutX() >= ((paddle.getLayoutY() + paddle.getHeight()) - circle.getRadius());
-            boolean topBorder = circle.getLayoutY() <= (paddle.getLayoutY() + circle.getRadius());
-
-            if (rightBorder || leftBorder) {
-                deltaX *= -1;
-            }
-            if (bottomBorder || topBorder) {
-                deltaY *= -1;
+    public void checkCollisionPowerUps() {
+        for (PowerUps powerUp : powerUps) {
+            if (powerUp.getPos().getBoundsInParent().intersects(paddle.getPos().getBoundsInParent())) {
+                powerUpState = powerUp.getType();
+                scene.getChildren().remove(powerUp.getPos());
             }
         }
     }
