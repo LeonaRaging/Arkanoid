@@ -29,7 +29,7 @@ public class BrickManager {
     ColorSamples[7] = Color.SILVER;
     ColorSamples[8] = Color.GOLD;
 
-    for (int i = height; i > 0; i -= 50) {
+    for (int i = height; i > 100; i -= 50) {
       for (int j = width; j > 0; j -= 25) {
         if (spaceCheck % 2 == 0) {
           Brick brick = new Brick(j, i, 30, 30, 1);

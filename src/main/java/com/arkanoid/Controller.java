@@ -36,15 +36,20 @@ public class Controller implements Initializable {
     public static double deltaY = 2;
 
     Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
-
+    long LastTime = System.nanoTime();
         @Override
         public void handle(ActionEvent actionEvent) {
             paddle.update(scene);
-
             paddle.checkCollisionPaddle(circle);
 
             circle.setLayoutX(circle.getLayoutX() + deltaX);
             circle.setLayoutY(circle.getLayoutY() + deltaY);
+
+            long CurrentTime = System.nanoTime();
+            double DeltaTime = (CurrentTime - LastTime) / 1_000_000_000.0;
+            LastTime = CurrentTime;
+            System.out.println(DeltaTime);
+            EnemiesManager.updateEnemies(DeltaTime);
 
             if (BrickManager.brick_remain > 0) {
                 BrickManager.update(circle, scene);
@@ -74,6 +79,7 @@ public class Controller implements Initializable {
         circle.setLayoutY(10);
 
         BrickManager.createBricks(scene);
+        EnemiesManager.CreateEnemies(scene);
 
         paddle = new Paddle(244, 360, 80, 10);
         scene.getChildren().add(paddle.getPos());
