@@ -3,7 +3,6 @@ package com.arkanoid;
 import java.util.ArrayList;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 public class BrickManager {
   public static ArrayList<Brick> bricks = new ArrayList<>();
@@ -36,17 +35,17 @@ public class BrickManager {
           switch (brick.getHP()) {
             case 1:
               brick_remain++;
-              brick.getPos().setFill(ColorSamples[(int)(Math.random() * 7)]);
+              brick.getRectangle().setFill(ColorSamples[6]);
               break;
             case 3:
               brick_remain++;
-              brick.getPos().setFill(ColorSamples[7]);
+              brick.getRectangle().setFill(ColorSamples[7]);
               break;
             default:
-              brick.getPos().setFill(ColorSamples[8]);
+              brick.getRectangle().setFill(ColorSamples[8]);
               break;
           }
-          scene.getChildren().add(brick.getPos());
+          scene.getChildren().add(brick.getRectangle());
           bricks.add(brick);
         }
         spaceCheck++;
@@ -54,16 +53,18 @@ public class BrickManager {
     }
   }
 
-  public static void update(Circle circle, AnchorPane scene) {
+  public static boolean update(Entity entity, AnchorPane scene) {
+    int size = bricks.size();
     bricks.removeIf(brick -> {
-      brick.checkCollisionBrick(circle);
+      brick.checkCollisionBrick(entity);
       if (brick.getHP() == 0) {
         BrickManager.brick_remain--;
-        scene.getChildren().remove(brick.getPos());
+        scene.getChildren().remove(brick.getShape());
         PowerUpManager.createPowerUps(brick, scene);
         return true;
       }
       return false;
     });
+    return (size != bricks.size());
   }
 }

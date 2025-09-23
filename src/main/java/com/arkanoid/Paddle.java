@@ -19,19 +19,19 @@ public class Paddle extends Entity {
     double sceneXPos = bounds.getMinX();
 
     double xPos = robot.getMouseX();
-    double paddleWidth = this.pos.getWidth();
+    double paddleWidth = this.getRectangle().getWidth();
 
     if (xPos >= sceneXPos + (paddleWidth / 2) && xPos <= (sceneXPos + scene.getWidth()) - (paddleWidth / 2)) {
-      pos.setX(xPos - sceneXPos - (paddleWidth / 2));
+      this.getRectangle().setX(xPos - sceneXPos - (paddleWidth / 2));
     } else if (xPos < sceneXPos + (paddleWidth / 2)) {
-      pos.setX(0);
+      this.getRectangle().setX(0);
     } else if (xPos > (sceneXPos + scene.getWidth()) - (paddleWidth / 2)) {
-      pos.setX(scene.getWidth() - paddleWidth);
+      this.getRectangle().setX(scene.getWidth() - paddleWidth);
     }
   }
 
   public void checkCollisionPaddle(Circle circle) {
-    if (circle.getBoundsInParent().intersects(pos.getBoundsInParent())) {
+    if (circle.getBoundsInParent().intersects(this.getRectangle().getBoundsInParent())) {
       Controller.deltaY *= -1;
     }
   }

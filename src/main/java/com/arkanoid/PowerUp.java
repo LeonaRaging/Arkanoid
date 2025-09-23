@@ -17,6 +17,6 @@ public class PowerUp extends Entity {
 
     @Override
     public void update(AnchorPane scene) {
-      pos.setY(pos.getY() + speed);
+      this.getRectangle().setY(this.getRectangle().getY() + speed);
     }
 }
