@@ -11,8 +11,8 @@ public class EnemiesManager {
     public static void CreateEnemies(AnchorPane scene) {
         Mini_Saturn mob1 = new Mini_Saturn(244, 0, 25, 25);
         enemies.add(mob1);
-        mob1.getPos().setFill(Color.BLACK);
-        scene.getChildren().add(mob1.getPos());
+        mob1.getRectangle().setFill(Color.BLACK);
+        scene.getChildren().add(mob1.getRectangle());
     }
 
     public static void updateEnemies(double DeltaTime) {

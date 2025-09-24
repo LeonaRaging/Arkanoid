@@ -14,7 +14,7 @@ public class Mini_Saturn extends Enemies {
         double SwingSpeed = 2;
         double FallSpeed = 10;
         TotalTime =  TotalTime + DeltaTime;
-        pos.setY(pos.getY() + FallSpeed * DeltaTime);
-        pos.setX(BaseX + Amplitude * Math.sin(SwingSpeed * TotalTime));
+        this.getRectangle().setY(this.getRectangle().getY() + FallSpeed * DeltaTime);
+        this.getRectangle().setX(BaseX + Amplitude * Math.sin(SwingSpeed * TotalTime));
     }
 }
