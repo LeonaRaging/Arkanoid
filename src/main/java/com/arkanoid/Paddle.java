@@ -3,7 +3,6 @@ package com.arkanoid;
 import javafx.geometry.Bounds;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.robot.Robot;
-import javafx.scene.shape.Circle;
 
 public class Paddle extends Entity {
 
@@ -30,9 +29,9 @@ public class Paddle extends Entity {
     }
   }
 
-  public void checkCollisionPaddle(Circle circle) {
-    if (circle.getBoundsInParent().intersects(this.getRectangle().getBoundsInParent())) {
-      Controller.deltaY *= -1;
+  public void checkCollisionPaddle(Ball ball) {
+    if (ball.getCircle().getBoundsInParent().intersects(this.getRectangle().getBoundsInParent())) {
+      ball.deltaY *= -1;
     }
   }
 }

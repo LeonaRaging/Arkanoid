@@ -9,13 +9,13 @@ public class PowerUpManager {
   public static ArrayList<PowerUp> powerUps = new ArrayList<>();
   public static ArrayList<Entity> projectiles = new ArrayList<>();
 
-  private static int numberOfPowerUps = 2;
+  private static int numberOfPowerUps = 4;
   public static int shootCooldown;
 
   public static int[] powerUpState = new int [numberOfPowerUps];
 
   public static void createPowerUps(Brick brick, AnchorPane scene) {
-    PowerUp powerUp = new PowerUp(brick.getRectangle().getX(), brick.getRectangle().getY(), brick.getRectangle().getWidth(), 10, 1);
+    PowerUp powerUp = new PowerUp(brick.getRectangle().getX(), brick.getRectangle().getY(), brick.getRectangle().getWidth(), 10, 3);
     powerUps.add(powerUp);
 
     scene.getChildren().add(powerUp.getShape());
@@ -28,7 +28,7 @@ public class PowerUpManager {
   }
 
   public static void checkCollisionPowerUps(Paddle paddle, AnchorPane scene) {
-    for (PowerUp powerUp : powerUps) {
+    powerUps.removeIf(powerUp -> {
       if (powerUp.getShape().getBoundsInParent().intersects(paddle.getShape().getBoundsInParent())) {
         if (powerUp.getType() == 0) {
           powerUpState[0] = 3;
@@ -36,9 +36,30 @@ public class PowerUpManager {
         if (powerUp.getType() == 1) {
           powerUpState[1] = 5;
         }
+        if (powerUp.getType() == 2) {
+          paddle.getRectangle().setWidth(160);
+        }
+        if (powerUp.getType() == 3) {
+          Ball currentBall = BallManager.balls.getFirst();
+          for (int i = -1; i <= 1; i++)
+            for (int j = -1; j <= 1; j++) if (i != 0 && j != 0) {
+              if (2 * i == currentBall.deltaX && 2 * j == currentBall.deltaY) {
+                continue;
+              }
+              Ball ball = new Ball(0, 0, 5);
+              ball.getCircle().setLayoutX(currentBall.getCircle().getLayoutX());
+              ball.getCircle().setLayoutY(currentBall.getCircle().getLayoutY());
+              ball.deltaX = i * 2;
+              ball.deltaY = j * 2;
+              BallManager.balls.add(ball);
+              scene.getChildren().add(ball.getShape());
+            }
+        }
         scene.getChildren().remove(powerUp.getShape());
+        return true;
       }
-    }
+      return false;
+    });
   }
 
   public static void update(Paddle paddle, AnchorPane scene) {
