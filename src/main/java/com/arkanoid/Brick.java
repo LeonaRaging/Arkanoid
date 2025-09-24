@@ -46,10 +46,10 @@ public class Brick extends Entity {
           boolean topBorder = circle.getLayoutY() <= (rectangle.getY() + circle.getRadius());
 
           if (rightBorder || leftBorder) {
-            Controller.deltaX *= -1;
+            entity.deltaX *= -1;
           }
           if (bottomBorder || topBorder) {
-            Controller.deltaY *= -1;
+            entity.deltaY *= -1;
           }
 
         }

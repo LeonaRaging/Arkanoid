@@ -10,8 +10,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -22,18 +20,12 @@ public class Controller implements Initializable {
     @FXML
     private AnchorPane scene;
 
-    private Ball ball;
-
     private Paddle paddle;
 
-    @FXML
-    private Rectangle bottomZone;
+    public static Rectangle bottomZone;
 
     @FXML
     private Button startButton;
-
-    public static double deltaX = 2;
-    public static double deltaY = 2;
 
     public static final Set<KeyCode> pressedKeys = new HashSet<>();
 
@@ -43,10 +35,10 @@ public class Controller implements Initializable {
         public void handle(ActionEvent actionEvent) {
             paddle.update(scene);
 
-            paddle.checkCollisionPaddle(ball.getCircle());
-
-            ball.getShape().setLayoutX(ball.getShape().getLayoutX() + deltaX);
-            ball.getShape().setLayoutY(ball.getShape().getLayoutY() + deltaY);
+            for (Ball ball : BallManager.balls) {
+                paddle.checkCollisionPaddle(ball);
+                ball.update(scene);
+            }
 
             long CurrentTime = System.nanoTime();
             double DeltaTime = (CurrentTime - LastTime) / 1_000_000_000.0;
@@ -55,7 +47,9 @@ public class Controller implements Initializable {
             EnemiesManager.updateEnemies(DeltaTime);
 
             if (BrickManager.brick_remain > 0) {
-                BrickManager.update(ball, scene);
+                for (Ball ball : BallManager.balls) {
+                    BrickManager.update(ball, scene);
+                }
             } else {
                 gameOver();
             }
@@ -64,8 +58,13 @@ public class Controller implements Initializable {
             PowerUpManager.checkCollisionPowerUps(paddle, scene);
             PowerUpManager.update(paddle, scene);
 
-            checkCollisionScene(scene);
-            checkCollisionBottomZone();
+            BallManager.checkCollisionScene(scene);
+
+            System.out.println(BallManager.balls.size());
+
+            if (BallManager.checkCollisionBottomZone()) {
+                gameOver();
+            }
         }
     }));
 
@@ -78,10 +77,12 @@ public class Controller implements Initializable {
     void startGameButtonAction(ActionEvent event) {
         startButton.setVisible(false);
 
-        ball = new Ball(10, 10, 5);
+        Ball ball = new Ball(10, 10, 5);
         ball.getCircle().setLayoutX(10);
         ball.getCircle().setLayoutY(10);
+        ball.deltaX = ball.deltaY = 2;
         scene.getChildren().add(ball.getShape());
+        BallManager.balls.add(ball);
 
         BrickManager.createBricks(scene);
         EnemiesManager.CreateEnemies(scene);
@@ -89,42 +90,13 @@ public class Controller implements Initializable {
         paddle = new Paddle(244, 360, 80, 10);
         scene.getChildren().add(paddle.getShape());
 
+        bottomZone = new Rectangle(0, 410, 600, 10);
+
         scene.setOnKeyPressed(e -> pressedKeys.add(e.getCode()));
         scene.setOnKeyReleased(e -> pressedKeys.remove(e.getCode()));
         scene.requestFocus();
 
         timeline.play();
-    }
-
-    public void checkCollisionScene(Node node) {
-        Bounds bounds = node.getBoundsInLocal();
-        boolean rightBorder = ball.getCircle().getLayoutX() >= (bounds.getMaxX() - 3 * ball.getCircle().getRadius());
-        boolean leftBorder = ball.getCircle().getLayoutX() <= (bounds.getMinX() + ball.getCircle().getRadius());
-        boolean bottomBorder = ball.getCircle().getLayoutY() >= (bounds.getMaxY() - ball.getCircle().getRadius());
-        boolean topBorder = ball.getCircle().getLayoutY() <= (bounds.getMinY() + ball.getCircle().getRadius());
-
-//        System.out.println(ball.getCircle().getLayoutX() + " radius: " + ball.getCircle().getRadius() + " rightBorder: " + bounds.getMaxX());
-
-        if (rightBorder || leftBorder) {
-            deltaX *= -1;
-            if (PowerUpManager.powerUpState[0] > 0) {
-                PowerUpManager.powerUpState[0]--;
-            }
-        }
-
-        if (bottomBorder || topBorder) {
-            deltaY *= -1;
-            if (PowerUpManager.powerUpState[0] > 0) {
-                PowerUpManager.powerUpState[0]--;
-            }
-        }
-
-    }
-
-    public void checkCollisionBottomZone() {
-        if (ball.getCircle().getBoundsInParent().intersects(bottomZone.getBoundsInParent())) {
-            gameOver();
-        }
     }
 
     public void gameOver() {
@@ -142,8 +114,10 @@ public class Controller implements Initializable {
         PowerUpManager.powerUps.clear();
         PowerUpManager.projectiles.clear();
         scene.getChildren().remove(paddle.getShape());
-        scene.getChildren().remove(ball.getShape());
+        for (Ball ball : BallManager.balls) {
+            scene.getChildren().remove(ball.getShape());
+        }
+        BallManager.balls.clear();
         startButton.setVisible(true);
     }
-
 }
