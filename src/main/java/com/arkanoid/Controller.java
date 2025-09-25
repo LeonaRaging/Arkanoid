@@ -44,7 +44,7 @@ public class Controller implements Initializable {
             double DeltaTime = (CurrentTime - LastTime) / 1_000_000_000.0;
             LastTime = CurrentTime;
             System.out.println(DeltaTime);
-            EnemiesManager.updateEnemies(DeltaTime);
+            EnemiesManager.updateEnemies(scene, DeltaTime, BallManager.balls, BrickManager.bricks);
 
             if (BrickManager.brick_remain > 0) {
                 for (Ball ball : BallManager.balls) {
@@ -110,6 +110,10 @@ public class Controller implements Initializable {
         for (Entity projectile : PowerUpManager.projectiles ){
             scene.getChildren().remove(projectile.getShape());
         }
+        for(Enemies e : EnemiesManager.enemies){
+            scene.getChildren().remove(e.getShape());
+        }
+        EnemiesManager.enemies.clear();
         BrickManager.bricks.clear();
         PowerUpManager.powerUps.clear();
         PowerUpManager.projectiles.clear();
