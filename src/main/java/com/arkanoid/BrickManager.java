@@ -10,8 +10,8 @@ public class BrickManager {
   public static int brick_remain;
 
   public static void createBricks(AnchorPane scene) {
-    int width = 560;
-    int height = 200;
+    int width = 240;
+    int height = 80;
 
     int spaceCheck = 1;
 
@@ -28,10 +28,10 @@ public class BrickManager {
     ColorSamples[7] = Color.SILVER;
     ColorSamples[8] = Color.GOLD;
 
-    for (int i = height; i > 0; i -= 50) {
-      for (int j = width; j > 0; j -= 25) {
+    for (int i = height; i > 0; i -= 20) {
+      for (int j = width; j > 0; j -= 10) {
         if (spaceCheck % 2 == 0) {
-          Brick brick = new Brick(j, i, 30, 30, 1);
+          Brick brick = new Brick(j, i, 16, 8, 1);
           switch (brick.getHP()) {
             case 1:
               brick_remain++;

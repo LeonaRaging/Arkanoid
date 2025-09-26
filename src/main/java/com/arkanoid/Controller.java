@@ -71,19 +71,19 @@ public class Controller implements Initializable {
     void startGameButtonAction(ActionEvent event) {
         startButton.setVisible(false);
 
-        Ball ball = new Ball(10, 10, 5);
+        Ball ball = new Ball(5, 5, 2.5);
         ball.getCircle().setLayoutX(10);
         ball.getCircle().setLayoutY(10);
-        ball.deltaX = ball.deltaY = 2;
+        ball.deltaX = ball.deltaY = 1;
         scene.getChildren().add(ball.getShape());
         BallManager.balls.add(ball);
 
         BrickManager.createBricks(scene);
 
-        paddle = new Paddle(244, 360, 80, 10);
+        paddle = new Paddle(112, 210, 32, 8);
         scene.getChildren().add(paddle.getShape());
 
-        bottomZone = new Rectangle(0, 410, 600, 10);
+        bottomZone = new Rectangle(0, 230, 256, 10);
 
         scene.setOnKeyPressed(e -> pressedKeys.add(e.getCode()));
         scene.setOnKeyReleased(e -> pressedKeys.remove(e.getCode()));

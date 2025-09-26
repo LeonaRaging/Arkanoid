@@ -15,7 +15,7 @@ public class PowerUpManager {
   public static int[] powerUpState = new int [numberOfPowerUps];
 
   public static void createPowerUps(Brick brick, AnchorPane scene) {
-    PowerUp powerUp = new PowerUp(brick.getRectangle().getX(), brick.getRectangle().getY(), brick.getRectangle().getWidth(), 10, 3);
+    PowerUp powerUp = new PowerUp(brick.getRectangle().getX(), brick.getRectangle().getY(), brick.getRectangle().getWidth(), brick.getRectangle().getHeight(), 3);
     powerUps.add(powerUp);
 
     scene.getChildren().add(powerUp.getShape());
@@ -46,11 +46,11 @@ public class PowerUpManager {
               if (2 * i == currentBall.deltaX && 2 * j == currentBall.deltaY) {
                 continue;
               }
-              Ball ball = new Ball(0, 0, 5);
+              Ball ball = new Ball(0, 0, 2.5);
               ball.getCircle().setLayoutX(currentBall.getCircle().getLayoutX());
               ball.getCircle().setLayoutY(currentBall.getCircle().getLayoutY());
-              ball.deltaX = i * 2;
-              ball.deltaY = j * 2;
+              ball.deltaX = i;
+              ball.deltaY = j;
               BallManager.balls.add(ball);
               scene.getChildren().add(ball.getShape());
             }

@@ -1,12 +1,10 @@
 package com.arkanoid;
 
 import javafx.geometry.Bounds;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.robot.Robot;
 
 public class Paddle extends Entity {
-
-  Robot robot = new Robot();
 
   public Paddle(double x, double y, double w, double h) {
     super(x, y, w, h);
@@ -14,19 +12,26 @@ public class Paddle extends Entity {
 
   @Override
   public void update(AnchorPane scene) {
-    Bounds bounds = scene.localToScreen(scene.getBoundsInLocal());
-    double sceneXPos = bounds.getMinX();
+    Bounds bounds = scene.getBoundsInLocal();
 
-    double xPos = robot.getMouseX();
-    double paddleWidth = this.getRectangle().getWidth();
+    double xPos = this.getRectangle().getX();
 
-    if (xPos >= sceneXPos + (paddleWidth / 2) && xPos <= (sceneXPos + scene.getWidth()) - (paddleWidth / 2)) {
-      this.getRectangle().setX(xPos - sceneXPos - (paddleWidth / 2));
-    } else if (xPos < sceneXPos + (paddleWidth / 2)) {
-      this.getRectangle().setX(0);
-    } else if (xPos > (sceneXPos + scene.getWidth()) - (paddleWidth / 2)) {
-      this.getRectangle().setX(scene.getWidth() - paddleWidth);
+    if (Controller.pressedKeys.contains(KeyCode.RIGHT)) {
+      xPos += 2;
     }
+
+    if (Controller.pressedKeys.contains(KeyCode.LEFT)) {
+      xPos -= 2;
+    }
+
+    if (xPos < bounds.getMinX()) {
+      this.getRectangle().setX(0);
+    } else  if (xPos + this.getRectangle().getWidth() > bounds.getMaxX()) {
+      this.getRectangle().setX(bounds.getMaxX() - this.getRectangle().getWidth());
+    } else {
+      this.getRectangle().setX(xPos);
+    }
+
   }
 
   public void checkCollisionPaddle(Ball ball) {

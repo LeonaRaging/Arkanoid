@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9b4e474d-7081-4290-9e5b-32669f2a7d61" name="Changes" comment="Change Circle to Entity &amp; add two PowerUps" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;LeonaRaging&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/LeonaRaging/arkanoid.git&quot;,
+    &quot;accountId&quot;: &quot;3ed15225-2f35-437b-9aed-a5a38d4acd89&quot;
+  }
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="32wllOdNvDHbPXNUoigDEgGrb01" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.HelloApplication.executor": "Debug",
+    "Application.Main.executor": "Debug",
+    "Application.Unnamed.executor": "Debug",
+    "Maven.Arkanoid [clean].executor": "Run",
+    "Maven.Arkanoid [install].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "Enemies",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/nhoxg/OneDrive/Arkanoid",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "vcs.Git",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.arkanoid.Main" />
+      <module name="Arkanoid" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Program Files\javafx-sdk-24.0.2\lib&quot; --add-modules javafx.controls,javafx.fxml,javafx.web" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26199.169" />
+        <option value="bundled-js-predefined-d6986cc7102b-9c94529fcfe0-JavaScript-IU-252.26199.169" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9b4e474d-7081-4290-9e5b-32669f2a7d61" name="Changes" comment="" />
+      <created>1758339668577</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1758339668577</updated>
+      <workItem from="1758339669584" duration="1488000" />
+      <workItem from="1758344341204" duration="3213000" />
+      <workItem from="1758351476155" duration="3483000" />
+      <workItem from="1758355654806" duration="1000" />
+      <workItem from="1758425484858" duration="3103000" />
+      <workItem from="1758435574415" duration="3394000" />
+      <workItem from="1758448940200" duration="3204000" />
+      <workItem from="1758458586035" duration="2976000" />
+      <workItem from="1758509315414" duration="934000" />
+      <workItem from="1758550038230" duration="403000" />
+      <workItem from="1758595676717" duration="150000" />
+      <workItem from="1758619231314" duration="4020000" />
+      <workItem from="1758625806427" duration="8767000" />
+      <workItem from="1758641490072" duration="136000" />
+      <workItem from="1758642092384" duration="199000" />
+      <workItem from="1758672560603" duration="311000" />
+      <workItem from="1758680388628" duration="851000" />
+    </task>
+    <task id="LOCAL-00001" summary="Refactor Code &amp; add PowerUps Class">
+      <option name="closed" value="true" />
+      <created>1758452107697</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1758452107697</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Refactor Code">
+      <option name="closed" value="true" />
+      <created>1758622126453</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1758622126453</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Change Circle to Entity &amp; add two PowerUps">
+      <option name="closed" value="true" />
+      <created>1758640558652</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1758640558652</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="Enemies" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Refactor Code &amp; add PowerUps Class" />
+    <MESSAGE value="Refactor Code" />
+    <MESSAGE value="Change Circle to Entity &amp; add two PowerUps" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change Circle to Entity &amp; add two PowerUps" />
+  </component>
+</project>
