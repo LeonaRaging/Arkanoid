@@ -7,8 +7,8 @@ import javafx.scene.shape.Shape;
 
 public class Entity {
   protected Shape shape;
-  protected int deltaX;
-  protected int deltaY;
+  protected double deltaX;
+  protected double deltaY;
 
   public Entity(double x, double y, double w, double h) {
     this.shape = new Rectangle(x, y, w, h);

@@ -43,8 +43,8 @@ public class Controller implements Initializable {
             long CurrentTime = System.nanoTime();
             double DeltaTime = (CurrentTime - LastTime) / 1_000_000_000.0;
             LastTime = CurrentTime;
-            System.out.println(DeltaTime);
-            EnemiesManager.updateEnemies(scene, DeltaTime, BallManager.balls, BrickManager.bricks);
+            //System.out.println(DeltaTime);
+            EnemiesManager.updateEnemies(scene, DeltaTime);
 
             if (BrickManager.brick_remain > 0) {
                 for (Ball ball : BallManager.balls) {
@@ -60,7 +60,7 @@ public class Controller implements Initializable {
 
             BallManager.checkCollisionScene(scene);
 
-            System.out.println(BallManager.balls.size());
+            //System.out.println(BallManager.balls.size());
 
             if (BallManager.checkCollisionBottomZone()) {
                 gameOver();

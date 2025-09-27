@@ -6,6 +6,7 @@ import javafx.scene.Node;
 
 public class BallManager {
   public static ArrayList<Ball> balls = new ArrayList<>();
+  static int isCaught = 0;
 
   public static void checkCollisionScene(Node node) {
     Bounds bounds = node.getBoundsInLocal();
@@ -34,7 +35,7 @@ public class BallManager {
 
   public static boolean checkCollisionBottomZone() {
     balls.removeIf(ball -> ball.getCircle().getBoundsInParent().intersects(Controller.bottomZone.getBoundsInParent()));
-    return balls.isEmpty();
+    return (balls.isEmpty() && isCaught == 0);
   }
 
 }

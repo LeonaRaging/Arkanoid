@@ -1,6 +1,8 @@
 package com.arkanoid;
 
 import java.util.ArrayList;
+
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
@@ -8,20 +10,18 @@ public class TriangleC extends Enemies {
     double Amplitude = 50;
     double SwingSpeed = 3;
     double FallSpeed = 20;
-    double TotalTime = 0;
     double BaseX = 0;
     public TriangleC (double x, double y, double w, double h) {
         super(x, y, w, h);
-        TotalTime = 0;
         BaseX = x;
     }
     @Override
-    public boolean update(double DeltaTime, ArrayList<Ball> balls, ArrayList<Brick> bricks) {
+    public boolean update(double DeltaTime, AnchorPane scene) {
 
         boolean bottomBorder = false;
         boolean leftBorder = false;
         boolean rightBorder = false;
-        for(Brick brick : bricks)
+        for(Brick brick : BrickManager.bricks)
             if (brick.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
                 if (this.getRectangle().getY() + this.getRectangle().getHeight() >= brick.getRectangle().getY()) {
                     bottomBorder = true;
@@ -38,19 +38,29 @@ public class TriangleC extends Enemies {
 
 
         TotalTime =  TotalTime + DeltaTime;
-        if(!bottomBorder) this.getRectangle().setY(this.getRectangle().getY() + FallSpeed * DeltaTime);
+        if(!bottomBorder) {
+            double oldY = this.getRectangle().getY();
+            this.getRectangle().setY(this.getRectangle().getY() + FallSpeed * DeltaTime);
+            if (this.checkCollisionEnemy()) {
+                this.getRectangle().setY(oldY);
+            }
+        }
+
         double ChangeX = Amplitude * Math.sin(SwingSpeed * TotalTime);
         if((leftBorder && ChangeX < 0) || (rightBorder && ChangeX > 0)) {
             Amplitude = ChangeX = 0;
             BaseX = this.getRectangle().getX();
         }
+        double oldX = this.getRectangle().getX();
         this.getRectangle().setX(BaseX + ChangeX);
+        if(this.checkCollisionEnemy()) {
+            this.getRectangle().setX(oldX);
+            TotalTime = TotalTime - DeltaTime;
+        }
 
-
-        for (Ball ball: balls)
-            if (ball.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
-               return true;
-            }
+        if (this.checkCollisionBall()) {
+            return true;
+        }
 
 
         return false;
