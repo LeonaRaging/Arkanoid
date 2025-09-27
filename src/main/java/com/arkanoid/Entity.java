@@ -1,5 +1,6 @@
 package com.arkanoid;
 
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -9,6 +10,7 @@ public class Entity {
   protected Shape shape;
   protected int deltaX;
   protected int deltaY;
+  protected ImageView imageView = new ImageView();
 
   public Entity(double x, double y, double w, double h) {
     this.shape = new Rectangle(x, y, w, h);
@@ -29,6 +31,8 @@ public class Entity {
   public Circle getCircle() {
     return (Circle) shape;
   }
+
+  public ImageView getImageView() {return imageView;}
 
   public void update(AnchorPane scene) {}
 

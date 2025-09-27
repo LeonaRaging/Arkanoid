@@ -18,7 +18,7 @@ public class PowerUpManager {
     PowerUp powerUp = new PowerUp(brick.getRectangle().getX(), brick.getRectangle().getY(), brick.getRectangle().getWidth(), brick.getRectangle().getHeight(), 3);
     powerUps.add(powerUp);
 
-    scene.getChildren().add(powerUp.getShape());
+    scene.getChildren().add(powerUp.getImageView());
   }
 
   public static void movePowerUps(AnchorPane scene) {
@@ -52,10 +52,10 @@ public class PowerUpManager {
               ball.deltaX = i;
               ball.deltaY = j;
               BallManager.balls.add(ball);
-              scene.getChildren().add(ball.getShape());
+              scene.getChildren().add(ball.getImageView());
             }
         }
-        scene.getChildren().remove(powerUp.getShape());
+        scene.getChildren().remove(powerUp.getImageView());
         return true;
       }
       return false;

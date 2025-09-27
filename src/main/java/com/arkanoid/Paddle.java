@@ -1,18 +1,24 @@
 package com.arkanoid;
 
-import javafx.geometry.Bounds;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Rectangle;
 
 public class Paddle extends Entity {
+  private final Image[] images =  new Image[4];
+  private int imageState;
+  private int imageCooldown;
 
   public Paddle(double x, double y, double w, double h) {
     super(x, y, w, h);
+    for (int i = 0; i < images.length; i++) {
+      images[i] = new Image(getClass().getResource("Paddle/paddle" + i + ".png").toExternalForm());
+    }
+    imageState = 0;
+    imageCooldown = 20;
   }
 
-  @Override
-  public void update(AnchorPane scene) {
-    Bounds bounds = scene.getBoundsInLocal();
+  public void update(Rectangle rect) {
 
     double xPos = this.getRectangle().getX();
 
@@ -24,14 +30,23 @@ public class Paddle extends Entity {
       xPos -= 2;
     }
 
-    if (xPos < bounds.getMinX()) {
-      this.getRectangle().setX(0);
-    } else  if (xPos + this.getRectangle().getWidth() > bounds.getMaxX()) {
-      this.getRectangle().setX(bounds.getMaxX() - this.getRectangle().getWidth());
+    if (xPos < rect.getX()) {
+      this.getRectangle().setX(rect.getX());
+    } else  if (xPos + this.getRectangle().getWidth() >= rect.getX() + rect.getWidth()) {
+      this.getRectangle().setX(rect.getX() + rect.getWidth() - this.getRectangle().getWidth());
     } else {
       this.getRectangle().setX(xPos);
     }
 
+    imageCooldown--;
+    if (imageCooldown == 0) {
+      imageState++;
+      imageState %= 4;
+      imageCooldown = 20;
+    }
+    imageView.setImage(images[imageState]);
+    imageView.setX(this.getRectangle().getX());
+    imageView.setY(this.getRectangle().getY());
   }
 
   public void checkCollisionPaddle(Ball ball) {
