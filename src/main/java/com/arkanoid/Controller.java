@@ -24,7 +24,9 @@ public class Controller implements Initializable {
 
     public static Rectangle bottomZone;
 
-    private Field field;
+    public static Field field;
+    private static Field outline;
+    private static Field [] gates = new Field[4];
 
     @FXML
     private Button startButton;
@@ -37,13 +39,13 @@ public class Controller implements Initializable {
         public void handle(ActionEvent actionEvent) {
             paddle.update(field.getRectangle());
 
-            for (Ball ball : BallManager.balls) {
+            for (Ball ball : BallManager.getBalls()) {
                 paddle.checkCollisionPaddle(ball);
                 ball.update(scene);
             }
 
             if (BrickManager.brick_remain > 0) {
-                for (Ball ball : BallManager.balls) {
+                for (Ball ball : BallManager.getBalls()) {
                     BrickManager.update(ball, scene);
                 }
             } else {
@@ -71,8 +73,17 @@ public class Controller implements Initializable {
     void startGameButtonAction(ActionEvent event) {
         startButton.setVisible(false);
 
-        field = new Field(16, 16, 160, 208);
+        field = new Field(16, 16, 160, 208, "field");
+        outline = new Field(8, 8, 176, 216, "outline");
+        gates[0] = new Field(32, 8, 32, 8, "gate0");
+        gates[1] = new Field(128, 8, 32, 8, "gate0");
+        gates[2] = new Field(8, 181, 8, 30, "gate1");
+        gates[3] = new Field(176, 181, 8, 30, "gate1");
         scene.getChildren().add(field.getImageView());
+        scene.getChildren().add(outline.getImageView());
+        for (int i = 0; i < 4; i++) {
+            scene.getChildren().add(gates[i].getImageView());
+        }
 
         paddle = new Paddle(112, 210, 32, 8);
         scene.getChildren().add(paddle.getImageView());
@@ -83,7 +94,7 @@ public class Controller implements Initializable {
         ball.deltaX = 1;
         ball.deltaY = -1;
         scene.getChildren().add(ball.getImageView());
-        BallManager.balls.add(ball);
+        BallManager.getBalls().add(ball);
 
         BrickManager.createBricks(scene);
 
@@ -99,25 +110,29 @@ public class Controller implements Initializable {
 
     public void gameOver() {
         timeline.stop();
-        for (Brick brick : BrickManager.bricks) {
+        for (Brick brick : BrickManager.getBricks()) {
             scene.getChildren().remove(brick.getImageView());
         }
         for (PowerUp powerUp : PowerUpManager.powerUps ){
             scene.getChildren().remove(powerUp.getImageView());
         }
         for (Entity projectile : PowerUpManager.projectiles ){
-            scene.getChildren().remove(projectile.getShape());
+            scene.getChildren().remove(projectile.getImageView());
         }
         scene.getChildren().remove(paddle.getImageView());
         scene.getChildren().remove(field.getImageView());
+        scene.getChildren().remove(outline.getImageView());
+        for (int i = 0; i < 4; i++) {
+            scene.getChildren().remove(gates[i].getImageView());
+        }
 
-        BrickManager.bricks.clear();
+        BrickManager.getBricks().clear();
         PowerUpManager.powerUps.clear();
         PowerUpManager.projectiles.clear();
-        for (Ball ball : BallManager.balls) {
+        for (Ball ball : BallManager.getBalls()) {
             scene.getChildren().remove(ball.getImageView());
         }
-        BallManager.balls.clear();
+        BallManager.getBalls().clear();
         startButton.setVisible(true);
     }
 }

@@ -5,7 +5,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 
 public class BallManager {
-  public static ArrayList<Ball> balls = new ArrayList<>();
+  private static ArrayList<Ball> balls = new ArrayList<>();
+
+  public static ArrayList<Ball> getBalls() {
+    return balls;
+  }
 
   public static void checkCollisionScene(Rectangle rect) {
     for (Ball ball : balls) {

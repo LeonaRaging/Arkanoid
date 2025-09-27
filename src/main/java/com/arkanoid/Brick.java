@@ -46,7 +46,7 @@ public class Brick extends Entity {
         return this.hp;
     }
 
-  public void checkCollisionBrick(Entity entity) {
+  public boolean checkCollisionBrick(Entity entity) {
     Rectangle rectangle = (Rectangle) shape;
 
     if (hitCooldown > 0) {
@@ -77,6 +77,9 @@ public class Brick extends Entity {
 
       this.hp--;
       if (hitCooldown == 0) hitCooldown = 10;
+      return true;
     }
+    return false;
   }
+
 }

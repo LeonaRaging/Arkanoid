@@ -1,12 +1,17 @@
 package com.arkanoid;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.scene.layout.AnchorPane;
 
 public class BrickManager {
-  public static ArrayList<Brick> bricks = new ArrayList<>();
+  private static ArrayList<Brick> bricks = new ArrayList<>();
 
   public static int brick_remain;
+
+  public static ArrayList<Brick> getBricks() {
+    return bricks;
+  }
 
   public static void createBricks(AnchorPane scene) {
     int width = 160;
@@ -39,9 +44,11 @@ public class BrickManager {
   }
 
   public static boolean update(Entity entity, AnchorPane scene) {
-    int size = bricks.size();
+    AtomicBoolean check = new AtomicBoolean(false);
     bricks.removeIf(brick -> {
-      brick.checkCollisionBrick(entity);
+      if (brick.checkCollisionBrick(entity)) {
+        check.set(true);
+      }
       if (brick.getHP() == 0) {
         BrickManager.brick_remain--;
         scene.getChildren().remove(brick.getImageView());
@@ -50,6 +57,6 @@ public class BrickManager {
       }
       return false;
     });
-    return (size != bricks.size());
+    return check.get();
   }
 }
