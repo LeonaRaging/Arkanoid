@@ -9,22 +9,22 @@ public class EnemiesManager {
     public static ArrayList<Enemies> enemies = new ArrayList<>();
 
     public static void CreateEnemies(AnchorPane scene) {
-        TriangleC mob1 = new TriangleC(250, 0, 25, 25);
+        TriangleC mob1 = new TriangleC(36, 100, 15, 15);
         enemies.add(mob1);
         mob1.getRectangle().setFill(Color.BLACK);
         scene.getChildren().add(mob1.getRectangle());
 
-        Mini_Saturn mob2 = new Mini_Saturn(200, 100, 10);
+        Mini_Saturn mob2 = new Mini_Saturn(72, 100, 7);
         enemies.add(mob2);
         mob2.getCircle().setFill(Color.GREEN);
         scene.getChildren().add(mob2.getCircle());
 
-        Red_Blob mob3 = new Red_Blob(300, 20, 15);
+        Red_Blob mob3 = new Red_Blob(108, 100, 7);
         enemies.add(mob3);
         mob3.getCircle().setFill(Color.RED);
         scene.getChildren().add(mob3.getCircle());
 
-        Bubble mob4 = new Bubble(50, 30, 30, 30); // 70 50 30 30
+        Bubble mob4 = new Bubble(36, 136, 15, 15); // 70 50 30 30
         enemies.add(mob4);
         mob4.getRectangle().setFill(Color.GRAY);
         scene.getChildren().add(mob4.getRectangle());

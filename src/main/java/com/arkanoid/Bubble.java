@@ -18,7 +18,7 @@ public class Bubble extends Enemies {
                 remainingTime--;
                 if (remainingTime == 0) return true;
                 if (checkCollisionBall()) {
-                    BallManager.balls.removeIf(ball -> {
+                    BallManager.getBalls().removeIf(ball -> {
                         if (ball.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
                             scene.getChildren().remove(ball.getShape());
                             return true;
@@ -55,7 +55,7 @@ public class Bubble extends Enemies {
                     ball.getCircle().setLayoutY(this.getRectangle().getLayoutY() + 65);
                     ball.deltaX = 2;
                     ball.deltaY = -2;
-                    BallManager.balls.add(ball);
+                    BallManager.getBalls().add(ball);
                     scene.getChildren().add(ball.getShape());
                     BallManager.isCaught--;
                     return true;

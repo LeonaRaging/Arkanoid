@@ -27,7 +27,7 @@ public class Red_Blob extends Enemies {
             BrickManager.brick_remain++;
             brick.getRectangle().setFill(Color.RED);
             scene.getChildren().add(brick.getRectangle());
-            BrickManager.bricks.add(brick);
+            BrickManager.getBricks().add(brick);
             return true;
         }
 

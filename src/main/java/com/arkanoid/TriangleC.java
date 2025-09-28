@@ -1,10 +1,6 @@
 package com.arkanoid;
 
-import java.util.ArrayList;
-
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 
 public class TriangleC extends Enemies {
     double Amplitude = 50;
@@ -21,7 +17,7 @@ public class TriangleC extends Enemies {
         boolean bottomBorder = false;
         boolean leftBorder = false;
         boolean rightBorder = false;
-        for(Brick brick : BrickManager.bricks)
+        for(Brick brick : BrickManager.getBricks())
             if (brick.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
                 if (this.getRectangle().getY() + this.getRectangle().getHeight() >= brick.getRectangle().getY()) {
                     bottomBorder = true;
