@@ -2,15 +2,13 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="scene" maxHeight="400.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.arkanoid.Controller">
+<AnchorPane fx:id="scene" maxHeight="224.0" maxWidth="256.0" minHeight="224.0" minWidth="256.0" prefHeight="224.0" prefWidth="256.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.arkanoid.Controller">
    <children>
-      <Rectangle fx:id="bottomZone" arcHeight="2.0" arcWidth="5.0" fill="TRANSPARENT" height="10.0" layoutY="410.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="600.0" />
-      <Button fx:id="startButton" layoutX="188.0" layoutY="145.0" mnemonicParsing="false" onAction="#startGameButtonAction" prefHeight="111.0" prefWidth="225.0" text="START">
+      <Button fx:id="startButton" layoutX="76.0" layoutY="86.0" mnemonicParsing="false" onAction="#startGameButtonAction" prefHeight="52.0" prefWidth="104.0" text="START">
          <font>
-            <Font size="44.0" />
+            <Font size="13.0" />
          </font>
       </Button>
    </children>

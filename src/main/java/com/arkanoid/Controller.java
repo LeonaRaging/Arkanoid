@@ -24,6 +24,10 @@ public class Controller implements Initializable {
 
     public static Rectangle bottomZone;
 
+    public static Field field;
+    private static Field outline;
+    private static Field [] gates = new Field[4];
+
     @FXML
     private Button startButton;
 
@@ -33,9 +37,9 @@ public class Controller implements Initializable {
     long LastTime = System.nanoTime();
         @Override
         public void handle(ActionEvent actionEvent) {
-            paddle.update(scene);
+            paddle.update(field.getRectangle());
 
-            for (Ball ball : BallManager.balls) {
+            for (Ball ball : BallManager.getBalls()) {
                 paddle.checkCollisionPaddle(ball);
                 ball.update(scene);
             }
@@ -43,11 +47,10 @@ public class Controller implements Initializable {
             long CurrentTime = System.nanoTime();
             double DeltaTime = (CurrentTime - LastTime) / 1_000_000_000.0;
             LastTime = CurrentTime;
-            //System.out.println(DeltaTime);
             EnemiesManager.updateEnemies(scene, DeltaTime);
 
             if (BrickManager.brick_remain > 0) {
-                for (Ball ball : BallManager.balls) {
+                for (Ball ball : BallManager.getBalls()) {
                     BrickManager.update(ball, scene);
                 }
             } else {
@@ -58,11 +61,9 @@ public class Controller implements Initializable {
             PowerUpManager.checkCollisionPowerUps(paddle, scene);
             PowerUpManager.update(paddle, scene);
 
-            BallManager.checkCollisionScene(scene);
+            BallManager.checkCollisionScene(field.getRectangle());
 
-            //System.out.println(BallManager.balls.size());
-
-            if (BallManager.checkCollisionBottomZone()) {
+            if (BallManager.checkCollisionBottomZone(scene)) {
                 gameOver();
             }
         }
@@ -77,20 +78,34 @@ public class Controller implements Initializable {
     void startGameButtonAction(ActionEvent event) {
         startButton.setVisible(false);
 
-        Ball ball = new Ball(10, 10, 5);
-        ball.getCircle().setLayoutX(10);
-        ball.getCircle().setLayoutY(10);
-        ball.deltaX = ball.deltaY = 2;
-        scene.getChildren().add(ball.getShape());
-        BallManager.balls.add(ball);
+        field = new Field(16, 16, 160, 208, "field");
+        outline = new Field(8, 8, 176, 216, "outline");
+        gates[0] = new Field(32, 8, 32, 8, "gate0");
+        gates[1] = new Field(128, 8, 32, 8, "gate0");
+        gates[2] = new Field(8, 181, 8, 30, "gate1");
+        gates[3] = new Field(176, 181, 8, 30, "gate1");
+        scene.getChildren().add(field.getImageView());
+        scene.getChildren().add(outline.getImageView());
+        for (int i = 0; i < 4; i++) {
+            scene.getChildren().add(gates[i].getImageView());
+        }
+
+        paddle = new Paddle(112, 210, 32, 8);
+        scene.getChildren().add(paddle.getImageView());
+
+        Ball ball = new Ball(0, 0, 2.5);
+        ball.getCircle().setLayoutX(112);
+        ball.getCircle().setLayoutY(200);
+        ball.deltaX = 1;
+        ball.deltaY = -1;
+        scene.getChildren().add(ball.getImageView());
+        BallManager.getBalls().add(ball);
 
         BrickManager.createBricks(scene);
         EnemiesManager.CreateEnemies(scene);
 
-        paddle = new Paddle(244, 360, 80, 10);
-        scene.getChildren().add(paddle.getShape());
 
-        bottomZone = new Rectangle(0, 410, 600, 10);
+        bottomZone = new Rectangle(0, 220, 256, 10);
 
         scene.setOnKeyPressed(e -> pressedKeys.add(e.getCode()));
         scene.setOnKeyReleased(e -> pressedKeys.remove(e.getCode()));
@@ -101,27 +116,29 @@ public class Controller implements Initializable {
 
     public void gameOver() {
         timeline.stop();
-        for (Brick brick : BrickManager.bricks) {
-            scene.getChildren().remove(brick.getShape());
+        for (Brick brick : BrickManager.getBricks()) {
+            scene.getChildren().remove(brick.getImageView());
         }
         for (PowerUp powerUp : PowerUpManager.powerUps ){
-            scene.getChildren().remove(powerUp.getShape());
+            scene.getChildren().remove(powerUp.getImageView());
         }
         for (Entity projectile : PowerUpManager.projectiles ){
-            scene.getChildren().remove(projectile.getShape());
+            scene.getChildren().remove(projectile.getImageView());
         }
-        for(Enemies e : EnemiesManager.enemies){
-            scene.getChildren().remove(e.getShape());
+        scene.getChildren().remove(paddle.getImageView());
+        scene.getChildren().remove(field.getImageView());
+        scene.getChildren().remove(outline.getImageView());
+        for (int i = 0; i < 4; i++) {
+            scene.getChildren().remove(gates[i].getImageView());
         }
-        EnemiesManager.enemies.clear();
-        BrickManager.bricks.clear();
+
+        BrickManager.getBricks().clear();
         PowerUpManager.powerUps.clear();
         PowerUpManager.projectiles.clear();
-        scene.getChildren().remove(paddle.getShape());
-        for (Ball ball : BallManager.balls) {
-            scene.getChildren().remove(ball.getShape());
+        for (Ball ball : BallManager.getBalls()) {
+            scene.getChildren().remove(ball.getImageView());
         }
-        BallManager.balls.clear();
+        BallManager.getBalls().clear();
         startButton.setVisible(true);
     }
 }

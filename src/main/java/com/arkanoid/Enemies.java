@@ -21,14 +21,14 @@ public class Enemies extends Entity {
     }
 
     public boolean checkCollisionBrick() {
-        for (Brick brick: BrickManager.bricks)
+        for (Brick brick: BrickManager.getBricks())
             if(brick.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent()))
                 return true;
         return false;
     }
 
     public boolean checkCollisionBall() {
-        for (Ball ball: BallManager.balls)
+        for (Ball ball: BallManager.getBalls())
             if (ball.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
                 return true;
             }

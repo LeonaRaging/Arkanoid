@@ -35,7 +35,7 @@ public class Mini_Saturn extends Enemies {
 
         if (this.checkCollisionBall()){
             this.getCircle().setRadius(this.getCircle().getRadius() * 3);
-            BrickManager.bricks.removeIf(brick->{
+            BrickManager.getBricks().removeIf(brick->{
                 if (this.getCircle().getBoundsInParent().intersects(brick.getShape().getBoundsInParent())){
                     BrickManager.brick_remain--;
                     scene.getChildren().remove(brick.getShape());
