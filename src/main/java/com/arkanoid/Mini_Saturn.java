@@ -17,14 +17,14 @@ public class Mini_Saturn extends Enemies {
         }
 
         if(MoveCooldown == 100){
-            deltaX = (Math.random() - 0.5) * 2.5;
-            deltaY = (Math.random() - 0.5) * 2.5;
+            deltaX = (Math.random() - 0.5) * 1.2;
+            deltaY = (Math.random() - 0.5) * 1.2;
         }
 
         if (MoveCooldown <= 100){
             this.getCircle().setCenterX(this.getCircle().getCenterX() + deltaX);
             this.getCircle().setCenterY(this.getCircle().getCenterY() + deltaY);
-            if (this.checkCollisionBrick() || this.checkCollisionScene(scene) || this.checkCollisionEnemy()) {
+            if (this.checkCollisionBrick() || this.checkCollisionScene() || this.checkCollisionEnemy()) {
                 this.getCircle().setCenterX(this.getCircle().getCenterX() - deltaX);
                 this.getCircle().setCenterY(this.getCircle().getCenterY() - deltaY);
                 MoveCooldown = 1;

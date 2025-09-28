@@ -5,6 +5,7 @@ import javafx.scene.layout.AnchorPane;
 
 public class Ball extends Entity {
   private Image image;
+  public boolean fromMM = false;
 
   Ball(double x, double y, double r) {
     super(x, y, r);

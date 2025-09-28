@@ -3,9 +3,9 @@ package com.arkanoid;
 import javafx.scene.layout.AnchorPane;
 
 public class TriangleC extends Enemies {
-    double Amplitude = 50;
-    double SwingSpeed = 3;
-    double FallSpeed = 20;
+    double Amplitude = 25;
+    double SwingSpeed = 1.5;
+    double FallSpeed = 10;
     double BaseX = 0;
     public TriangleC (double x, double y, double w, double h) {
         super(x, y, w, h);
@@ -37,7 +37,7 @@ public class TriangleC extends Enemies {
         if(!bottomBorder) {
             double oldY = this.getRectangle().getY();
             this.getRectangle().setY(this.getRectangle().getY() + FallSpeed * DeltaTime);
-            if (this.checkCollisionEnemy()) {
+            if (this.checkCollisionEnemy() || this.checkCollisionScene()) {
                 this.getRectangle().setY(oldY);
             }
         }
@@ -49,7 +49,7 @@ public class TriangleC extends Enemies {
         }
         double oldX = this.getRectangle().getX();
         this.getRectangle().setX(BaseX + ChangeX);
-        if(this.checkCollisionEnemy()) {
+        if(this.checkCollisionEnemy() || this.checkCollisionScene()) {
             this.getRectangle().setX(oldX);
             TotalTime = TotalTime - DeltaTime;
         }

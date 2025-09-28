@@ -35,16 +35,18 @@ public class Enemies extends Entity {
         return false;
     }
 
-    public boolean checkCollisionScene(Node node) {
-        Bounds bounds = node.getBoundsInLocal();
-        if(this.getShape() instanceof Circle circle) {
-            boolean rightBorder = circle.getCenterX() >= (bounds.getMaxX() - circle.getRadius());
-            boolean leftBorder = circle.getCenterX() <= (bounds.getMinX() + circle.getRadius());
-            boolean bottomBorder = circle.getCenterY() >= (bounds.getMaxY() - circle.getRadius());
-            boolean topBorder = circle.getCenterY() <= (bounds.getMinY() + circle.getRadius());
-            if (rightBorder || leftBorder || bottomBorder || topBorder) {
-                return true;
-            }
+    public boolean checkCollisionScene() {
+        Rectangle rect = Controller.field.getRectangle();
+        if (this.getShape() instanceof Rectangle rec) {
+            return (rec.getX() + rec.getWidth() >= rect.getX() + rect.getWidth() ||
+                    rec.getX() <= rect.getX() || rec.getY() <= rect.getY() ||
+                    rec.getY() + rec.getHeight() >= rect.getY() + rect.getHeight());
+        }
+        if (this.getShape() instanceof Circle cir) {
+            return (cir.getCenterX() + cir.getRadius() >= rect.getX() + rect.getWidth() ||
+                    cir.getCenterX() - cir.getRadius() <= rect.getX() ||
+                    cir.getCenterY() + cir.getRadius() >= rect.getY() + rect.getHeight() ||
+                    cir.getCenterY() - cir.getRadius() <= rect.getY());
         }
         return false;
     }

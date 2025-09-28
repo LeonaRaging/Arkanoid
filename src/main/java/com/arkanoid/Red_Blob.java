@@ -6,10 +6,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 public class Red_Blob extends Enemies {
-    int TransformCooldown = 500;
+    int TransformCooldown = 200;
 
     int MoveCooldown = 99;
-    double MoveSpeed = 0.5;
+    double MoveSpeed = 0.25;
     int lastDirectionX;
 
     public Red_Blob(double x, double y, double r) {
@@ -23,7 +23,7 @@ public class Red_Blob extends Enemies {
     public boolean update(double DeltaTime, AnchorPane scene) {
         if (TransformCooldown == 0) {
             Brick brick = new Brick(this.getCircle().getCenterX() - 15,
-                    this.getCircle().getCenterY() - 15, 30, 30, 1);
+                    this.getCircle().getCenterY() - 15, 16, 8, 1);
             BrickManager.brick_remain++;
             brick.getRectangle().setFill(Color.RED);
             scene.getChildren().add(brick.getRectangle());
@@ -33,7 +33,7 @@ public class Red_Blob extends Enemies {
 
         this.getCircle().setCenterX(this.getCircle().getCenterX() + deltaX);
         this.getCircle().setCenterY(this.getCircle().getCenterY() + deltaY);
-        if (MoveCooldown == 0 || this.checkCollisionBrick() || this.checkCollisionScene(scene)
+        if (MoveCooldown == 0 || this.checkCollisionBrick() || this.checkCollisionScene()
                 || this.checkCollisionEnemy()) {
             this.getCircle().setCenterX(this.getCircle().getCenterX() - deltaX);
             this.getCircle().setCenterY(this.getCircle().getCenterY() - deltaY);

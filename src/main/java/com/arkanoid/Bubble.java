@@ -1,6 +1,7 @@
 package com.arkanoid;
 
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Rectangle;
 
 public class Bubble extends Enemies {
     int remainingTime = 300;
@@ -20,7 +21,7 @@ public class Bubble extends Enemies {
                 if (checkCollisionBall()) {
                     BallManager.getBalls().removeIf(ball -> {
                         if (ball.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
-                            scene.getChildren().remove(ball.getShape());
+                            scene.getChildren().remove(ball.getImageView());
                             return true;
                         }
                         return false;
@@ -35,28 +36,29 @@ public class Bubble extends Enemies {
                 if (remainingTime == 0) {
                     state = 2;
                     remainingTime = 100;
-                    double x = Math.random() * (scene.getWidth() - this.getRectangle().getWidth());
-                    double y = Math.random() * (scene.getHeight() / 2 - this.getRectangle().getHeight());
-                    this.getRectangle().setLayoutX(x);
-                    this.getRectangle().setLayoutY(y);
+                    Rectangle rect = Controller.field.getRectangle();
+                    double x = Math.random() * (rect.getWidth() - this.getRectangle().getWidth()) + rect.getX();
+                    double y = Math.random() * (rect.getHeight() / 2 - this.getRectangle().getHeight()) + rect.getY();
+                    this.getRectangle().setX(x);
+                    this.getRectangle().setY(y);
                     while(this.checkCollisionBrick()) {
-                        x = Math.random() * (scene.getWidth() - this.getRectangle().getWidth());
-                        y = Math.random() * (scene.getHeight() - this.getRectangle().getHeight());
-                        this.getRectangle().setLayoutX(x);
-                        this.getRectangle().setLayoutY(y);
+                        x = Math.random() * (rect.getWidth() - this.getRectangle().getWidth()) + rect.getX();
+                        y = Math.random() * (rect.getHeight() / 2 - this.getRectangle().getHeight()) + rect.getY();
+                        this.getRectangle().setX(x);
+                        this.getRectangle().setY(y);
                     }
                 }
                 break;
             case 2:
                 remainingTime--;
                 if (remainingTime == 0) {
-                    Ball ball = new Ball(0, 0, 5);
-                    ball.getCircle().setLayoutX(this.getRectangle().getLayoutX() + 83);
-                    ball.getCircle().setLayoutY(this.getRectangle().getLayoutY() + 65);
-                    ball.deltaX = 2;
-                    ball.deltaY = -2;
+                    Ball ball = new Ball(0, 0, 2.5);
+                    ball.getCircle().setLayoutX(this.getRectangle().getX() + this.getRectangle().getWidth() / 2);
+                    ball.getCircle().setLayoutY(this.getRectangle().getY() + this.getRectangle().getHeight() / 2);
+                    ball.deltaX = 1;
+                    ball.deltaY = -1;
                     BallManager.getBalls().add(ball);
-                    scene.getChildren().add(ball.getShape());
+                    scene.getChildren().add(ball.getImageView());
                     BallManager.isCaught--;
                     return true;
                 }
