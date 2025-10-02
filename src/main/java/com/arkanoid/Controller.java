@@ -64,9 +64,9 @@ public class Controller implements Initializable {
             BallManager.checkCollisionScene(field.getRectangle());
 
             BallManager.getBalls().removeIf(ball1->{
-               if (ball1.fromMM) {
+               if (ball1.ballType > 0) {
                    for(Ball ball: BallManager.getBalls())
-                       if (!ball.fromMM && ball1.getCircle().getBoundsInParent().intersects(ball.getCircle().getBoundsInParent()))
+                       if (ball.ballType == 0 && ball1.getCircle().getBoundsInParent().intersects(ball.getCircle().getBoundsInParent()))
                        {
                            scene.getChildren().remove(ball1.getImageView());
                            return true;
