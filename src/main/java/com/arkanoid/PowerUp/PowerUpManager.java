@@ -23,7 +23,7 @@ public class PowerUpManager {
   public static int[] powerUpState = new int [numberOfPowerUps];
 
   public static void createPowerUps(Brick brick, AnchorPane scene) {
-    PowerUp powerUp = new PowerUp(brick.getRectangle().getX(), brick.getRectangle().getY(), brick.getRectangle().getWidth(), brick.getRectangle().getHeight(), 3);
+    PowerUp powerUp = new PowerUp(brick.getRectangle().getX(), brick.getRectangle().getY(), brick.getRectangle().getWidth(), brick.getRectangle().getHeight(), 1);
     powerUps.add(powerUp);
 
     scene.getChildren().add(powerUp.getImageView());
@@ -99,7 +99,7 @@ public class PowerUpManager {
 
       Entity projectile1 = new Entity(paddle.getRectangle().getX() + paddleWidth / 2 - 5 , paddle.getRectangle().getY(), 8, 16);
       Entity projectile2 = new Entity(paddle.getRectangle().getX() + paddleWidth / 2 + 5, paddle.getRectangle().getY(), 8, 16);
-      Image image = new Image(PowerUpManager.class.getResource("Paddle/bullet.png").toExternalForm());
+      Image image = new Image(PowerUpManager.class.getResource("/com/arkanoid/Paddle/bullet.png").toExternalForm());
       projectile1.getImageView().setImage(image);
       projectile2.getImageView().setImage(image);
 

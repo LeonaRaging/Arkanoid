@@ -110,8 +110,8 @@ public class RedBlob extends Enemies {
                 if (imageState < 7 && imageCooldown == 19) {
                     for (Ball ball : BallManager.getBalls())
                         if (ball.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
-                            ball.setDeltaX(ball.getDeltaX() * -1);
-                            ball.setDeltaY(ball.getDeltaY() * -1);
+                            ball.updateX();
+                            ball.updateY();
                         }
                 }
                 if (imageCooldown == 0) {

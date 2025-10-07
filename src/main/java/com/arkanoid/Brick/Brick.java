@@ -15,28 +15,22 @@ public class Brick extends Entity {
     // create brick with size + type
     public Brick(double x, double y, double w, double h, int type) {
         super(x, y, w, h);
-        switch (type) {
-            case 1:
-                hp = 1;
-                for (int i = 0; i < 6; i++) {
-                  images[i] = new Image(getClass().getResource("/com/arkanoid/Brick/brick1.png").toExternalForm());
-                }
-                break;
-            case 2:
-                hp = 3;
-                for (int i = 0; i < 6; i++) {
-                  images[i] = new Image(getClass().getResource("/com/arkanoid/Brick/brick2" + i + ".png").toExternalForm());
-                }
-                break;
-            case 3:
-                hp = Integer.MAX_VALUE;
-                for (int i = 0; i < 6; i++) {
-                  images[i] = new Image(getClass().getResource("/com/arkanoid/Brick/brick3" + i + ".png").toExternalForm());
-                }
-                break;
-            default:
-                hp = 1;
-                break;
+        if (type <= 7) {
+          hp = 1;
+          for (int i = 0; i < 6; i++) {
+            images[i] = new Image(
+                getClass().getResource("/com/arkanoid/Brick/brick1" + type + ".png").toExternalForm());
+          }
+        } else if (type == 8) {
+          hp = 3;
+          for (int i = 0; i < 6; i++) {
+            images[i] = new Image(getClass().getResource("/com/arkanoid/Brick/brick2" + i + ".png").toExternalForm());
+          }
+        } else {
+          hp = Integer.MAX_VALUE;
+          for (int i = 0; i < 6; i++) {
+            images[i] = new Image(getClass().getResource("/com/arkanoid/Brick/brick3" + i + ".png").toExternalForm());
+          }
         }
         imageView.setImage(images[0]);
         imageView.setX(this.getRectangle().getX());

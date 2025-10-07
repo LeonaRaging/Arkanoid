@@ -61,9 +61,12 @@ public class Paddle extends Entity {
 
   public void checkCollisionPaddle(Ball ball) {
     if (ball.getCircle().getBoundsInParent().intersects(this.getRectangle().getBoundsInParent())) {
-      ball.deltaY *= -1;
-      ball.getCircle().setLayoutY(ball.getCircle().getLayoutY() + 2 * ball.deltaY);
+      ball.updateY();
+      double distance = ball.getCircle().getLayoutX() - (this.getRectangle().getX() + this.getRectangle().getWidth() / 2);
+//      System.out.println("Distance to circle: " + distance);
+      ball.setDeltaX(distance / 10);
       Sound.playBouncePaddle();
+      ball.getShape().setLayoutX(ball.getShape().getLayoutX() + ball.getDeltaX());
     }
   }
 }

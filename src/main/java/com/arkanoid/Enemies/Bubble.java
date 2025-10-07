@@ -96,8 +96,8 @@ public class Bubble extends Enemies {
                 if (imageCooldown == 19) {
                     for (Ball ball : BallManager.getBalls())
                         if (ball.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
-                            ball.setDeltaX(ball.getDeltaX() * -1);
-                            ball.setDeltaY(ball.getDeltaY() * -1);
+                            ball.updateX();
+                            ball.updateY();
                         }
                 }
 
@@ -164,8 +164,8 @@ public class Bubble extends Enemies {
                 if (imageCooldown == 19) {
                     for (Ball ball : BallManager.getBalls())
                         if (ball.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
-                            ball.setDeltaX(ball.getDeltaX() * -1);
-                            ball.setDeltaY(ball.getDeltaY() * -1);
+                            ball.updateX();
+                            ball.updateY();
                         }
                 }
 

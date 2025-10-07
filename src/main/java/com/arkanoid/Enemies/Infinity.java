@@ -91,10 +91,10 @@ public class Infinity extends Enemies {
                         boolean topBorder = circle.getLayoutY() <= (rectangle.getY() + circle.getRadius());
 
                         if (rightBorder || leftBorder) {
-                            ball.setDeltaX(ball.getDeltaX() * -1);
+                            ball.updateX();
                         }
                         if (bottomBorder || topBorder) {
-                            ball.setDeltaY(ball.getDeltaY() * -1);
+                            ball.updateY();
                         }
                     }
                 imageCooldown--;

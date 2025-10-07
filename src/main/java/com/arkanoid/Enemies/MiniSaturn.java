@@ -91,8 +91,8 @@ public class MiniSaturn extends Enemies {
                     }
                     for (Ball ball : BallManager.getBalls())
                         if (ball.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
-                            ball.setDeltaX(ball.getDeltaX() * -1);
-                            ball.setDeltaY(ball.getDeltaY() * -1);
+                            ball.updateX();
+                            ball.updateY();
                         }
                 }
             break;

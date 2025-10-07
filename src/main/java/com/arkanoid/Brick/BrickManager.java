@@ -4,7 +4,9 @@ import com.arkanoid.Core.Ball;
 import com.arkanoid.Core.Entity;
 import com.arkanoid.PowerUp.PowerUpManager;
 import com.arkanoid.Sound.Sound;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.scene.layout.AnchorPane;
 
@@ -18,32 +20,34 @@ public class BrickManager {
   }
 
   public static void createBricks(AnchorPane scene) {
-    int width = 160;
-    int height = 80;
-
-    int spaceCheck = 1;
-
     brick_remain = 0;
 
-    for (int i = height; i > 10; i -= 20) {
-      for (int j = width; j > 10; j -= 10) {
-        if (spaceCheck % 2 == 0) {
-          Brick brick = new Brick(j, i, 16, 8, 2);
-          switch (brick.getHP()) {
-            case 1:
-              brick_remain++;
-              break;
-            case 3:
-              brick_remain++;
-              break;
-            default:
-              break;
+    File file = new File("src/main/resources/com/arkanoid/Level/level1.txt");
+    try {
+      Scanner sc = new Scanner(file);
+
+      for (int i = 0; i < 26; i++) {
+        for (int j = 0; j < 10; j++) {
+          int index = sc.nextInt();
+          if (index != -1) {
+            Brick brick = new Brick(j * 16 + 16, i * 8 + 16, 16, 8, index);
+            switch (brick.getHP()) {
+              case 1:
+                brick_remain++;
+                break;
+              case 3:
+                brick_remain++;
+                break;
+              default:
+                break;
+            }
+            scene.getChildren().add(brick.getImageView());
+            bricks.add(brick);
           }
-          scene.getChildren().add(brick.getImageView());
-          bricks.add(brick);
         }
-        spaceCheck++;
       }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 

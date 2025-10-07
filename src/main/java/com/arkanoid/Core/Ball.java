@@ -1,5 +1,6 @@
 package com.arkanoid.Core;
 
+import java.util.Random;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 
@@ -25,5 +26,17 @@ public class Ball extends Entity {
     this.getShape().setLayoutY(this.getShape().getLayoutY() + deltaY);
     imageView.setX(this.getCircle().getLayoutX() - 2.5);
     imageView.setY(this.getCircle().getLayoutY() - 2.5);
+  }
+
+  public void updateX() {
+//    Random rand = new Random();
+    deltaX *= -1;
+//    deltaY += (rand.nextDouble() - 0.5) * 0.3;
+  }
+
+  public void updateY() {
+//    Random rand = new Random();
+//    deltaX += (rand.nextDouble() - 0.5) * 0.3;
+    deltaY *= -1;
   }
 }

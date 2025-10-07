@@ -4,6 +4,7 @@ import com.arkanoid.Controller;
 import com.arkanoid.PowerUp.PowerUpManager;
 import com.arkanoid.Sound.Sound;
 import java.util.ArrayList;
+import java.util.Random;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 
@@ -23,7 +24,8 @@ public class BallManager {
       boolean topBorder = ball.getCircle().getLayoutY() <= (rect.getY() + ball.getCircle().getRadius());
 
       if (rightBorder || leftBorder) {
-        ball.deltaX *= -1;
+        ball.updateX();
+        ball.getShape().setLayoutX(ball.getShape().getLayoutX() + ball.getDeltaX());
         if (PowerUpManager.powerUpState[0] > 0) {
           PowerUpManager.powerUpState[0]--;
         }
@@ -31,12 +33,14 @@ public class BallManager {
       }
 
       if (bottomBorder || topBorder) {
-        ball.deltaY *= -1;
+        ball.updateY();
+        ball.getShape().setLayoutX(ball.getShape().getLayoutY() + ball.getDeltaY());
         if (PowerUpManager.powerUpState[0] > 0) {
           PowerUpManager.powerUpState[0]--;
         }
         Sound.playBounceField();
       }
+
     }
   }
 
