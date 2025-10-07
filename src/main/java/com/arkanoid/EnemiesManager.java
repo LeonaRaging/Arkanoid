@@ -29,23 +29,16 @@ public class EnemiesManager {
 
         Bubble mob4 = new Bubble(36, 136, 15, 15); // 70 50 30 30
         enemies.add(mob4);
-        //mob4.getRectangle().setFill(Color.GRAY);
-        //scene.getChildren().add(mob4.getRectangle());
         scene.getChildren().add(mob4.getImageView());
 
-        /*MolecularModel mob5 = new MolecularModel(55, 100, 5);
-        enemies.add(mob5);
-        //mob5.getCircle().setFill(Color.YELLOW);
-        //scene.getChildren().add(mob5.getCircle());
-        scene.getChildren().add(mob5.getImageView());*/
+//        MolecularModel mob5 = new MolecularModel(55, 100, 5);
+//        enemies.add(mob5);
+//        scene.getChildren().add(mob5.getImageView());
 
-        /*Infinity mob6 = new Infinity(70, 100, 16, 16);
-        enemies.add(mob6);
-        //mob6.getRectangle().setFill(Color.BLUE);
-        //scene.getChildren().add(mob6.getRectangle());
-        scene.getChildren().add(mob6.getImageView());*/
+//        Infinity mob6 = new Infinity(70, 100, 16, 16);
+//        enemies.add(mob6);
+//        scene.getChildren().add(mob6.getImageView());
 
-        //System.out.println("MiniSaturn/MiniSaturn" + 0 + (0+1) +".png");
     }
 
     public static void updateEnemies(AnchorPane scene, double DeltaTime) {

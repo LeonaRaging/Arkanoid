@@ -25,10 +25,12 @@ public class Bubble extends Enemies {
         imageState = 0;
         imageCooldown = 20;
         remainingTime = imageCooldown * 4;
+        Sound.playBubble();
     }
 
     @Override
     public boolean update(double DeltaTime, AnchorPane scene) {
+        System.out.println("Bubble state: " + state);
         switch(state) {
             case 0: // spawn
                 imageCooldown--;
@@ -73,6 +75,7 @@ public class Bubble extends Enemies {
                 }
 
                 if (remainingTime == 0) {
+                    Sound.playBubble();
                     state = 7;
                     imageState = 3;
                     imageCooldown = 20;
@@ -97,6 +100,7 @@ public class Bubble extends Enemies {
                 }
 
                 if (remainingTime == 0) {
+                    Sound.playBubble();
                     state = 4;
                     imageState = 3;
                     imageCooldown = 20;
@@ -117,22 +121,11 @@ public class Bubble extends Enemies {
                 }
 
                 if (remainingTime == 0) {
+                    Sound.playBubble();
                     state = 5;
                     imageState = 0;
                     imageCooldown = 20;
-                    remainingTime = imageCooldown * 4;
-
-                    Rectangle rect = Controller.field.getRectangle();
-                    double x = Math.random() * (rect.getWidth() - this.getRectangle().getWidth()) + rect.getX();
-                    double y = Math.random() * (rect.getHeight() / 2 - this.getRectangle().getHeight()) + rect.getY();
-                    this.getRectangle().setX(x);
-                    this.getRectangle().setY(y);
-                    while(this.checkCollisionBrick()) {
-                        x = Math.random() * (rect.getWidth() - this.getRectangle().getWidth()) + rect.getX();
-                        y = Math.random() * (rect.getHeight() / 2 - this.getRectangle().getHeight()) + rect.getY();
-                        this.getRectangle().setX(x);
-                        this.getRectangle().setY(y);
-                    }
+                    teleport();
                     scene.getChildren().add(this.getImageView());
                 }
             break;
@@ -169,6 +162,7 @@ public class Bubble extends Enemies {
                 }
 
                 if (remainingTime == 0) {
+                    Sound.playBubble();
                     state = 7;
                     imageState = 3;
                     imageCooldown = 20;
@@ -192,7 +186,13 @@ public class Bubble extends Enemies {
                     imageCooldown = 20;
                 }
 
-                if (remainingTime == 0) return true;
+                if (remainingTime == 0) {
+                    Sound.playBubble();
+                    state = 0;
+                    imageState = 0;
+                    imageCooldown = 20;
+                    teleport();
+                }
             break;
         }
         
@@ -229,5 +229,20 @@ public class Bubble extends Enemies {
         imageView.setY(this.getRectangle().getY() + this.getRectangle().getHeight() / 2 - images[imageDisplay][imageState].getHeight() / 2);
 
         return false;
+    }
+
+    private void teleport() {
+        remainingTime = imageCooldown * 4;
+        Rectangle rect = Controller.field.getRectangle();
+        double x = Math.random() * (rect.getWidth() - this.getRectangle().getWidth()) + rect.getX();
+        double y = Math.random() * (rect.getHeight() / 2 - this.getRectangle().getHeight()) + rect.getY();
+        this.getRectangle().setX(x);
+        this.getRectangle().setY(y);
+        while(this.checkCollisionBrick()) {
+            x = Math.random() * (rect.getWidth() - this.getRectangle().getWidth()) + rect.getX();
+            y = Math.random() * (rect.getHeight() / 2 - this.getRectangle().getHeight()) + rect.getY();
+            this.getRectangle().setX(x);
+            this.getRectangle().setY(y);
+        }
     }
 }

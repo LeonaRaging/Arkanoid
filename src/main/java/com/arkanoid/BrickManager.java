@@ -24,7 +24,7 @@ public class BrickManager {
     for (int i = height; i > 10; i -= 20) {
       for (int j = width; j > 10; j -= 10) {
         if (spaceCheck % 2 == 0) {
-          Brick brick = new Brick(j, i, 16, 8, 1);
+          Brick brick = new Brick(j, i, 16, 8, 2);
           switch (brick.getHP()) {
             case 1:
               brick_remain++;
@@ -48,6 +48,13 @@ public class BrickManager {
     bricks.removeIf(brick -> {
       if (brick.checkCollisionBrick(entity)) {
         check.set(true);
+        if (entity instanceof Ball) {
+          if (brick.getHP() == 0) {
+            Sound.playBounceBrick();
+          } else {
+            Sound.playBounceBrickSilverGold();
+          }
+        }
       }
       if (brick.getHP() == 0) {
         BrickManager.brick_remain--;

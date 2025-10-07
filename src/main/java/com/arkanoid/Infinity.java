@@ -30,6 +30,7 @@ public class Infinity extends Enemies {
 
     @Override
     public boolean update(double DeltaTime, AnchorPane scene) {
+        System.out.println(state);
         switch (state) {
             case 0:
                 if (MoveCooldown == 0) {
@@ -37,12 +38,12 @@ public class Infinity extends Enemies {
                     MoveCooldown = 450;
                 }
 
-                //this.getRectangle().setFill(Color.BLUE);
                 if (this.checkCollisionBall()) {
                     state = 1;
                     imageCooldown = 20;
                     imageState = 0;
                     MoveCooldown = imageCooldown * 12;
+                    Sound.playExplode();
                 }
                 else {
                     imageCooldown--;
@@ -60,6 +61,7 @@ public class Infinity extends Enemies {
                         state = 2;
                         imageCooldown = 20;
                         imageState = 0;
+                        Sound.playInfinity();
                     }
                 }
             break;
@@ -73,7 +75,6 @@ public class Infinity extends Enemies {
                 }
             break;
             case 2:
-                //this.getRectangle().setFill(Color.CYAN);
                 Rectangle rectangle = new Rectangle(this.getRectangle().getX() - 6, this.getRectangle().getY() - 6,
                         this.getRectangle().getWidth() + 6, this.getRectangle().getHeight() + 6);
                 for(Ball ball: BallManager.getBalls())

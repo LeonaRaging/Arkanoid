@@ -24,6 +24,7 @@ public class MolecularModel extends Enemies {
 
     @Override
     public boolean update(double DeltaTime, AnchorPane scene) {
+        System.out.println("MolecularModel state: " + state);
         switch (state) {
             case 0:
                 if (this.checkCollisionBall()) {
@@ -31,6 +32,7 @@ public class MolecularModel extends Enemies {
                     imageCooldown = 20;
                     imageState = 0;
                     MoveCooldown = imageCooldown * 3;
+                    Sound.playExplode();
                 }
                 else {
                     imageCooldown--;

@@ -39,6 +39,7 @@ public class PowerUpManager {
         if (powerUp.getType() == 2) {
           paddle.getRectangle().setWidth(48);
           paddle.setState(1);
+          Sound.playPowerUpE();
         }
         if (powerUp.getType() == 3) {
           Ball currentBall = BallManager.getBalls().getFirst();
@@ -102,6 +103,7 @@ public class PowerUpManager {
 
       powerUpState[1]--;
       shootCooldown = 30;
+      Sound.playShoot();
     }
   }
 

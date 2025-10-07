@@ -24,6 +24,7 @@ public class BallManager {
         if (PowerUpManager.powerUpState[0] > 0) {
           PowerUpManager.powerUpState[0]--;
         }
+        Sound.playBounceField();
       }
 
       if (bottomBorder || topBorder) {
@@ -31,8 +32,8 @@ public class BallManager {
         if (PowerUpManager.powerUpState[0] > 0) {
           PowerUpManager.powerUpState[0]--;
         }
+        Sound.playBounceField();
       }
-
     }
   }
 

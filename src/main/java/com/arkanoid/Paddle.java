@@ -61,6 +61,7 @@ public class Paddle extends Entity {
     if (ball.getCircle().getBoundsInParent().intersects(this.getRectangle().getBoundsInParent())) {
       ball.deltaY *= -1;
       ball.getCircle().setLayoutY(ball.getCircle().getLayoutY() + 2 * ball.deltaY);
+      Sound.playBouncePaddle();
     }
   }
 }
