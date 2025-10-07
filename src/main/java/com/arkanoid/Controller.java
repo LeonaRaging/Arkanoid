@@ -1,5 +1,15 @@
 package com.arkanoid;
 
+import com.arkanoid.Brick.Brick;
+import com.arkanoid.Brick.BrickManager;
+import com.arkanoid.Core.Ball;
+import com.arkanoid.Core.BallManager;
+import com.arkanoid.Core.Entity;
+import com.arkanoid.Core.Field;
+import com.arkanoid.Core.Paddle;
+import com.arkanoid.Enemies.EnemiesManager;
+import com.arkanoid.PowerUp.PowerUp;
+import com.arkanoid.PowerUp.PowerUpManager;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -108,8 +118,8 @@ public class Controller implements Initializable {
         Ball ball = new Ball(0, 0, 2.5);
         ball.getCircle().setLayoutX(112);
         ball.getCircle().setLayoutY(200);
-        ball.deltaX = 1;
-        ball.deltaY = -1;
+        ball.setDeltaX(1);
+        ball.setDeltaY(1);
         scene.getChildren().add(ball.getImageView());
         BallManager.getBalls().add(ball);
 

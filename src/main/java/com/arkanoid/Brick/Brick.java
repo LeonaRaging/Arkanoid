@@ -1,6 +1,8 @@
-package com.arkanoid;
+package com.arkanoid.Brick;
 
 
+import com.arkanoid.Core.Entity;
+import com.arkanoid.PowerUp.PowerUpManager;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -17,19 +19,19 @@ public class Brick extends Entity {
             case 1:
                 hp = 1;
                 for (int i = 0; i < 6; i++) {
-                  images[i] = new Image(getClass().getResource("Brick/brick1.png").toExternalForm());
+                  images[i] = new Image(getClass().getResource("/com/arkanoid/Brick/brick1.png").toExternalForm());
                 }
                 break;
             case 2:
                 hp = 3;
                 for (int i = 0; i < 6; i++) {
-                  images[i] = new Image(getClass().getResource("Brick/brick2" + i + ".png").toExternalForm());
+                  images[i] = new Image(getClass().getResource("/com/arkanoid/Brick/brick2" + i + ".png").toExternalForm());
                 }
                 break;
             case 3:
                 hp = Integer.MAX_VALUE;
                 for (int i = 0; i < 6; i++) {
-                  images[i] = new Image(getClass().getResource("Brick/brick3" + i + ".png").toExternalForm());
+                  images[i] = new Image(getClass().getResource("/com/arkanoid/Brick/brick3" + i + ".png").toExternalForm());
                 }
                 break;
             default:
@@ -66,10 +68,10 @@ public class Brick extends Entity {
           boolean topBorder = circle.getLayoutY() <= (rectangle.getY() + circle.getRadius());
 
           if (rightBorder || leftBorder) {
-            entity.deltaX *= -1;
+            entity.setDeltaX(entity.getDeltaX() * -1);
           }
           if (bottomBorder || topBorder) {
-            entity.deltaY *= -1;
+            entity.setDeltaY(entity.getDeltaY() * -1);
           }
 
         }

@@ -1,4 +1,4 @@
-package com.arkanoid;
+package com.arkanoid.Core;
 
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -7,11 +7,11 @@ public class Ball extends Entity {
   private Image[] images = new Image[4];
   public int ballType = 0;
 
-  Ball(double x, double y, double r) {
+  public Ball(double x, double y, double r) {
     super(x, y, r);
-    images[0] = new Image(getClass().getResource("Ball/ball.png").toExternalForm());
+    images[0] = new Image(getClass().getResource("/com/arkanoid/Ball/ball.png").toExternalForm());
     for(int i = 1; i < 4; i++)
-        images[i] = new Image(getClass().getResource("Ball/MMball0" + (i - 1) + ".png").toExternalForm());
+        images[i] = new Image(getClass().getResource("/com/arkanoid/Ball/MMball0" + (i - 1) + ".png").toExternalForm());
     imageView.setImage(images[0]);
     imageView.setX(this.getCircle().getLayoutX() - 2.5);
     imageView.setY(this.getCircle().getLayoutY() - 2.5);

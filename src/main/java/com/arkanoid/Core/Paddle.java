@@ -1,5 +1,7 @@
-package com.arkanoid;
+package com.arkanoid.Core;
 
+import com.arkanoid.Controller;
+import com.arkanoid.Sound.Sound;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
@@ -14,7 +16,7 @@ public class Paddle extends Entity {
     super(x, y, w, h);
     for (int i = 0; i < 2; i++) {
       for (int j = 0; j < 4; j++) {
-        images[i][j] = new Image(getClass().getResource("Paddle/paddle" + i + j + ".png").toExternalForm());
+        images[i][j] = new Image(getClass().getResource("/com/arkanoid/Paddle/paddle" + i + j + ".png").toExternalForm());
       }
     }
     imageState = 0;

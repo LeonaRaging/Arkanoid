@@ -1,12 +1,15 @@
-package com.arkanoid;
+package com.arkanoid.Core;
 
+import com.arkanoid.Controller;
+import com.arkanoid.PowerUp.PowerUpManager;
+import com.arkanoid.Sound.Sound;
 import java.util.ArrayList;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 
 public class BallManager {
   private static ArrayList<Ball> balls = new ArrayList<>();
-  static int isCaught = 0;
+  public static int isCaught = 0;
 
   public static ArrayList<Ball> getBalls() {
     return balls;

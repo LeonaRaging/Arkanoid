@@ -1,5 +1,6 @@
-package com.arkanoid;
+package com.arkanoid.PowerUp;
 
+import com.arkanoid.Core.Entity;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 
@@ -13,7 +14,7 @@ public class PowerUp extends Entity {
       super(x, y, w, h);
       this.type = type;
       for (int i = 0; i < 8; i++) {
-        images[i] = new Image (getClass().getResource("Powerup/powerup" + type + i + ".png").toExternalForm());
+        images[i] = new Image (getClass().getResource("/com/arkanoid/Powerup/powerup" + type + i + ".png").toExternalForm());
       }
       imageCooldown = 0;
       imageView.setImage(images[imageCooldown]);

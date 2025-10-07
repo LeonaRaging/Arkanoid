@@ -1,5 +1,9 @@
-package com.arkanoid;
+package com.arkanoid.Enemies;
 
+import com.arkanoid.Core.BallManager;
+import com.arkanoid.Brick.BrickManager;
+import com.arkanoid.Core.Ball;
+import com.arkanoid.PowerUp.PowerUpManager;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.Image;
 
@@ -14,7 +18,8 @@ public class MiniSaturn extends Enemies {
         super(x, y, r);
         for (int i = 0; i < 2; i++)
             for (int j = 0; j < 6 - i; j++)
-                images[i][j] = new Image(getClass().getResource("MiniSaturn/MiniSaturn" + i + j +".png").toExternalForm());
+                images[i][j] = new Image(getClass().getResource(
+                    "/com/arkanoid/Enemy/MiniSaturn/MiniSaturn" + i + j +".png").toExternalForm());
         state = 0;
         imageState = 0;
         imageView.setImage(images[state][imageState]);
@@ -86,8 +91,8 @@ public class MiniSaturn extends Enemies {
                     }
                     for (Ball ball : BallManager.getBalls())
                         if (ball.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
-                            ball.deltaX *= -1;
-                            ball.deltaY *= -1;
+                            ball.setDeltaX(ball.getDeltaX() * -1);
+                            ball.setDeltaY(ball.getDeltaY() * -1);
                         }
                 }
             break;

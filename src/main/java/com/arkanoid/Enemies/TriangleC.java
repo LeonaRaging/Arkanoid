@@ -1,5 +1,7 @@
-package com.arkanoid;
+package com.arkanoid.Enemies;
 
+import com.arkanoid.Brick.Brick;
+import com.arkanoid.Brick.BrickManager;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 
@@ -20,7 +22,8 @@ public class TriangleC extends Enemies {
         BaseX = x;
         for (int i = 0; i < 2; i++)
             for (int j = 0; j < (i == 1 ? 12 : 8); j++)
-                images[i][j] = new Image(getClass().getResource("TriangleC/TriangleC" + i + j + ".png").toExternalForm());
+                images[i][j] = new Image(getClass().getResource(
+                    "/com/arkanoid/Enemy/TriangleC/TriangleC" + i + j + ".png").toExternalForm());
         state = 0;
         imageState = 0;
         imageCooldown = 20;

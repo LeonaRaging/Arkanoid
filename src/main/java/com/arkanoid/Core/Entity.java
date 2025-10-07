@@ -1,4 +1,4 @@
-package com.arkanoid;
+package com.arkanoid.Core;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -33,6 +33,14 @@ public class Entity {
   }
 
   public ImageView getImageView() {return imageView;}
+
+  public double getDeltaX() {return deltaX;}
+
+  public double getDeltaY() {return deltaY;}
+
+  public void setDeltaX(double x) {deltaX = x;}
+
+  public void setDeltaY(double y) {deltaY = y;}
 
   public void update(AnchorPane scene) {}
 

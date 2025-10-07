@@ -1,5 +1,8 @@
-package com.arkanoid;
+package com.arkanoid.Enemies;
 
+import com.arkanoid.Core.BallManager;
+import com.arkanoid.Core.Ball;
+import com.arkanoid.Sound.Sound;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 
@@ -16,7 +19,8 @@ public class MolecularModel extends Enemies {
         deltaY = MoveSpeed;
         for (int i = 0; i < 2; i++)
             for (int j = 0; j < (i == 0 ? 22 : 3); j++)
-                images[i][j] = new Image(getClass().getResource("MolecularModel/MolecularModel" + i + j + ".png").toExternalForm());
+                images[i][j] = new Image(getClass().getResource(
+                    "/com/arkanoid/Enemy/MolecularModel/MolecularModel" + i + j + ".png").toExternalForm());
         state = 0;
         imageState = 0;
         imageCooldown = 20;
@@ -65,8 +69,8 @@ public class MolecularModel extends Enemies {
                     Ball ball1 = new Ball(0, 0, 2.5);
                     ball1.getCircle().setLayoutX(this.getCircle().getCenterX() - 2 * this.getCircle().getRadius());
                     ball1.getCircle().setLayoutY(this.getCircle().getCenterY() - 2 * this.getCircle().getRadius());
-                    ball1.deltaX = -1;
-                    ball1.deltaY = -1;
+                    ball1.setDeltaX(-1);
+                    ball1.setDeltaY(-1);
                     ball1.ballType = 1;
                     BallManager.getBalls().add(ball1);
                     scene.getChildren().add(ball1.getImageView());
@@ -74,8 +78,8 @@ public class MolecularModel extends Enemies {
                     Ball ball2 = new Ball(0, 0, 2.5);
                     ball2.getCircle().setLayoutX(this.getCircle().getCenterX() + 2 * this.getCircle().getRadius());
                     ball2.getCircle().setLayoutY(this.getCircle().getCenterY() - 2 * this.getCircle().getRadius());
-                    ball2.deltaX = 1;
-                    ball2.deltaY = -1;
+                    ball2.setDeltaX(1);
+                    ball2.setDeltaY(-1);
                     ball2.ballType = 2;
                     BallManager.getBalls().add(ball2);
                     scene.getChildren().add(ball2.getImageView());
@@ -83,8 +87,8 @@ public class MolecularModel extends Enemies {
                     Ball ball3 = new Ball(0, 0, 2.5);
                     ball3.getCircle().setLayoutX(this.getCircle().getCenterX() + 2 * this.getCircle().getRadius());
                     ball3.getCircle().setLayoutY(this.getCircle().getCenterY() + 2 * this.getCircle().getRadius());
-                    ball3.deltaX = 1;
-                    ball3.deltaY = 1;
+                    ball3.setDeltaX(1);
+                    ball3.setDeltaY(1);
                     ball3.ballType = 3;
                     BallManager.getBalls().add(ball3);
                     scene.getChildren().add(ball3.getImageView());

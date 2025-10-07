@@ -1,5 +1,9 @@
-package com.arkanoid;
+package com.arkanoid.Brick;
 
+import com.arkanoid.Core.Ball;
+import com.arkanoid.Core.Entity;
+import com.arkanoid.PowerUp.PowerUpManager;
+import com.arkanoid.Sound.Sound;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.scene.layout.AnchorPane;

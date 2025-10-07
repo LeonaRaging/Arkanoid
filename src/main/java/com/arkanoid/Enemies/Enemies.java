@@ -1,12 +1,14 @@
-package com.arkanoid;
+package com.arkanoid.Enemies;
 
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
+import com.arkanoid.Core.BallManager;
+import com.arkanoid.Brick.Brick;
+import com.arkanoid.Brick.BrickManager;
+import com.arkanoid.Controller;
+import com.arkanoid.Core.Ball;
+import com.arkanoid.Core.Entity;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-
-import java.util.ArrayList;
 
 public class Enemies extends Entity {
     double TotalTime = 0;

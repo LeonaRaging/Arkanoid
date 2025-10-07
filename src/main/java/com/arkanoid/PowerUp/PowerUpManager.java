@@ -1,5 +1,13 @@
-package com.arkanoid;
+package com.arkanoid.PowerUp;
 
+import com.arkanoid.Core.BallManager;
+import com.arkanoid.Brick.Brick;
+import com.arkanoid.Brick.BrickManager;
+import com.arkanoid.Controller;
+import com.arkanoid.Core.Ball;
+import com.arkanoid.Core.Entity;
+import com.arkanoid.Core.Paddle;
+import com.arkanoid.Sound.Sound;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -45,14 +53,14 @@ public class PowerUpManager {
           Ball currentBall = BallManager.getBalls().getFirst();
           for (int i = -1; i <= 1; i++)
             for (int j = -1; j <= 1; j++) if (i != 0 && j != 0) {
-              if (2 * i == currentBall.deltaX && 2 * j == currentBall.deltaY) {
+              if (2 * i == currentBall.getDeltaX() && 2 * j == currentBall.getDeltaY()) {
                 continue;
               }
               Ball ball = new Ball(0, 0, 2.5);
               ball.getCircle().setLayoutX(currentBall.getCircle().getLayoutX());
               ball.getCircle().setLayoutY(currentBall.getCircle().getLayoutY());
-              ball.deltaX = i;
-              ball.deltaY = j;
+              ball.setDeltaX(i);
+              ball.setDeltaY(j);
               BallManager.getBalls().add(ball);
               scene.getChildren().add(ball.getImageView());
             }

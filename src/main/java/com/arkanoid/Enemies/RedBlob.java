@@ -1,8 +1,11 @@
-package com.arkanoid;
+package com.arkanoid.Enemies;
 
+import com.arkanoid.Core.BallManager;
+import com.arkanoid.Brick.Brick;
+import com.arkanoid.Brick.BrickManager;
+import com.arkanoid.Core.Ball;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 
 public class RedBlob extends Enemies {
     int TransformCooldown = 200;
@@ -22,11 +25,14 @@ public class RedBlob extends Enemies {
         deltaY = MoveSpeed;
         lastDirectionX = 1;
         for (int i = 0; i < 10; i++)
-            images[0][i] = new Image(getClass().getResource("RedBlob/RedBlob0" + i + ".png").toExternalForm());
+            images[0][i] = new Image(getClass().getResource(
+                "/com/arkanoid/Enemy/RedBlob/RedBlob0" + i + ".png").toExternalForm());
         for (int i = 0; i < 12; i++)
-            images[1][i] = new Image(getClass().getResource("TriangleC/TriangleC1" + i + ".png").toExternalForm());
+            images[1][i] = new Image(getClass().getResource(
+                "/com/arkanoid/Enemy/TriangleC/TriangleC1" + i + ".png").toExternalForm());
         for (int i = 0; i < 3; i++)
-            images[2][i] = new Image(getClass().getResource("RedBlob/RedBlob2" + i + ".png").toExternalForm());
+            images[2][i] = new Image(getClass().getResource(
+                "/com/arkanoid/Enemy/RedBlob/RedBlob2" + i + ".png").toExternalForm());
         state = 0;
         imageState = 0;
         imageCooldown = 20;
@@ -104,8 +110,8 @@ public class RedBlob extends Enemies {
                 if (imageState < 7 && imageCooldown == 19) {
                     for (Ball ball : BallManager.getBalls())
                         if (ball.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
-                            ball.deltaX *= -1;
-                            ball.deltaY *= -1;
+                            ball.setDeltaX(ball.getDeltaX() * -1);
+                            ball.setDeltaY(ball.getDeltaY() * -1);
                         }
                 }
                 if (imageCooldown == 0) {

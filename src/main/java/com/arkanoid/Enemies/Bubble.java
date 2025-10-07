@@ -1,5 +1,9 @@
-package com.arkanoid;
+package com.arkanoid.Enemies;
 
+import com.arkanoid.Core.BallManager;
+import com.arkanoid.Controller;
+import com.arkanoid.Core.Ball;
+import com.arkanoid.Sound.Sound;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
@@ -14,13 +18,17 @@ public class Bubble extends Enemies {
     public Bubble(double x, double y, double w, double h) {
         super(x, y, w, h);
         for (int i = 0; i < 4; i++)
-            images[0][i] = new Image(getClass().getResource("Bubble/Bubble0" + i + ".png").toExternalForm());
+            images[0][i] = new Image(getClass().getResource(
+                "/com/arkanoid/Enemy/Bubble/Bubble0" + i + ".png").toExternalForm());
         for (int i = 0; i < 12; i++)
-            images[1][i] = new Image(getClass().getResource("TriangleC/TriangleC1" + i + ".png").toExternalForm());
+            images[1][i] = new Image(getClass().getResource(
+                "/com/arkanoid/Enemy/TriangleC/TriangleC1" + i + ".png").toExternalForm());
         for (int i = 0; i < 2; i++)
-            images[2][i] = new Image(getClass().getResource("Bubble/Bubble2" + i + ".png").toExternalForm());
+            images[2][i] = new Image(getClass().getResource(
+                "/com/arkanoid/Enemy/Bubble/Bubble2" + i + ".png").toExternalForm());
         for (int i = 0; i < 6; i++)
-            images[3][i] = new Image(getClass().getResource("Bubble/Bubble3" + i + ".png").toExternalForm());
+            images[3][i] = new Image(getClass().getResource(
+                "/com/arkanoid/Enemy/Bubble/Bubble3" + i + ".png").toExternalForm());
         state = 0;
         imageState = 0;
         imageCooldown = 20;
@@ -88,8 +96,8 @@ public class Bubble extends Enemies {
                 if (imageCooldown == 19) {
                     for (Ball ball : BallManager.getBalls())
                         if (ball.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
-                            ball.deltaX *= -1;
-                            ball.deltaY *= -1;
+                            ball.setDeltaX(ball.getDeltaX() * -1);
+                            ball.setDeltaY(ball.getDeltaY() * -1);
                         }
                 }
 
@@ -156,8 +164,8 @@ public class Bubble extends Enemies {
                 if (imageCooldown == 19) {
                     for (Ball ball : BallManager.getBalls())
                         if (ball.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
-                            ball.deltaX *= -1;
-                            ball.deltaY *= -1;
+                            ball.setDeltaX(ball.getDeltaX() * -1);
+                            ball.setDeltaY(ball.getDeltaY() * -1);
                         }
                 }
 
@@ -171,8 +179,8 @@ public class Bubble extends Enemies {
                     Ball ball = new Ball(0, 0, 2.5);
                     ball.getCircle().setLayoutX(this.getRectangle().getX() + this.getRectangle().getWidth() / 2);
                     ball.getCircle().setLayoutY(this.getRectangle().getY() + this.getRectangle().getHeight() / 2);
-                    ball.deltaX = -1;
-                    ball.deltaY = -1;
+                    ball.setDeltaX(-1);
+                    ball.setDeltaY(-1);
                     BallManager.getBalls().add(ball);
                     scene.getChildren().add(ball.getImageView());
                     BallManager.isCaught--;
