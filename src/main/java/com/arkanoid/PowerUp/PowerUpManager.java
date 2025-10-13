@@ -115,4 +115,10 @@ public class PowerUpManager {
     }
   }
 
+  public static void resetPower() {
+    for (int i = 0; i < numberOfPowerUps; i++) {
+      powerUpState[i] = 0;
+    }
+  }
+
 }
