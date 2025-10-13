@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.scene.layout.AnchorPane;
+import com.arkanoid.Score.ScoreDisplay;
 
 public class BrickManager {
   private static ArrayList<Brick> bricks = new ArrayList<>();
@@ -68,6 +69,7 @@ public class BrickManager {
         BrickManager.brick_remain--;
         scene.getChildren().remove(brick.getImageView());
         PowerUpManager.createPowerUps(brick, scene);
+        ScoreDisplay.addScore(brick.getScore());
         return true;
       }
       return false;

@@ -11,23 +11,27 @@ public class Brick extends Entity {
     private Image[] images = new Image[6];
     protected int hp; // The brick will be destroyed when it runs out of hp
     private int hitCooldown;
+    private int score;
 
     // create brick with size + type
     public Brick(double x, double y, double w, double h, int type) {
         super(x, y, w, h);
         if (type <= 7) {
           hp = 1;
+          score = 50;
           for (int i = 0; i < 6; i++) {
             images[i] = new Image(
                 getClass().getResource("/com/arkanoid/Brick/brick1" + type + ".png").toExternalForm());
           }
         } else if (type == 8) {
           hp = 3;
+          score = 100;
           for (int i = 0; i < 6; i++) {
             images[i] = new Image(getClass().getResource("/com/arkanoid/Brick/brick2" + i + ".png").toExternalForm());
           }
         } else {
           hp = Integer.MAX_VALUE;
+          score = 0;
           for (int i = 0; i < 6; i++) {
             images[i] = new Image(getClass().getResource("/com/arkanoid/Brick/brick3" + i + ".png").toExternalForm());
           }
@@ -40,6 +44,10 @@ public class Brick extends Entity {
     //get hp
     public int getHP() {
         return this.hp;
+    }
+
+    public int getScore(){
+        return this.score;
     }
 
   public boolean checkCollisionBrick(Entity entity) {
