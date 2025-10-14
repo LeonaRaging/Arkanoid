@@ -24,8 +24,7 @@ public class BallManager {
       boolean topBorder = ball.getCircle().getLayoutY() <= (rect.getY() + ball.getCircle().getRadius());
 
       if (rightBorder || leftBorder) {
-        ball.updateX();
-        ball.getShape().setLayoutX(ball.getShape().getLayoutX() + ball.getDeltaX());
+        ball.updateX((rightBorder ? -1 : 1));
         if (PowerUpManager.powerUpState[0] > 0) {
           PowerUpManager.powerUpState[0]--;
         }
@@ -33,8 +32,7 @@ public class BallManager {
       }
 
       if (bottomBorder || topBorder) {
-        ball.updateY();
-        ball.getShape().setLayoutX(ball.getShape().getLayoutY() + ball.getDeltaY());
+        ball.updateY(1);
         if (PowerUpManager.powerUpState[0] > 0) {
           PowerUpManager.powerUpState[0]--;
         }

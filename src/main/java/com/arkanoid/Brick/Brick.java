@@ -1,6 +1,7 @@
 package com.arkanoid.Brick;
 
 
+import com.arkanoid.Core.Ball;
 import com.arkanoid.Core.Entity;
 import com.arkanoid.PowerUp.PowerUpManager;
 import javafx.scene.image.Image;
@@ -51,31 +52,30 @@ public class Brick extends Entity {
     }
 
   public boolean checkCollisionBrick(Entity entity) {
-    Rectangle rectangle = (Rectangle) shape;
+    Rectangle rect = (Rectangle) shape;
 
     if (hitCooldown > 0) {
       hitCooldown--;
     }
     imageView.setImage(images[hitCooldown / 2]);
 
-    if (entity.getShape().getBoundsInParent().intersects(rectangle.getBoundsInParent())) {
+    if (entity.getShape().getBoundsInParent().intersects(rect.getBoundsInParent())) {
 
-      if (entity.getShape() instanceof Circle circle) {
+      if (entity instanceof Ball ball) {
 
         if (PowerUpManager.powerUpState[0] == 0) {
 
-          boolean rightBorder = circle.getLayoutX() >= ((rectangle.getX() + rectangle.getWidth()) - circle.getRadius());
-          boolean leftBorder = circle.getLayoutX() <= (rectangle.getX() + circle.getRadius());
-          boolean bottomBorder = circle.getLayoutY() >= ((rectangle.getY() + rectangle.getHeight()) - circle.getRadius());
-          boolean topBorder = circle.getLayoutY() <= (rectangle.getY() + circle.getRadius());
+          boolean rightBorder = ball.getCircle().getLayoutX() >= (rect.getX() + rect.getWidth() - ball.getCircle().getRadius());
+          boolean leftBorder = ball.getCircle().getLayoutX() <= (rect.getX() + ball.getCircle().getRadius());
+          boolean bottomBorder = ball.getCircle().getLayoutY() >= (rect.getY() + rect.getHeight() - ball.getCircle().getRadius());
+          boolean topBorder = ball.getCircle().getLayoutY() <= (rect.getY() + ball.getCircle().getRadius());
 
           if (rightBorder || leftBorder) {
-            entity.setDeltaX(entity.getDeltaX() * -1);
+            ball.updateX(rightBorder ? 1 : -1);
           }
           if (bottomBorder || topBorder) {
-            entity.setDeltaY(entity.getDeltaY() * -1);
+            ball.updateY(bottomBorder ? 1 : -1);
           }
-
         }
       }
 

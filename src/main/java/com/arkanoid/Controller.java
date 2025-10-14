@@ -41,6 +41,8 @@ public class Controller implements Initializable {
     private ScoreDisplay score;
     private HP hp;
 
+    private int level;
+
     @FXML
     private Button startButton;
 
@@ -67,7 +69,16 @@ public class Controller implements Initializable {
                     BrickManager.update(ball, scene);
                 }
             } else {
-                gameOver();
+                level++;
+                // will replace as boss level later
+                if (level == 5 || level == 10 || level == 15) level++;
+                if (level > 15) gameOver();
+                newLife();
+                for (Brick brick : BrickManager.getBricks()) {
+                    scene.getChildren().remove(brick.getImageView());
+                }
+                BrickManager.getBricks().clear();
+                BrickManager.createBricks(scene, level);
             }
 
             PowerUpManager.movePowerUps(scene);
@@ -135,7 +146,9 @@ public class Controller implements Initializable {
 
         newLife();
 
-        BrickManager.createBricks(scene);
+        level = 1;
+
+        BrickManager.createBricks(scene, level);
         EnemiesManager.CreateEnemies(scene);
 
         score = new ScoreDisplay(0);
@@ -157,10 +170,10 @@ public class Controller implements Initializable {
         }
         BallManager.getBalls().clear();
 
-        for (PowerUp powerUp : PowerUpManager.powerUps) {
+        for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
             scene.getChildren().remove(powerUp.getImageView());
         }
-        for (Entity projectile : PowerUpManager.projectiles) {
+        for (Entity projectile : PowerUpManager.getProjectiles()) {
             scene.getChildren().remove(projectile.getImageView());
         }
 
@@ -185,10 +198,10 @@ public class Controller implements Initializable {
         for (Brick brick : BrickManager.getBricks()) {
             scene.getChildren().remove(brick.getImageView());
         }
-        for (PowerUp powerUp : PowerUpManager.powerUps ){
+        for (PowerUp powerUp : PowerUpManager.getPowerUps() ){
             scene.getChildren().remove(powerUp.getImageView());
         }
-        for (Entity projectile : PowerUpManager.projectiles ){
+        for (Entity projectile : PowerUpManager.getProjectiles()){
             scene.getChildren().remove(projectile.getImageView());
         }
         scene.getChildren().remove(paddle.getImageView());
@@ -205,8 +218,8 @@ public class Controller implements Initializable {
         hp.clear(scene);
 
         BrickManager.getBricks().clear();
-        PowerUpManager.powerUps.clear();
-        PowerUpManager.projectiles.clear();
+        PowerUpManager.getPowerUps().clear();
+        PowerUpManager.getProjectiles().clear();
         for (Ball ball : BallManager.getBalls()) {
             scene.getChildren().remove(ball.getImageView());
         }

@@ -20,10 +20,10 @@ public class BrickManager {
     return bricks;
   }
 
-  public static void createBricks(AnchorPane scene) {
+  public static void createBricks(AnchorPane scene, int level) {
     brick_remain = 0;
 
-    File file = new File("src/main/resources/com/arkanoid/Level/level1.txt");
+    File file = new File("src/main/resources/com/arkanoid/Level/level" + level + ".txt");
     try {
       Scanner sc = new Scanner(file);
 

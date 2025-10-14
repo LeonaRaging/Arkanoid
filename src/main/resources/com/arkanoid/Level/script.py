@@ -48,7 +48,7 @@ def save_to_txt(indices, filename):
 if __name__ == "__main__":
     # Paths to images
     map_tiles_path = "tileset.png"
-    name = "level1"
+    name = "level14"
     map_path = name + ".png"
 
     # Set your tile size
