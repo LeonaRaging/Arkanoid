@@ -20,6 +20,7 @@ public class Ball extends Entity {
 
   @Override
   public void update(AnchorPane scene) {
+//    System.out.println(this.getShape().boundsInParentProperty());
     //deltaX = deltaY = 0.01;
     imageView.setImage(images[ballType]);
     this.getShape().setLayoutX(this.getShape().getLayoutX() + deltaX);
@@ -28,15 +29,15 @@ public class Ball extends Entity {
     imageView.setY(this.getCircle().getLayoutY() - 2.5);
   }
 
-  public void updateX() {
-//    Random rand = new Random();
-    deltaX *= -1;
-//    deltaY += (rand.nextDouble() - 0.5) * 0.3;
+  public void updateX(double x) {
+    Random rand = new Random();
+    deltaX = x * Math.abs(deltaX);
+    deltaY += (rand.nextDouble() - 0.5) * 0.3;
   }
 
-  public void updateY() {
-//    Random rand = new Random();
-//    deltaX += (rand.nextDouble() - 0.5) * 0.3;
-    deltaY *= -1;
+  public void updateY(double y) {
+    Random rand = new Random();
+    deltaX += (rand.nextDouble() - 0.5) * 0.3;
+    deltaY = y * Math.abs(deltaY);
   }
 }

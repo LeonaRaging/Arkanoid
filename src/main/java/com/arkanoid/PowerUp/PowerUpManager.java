@@ -14,16 +14,24 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
 public class PowerUpManager {
-  public static ArrayList<PowerUp> powerUps = new ArrayList<>();
-  public static ArrayList<Entity> projectiles = new ArrayList<>();
+  private static ArrayList<PowerUp> powerUps = new ArrayList<>();
+  private static ArrayList<Entity> projectiles = new ArrayList<>();
 
   private static int numberOfPowerUps = 4;
-  public static int shootCooldown;
+  private static int shootCooldown;
 
   public static int[] powerUpState = new int [numberOfPowerUps];
 
+  public static ArrayList<PowerUp> getPowerUps() {
+    return powerUps;
+  }
+
+  public static ArrayList<Entity> getProjectiles() {
+    return projectiles;
+  }
+
   public static void createPowerUps(Brick brick, AnchorPane scene) {
-    PowerUp powerUp = new PowerUp(brick.getRectangle().getX(), brick.getRectangle().getY(), brick.getRectangle().getWidth(), brick.getRectangle().getHeight(), 1);
+    PowerUp powerUp = new PowerUp(brick.getRectangle().getX(), brick.getRectangle().getY(), brick.getRectangle().getWidth(), brick.getRectangle().getHeight(), 3);
     powerUps.add(powerUp);
 
     scene.getChildren().add(powerUp.getImageView());
@@ -119,6 +127,8 @@ public class PowerUpManager {
     for (int i = 0; i < numberOfPowerUps; i++) {
       powerUpState[i] = 0;
     }
+    projectiles.clear();
+    powerUps.clear();
   }
 
 }

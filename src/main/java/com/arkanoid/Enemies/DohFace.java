@@ -3,6 +3,8 @@ package com.arkanoid.Enemies;
 import com.arkanoid.Controller;
 import com.arkanoid.Core.Ball;
 import com.arkanoid.Core.BallManager;
+import com.arkanoid.PowerUp.PowerUpManager;
+import com.arkanoid.Sound.Sound;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -120,13 +122,7 @@ public class DohFace extends Enemies {
                         + this.getRectangle().getHeight() / 2
                         - imageView.getImage().getHeight() / 2);
 
-                for (Ball ball: BallManager.getBalls()) {
-                    if (this.getShape().getBoundsInParent().intersects(ball.getShape().getBoundsInParent())) {
-                        ball.updateX();
-                        ball.updateY();
-                        isHit = true;
-                    }
-                }
+                checkCollision();
 
                 if (state == 4) {
                     isHit = false;
@@ -342,13 +338,7 @@ public class DohFace extends Enemies {
                 stateCooldown--;
 
                 if (!isHit) {
-                    for (Ball ball: BallManager.getBalls()) {
-                        if (this.getShape().getBoundsInParent().intersects(ball.getShape().getBoundsInParent())) {
-                            ball.updateX();
-                            ball.updateY();
-                            isHit = true;
-                        }
-                    }
+                    checkCollision();
 
                     if (isHit) {
                         hp--;
@@ -466,6 +456,27 @@ public class DohFace extends Enemies {
 
 
         return false;
+    }
+
+    void checkCollision() {
+        for (Ball ball: BallManager.getBalls()) {
+            if (this.getShape().getBoundsInParent().intersects(ball.getShape().getBoundsInParent())) {
+                Rectangle rect = this.getRectangle();
+                boolean rightBorder = ball.getCircle().getLayoutX() >= (rect.getX() + rect.getWidth() - ball.getCircle().getRadius());
+                boolean leftBorder = ball.getCircle().getLayoutX() <= (rect.getX() + ball.getCircle().getRadius());
+                boolean bottomBorder = ball.getCircle().getLayoutY() >= (rect.getY() + rect.getHeight() - ball.getCircle().getRadius());
+                boolean topBorder = ball.getCircle().getLayoutY() <= (rect.getY() + ball.getCircle().getRadius());
+
+                if (rightBorder || leftBorder) {
+                    ball.updateX((leftBorder ? -1 : 1));
+                }
+
+                if (bottomBorder || topBorder) {
+                    ball.updateY((topBorder ? -1 : 1));
+                }
+                isHit = true;
+            }
+        }
     }
 }
 

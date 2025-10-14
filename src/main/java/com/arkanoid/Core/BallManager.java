@@ -17,15 +17,14 @@ public class BallManager {
   }
 
   public static void checkCollisionScene(Rectangle rect) {
-    for (Ball ball : balls) {
+    for (Ball ball : balls) if (ball.getCircle().getBoundsInParent().intersects(rect.getBoundsInParent())) {
       boolean rightBorder = ball.getCircle().getLayoutX() >= (rect.getX() + rect.getWidth() - ball.getCircle().getRadius());
       boolean leftBorder = ball.getCircle().getLayoutX() <= (rect.getX() + ball.getCircle().getRadius());
       boolean bottomBorder = ball.getCircle().getLayoutY() >= (rect.getY() + rect.getHeight() - ball.getCircle().getRadius());
       boolean topBorder = ball.getCircle().getLayoutY() <= (rect.getY() + ball.getCircle().getRadius());
 
       if (rightBorder || leftBorder) {
-        ball.updateX();
-        ball.getShape().setLayoutX(ball.getShape().getLayoutX() + ball.getDeltaX());
+        ball.updateX((rightBorder ? -1 : 1));
         if (PowerUpManager.powerUpState[0] > 0) {
           PowerUpManager.powerUpState[0]--;
         }
@@ -33,8 +32,7 @@ public class BallManager {
       }
 
       if (bottomBorder || topBorder) {
-        ball.updateY();
-        ball.getShape().setLayoutY(ball.getShape().getLayoutY() + ball.getDeltaY());
+        ball.updateY(1);
         if (PowerUpManager.powerUpState[0] > 0) {
           PowerUpManager.powerUpState[0]--;
         }

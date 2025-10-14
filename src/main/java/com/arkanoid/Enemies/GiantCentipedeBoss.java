@@ -65,8 +65,7 @@ public class GiantCentipedeBoss extends Enemies {
                 for (Ball ball : BallManager.getBalls())
                     if (ball.getShape().getBoundsInParent().intersects(seg.getShape().getBoundsInParent())) {
                         checkCollision = true;
-                        ball.updateX();
-                        ball.updateY();
+                        BallManager.checkCollisionScene(this.getRectangle());
                         ball.update(scene);
                     }
             } else {
