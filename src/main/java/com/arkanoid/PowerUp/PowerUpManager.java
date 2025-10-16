@@ -9,6 +9,7 @@ import com.arkanoid.Core.Entity;
 import com.arkanoid.Core.Paddle;
 import com.arkanoid.Sound.Sound;
 import java.util.ArrayList;
+import java.util.Random;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -31,7 +32,9 @@ public class PowerUpManager {
   }
 
   public static void createPowerUps(Brick brick, AnchorPane scene) {
-    PowerUp powerUp = new PowerUp(brick.getRectangle().getX(), brick.getRectangle().getY(), brick.getRectangle().getWidth(), brick.getRectangle().getHeight(), 3);
+    Random rand = new Random();
+    PowerUp powerUp = new PowerUp(brick.getRectangle().getX(), brick.getRectangle().getY(),
+        brick.getRectangle().getWidth(), brick.getRectangle().getHeight(), rand.nextInt(4));
     powerUps.add(powerUp);
 
     scene.getChildren().add(powerUp.getImageView());

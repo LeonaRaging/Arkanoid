@@ -63,7 +63,7 @@ public class Brick extends Entity {
 
       if (entity instanceof Ball ball) {
 
-        if (PowerUpManager.powerUpState[0] == 0) {
+        if (PowerUpManager.powerUpState[0] == 0 || hp > 3) {
 
           boolean rightBorder = ball.getCircle().getLayoutX() >= (rect.getX() + rect.getWidth() - ball.getCircle().getRadius());
           boolean leftBorder = ball.getCircle().getLayoutX() <= (rect.getX() + ball.getCircle().getRadius());

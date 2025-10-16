@@ -80,7 +80,7 @@ public class MiniSaturn extends Enemies {
                         this.getCircle().setRadius(this.getCircle().getRadius() * 2);
                         BrickManager.getBricks().removeIf(brick->{
                             if (this.getCircle().getBoundsInParent().intersects(brick.getShape().getBoundsInParent())){
-                                BrickManager.brick_remain--;
+                                BrickManager.brickRemain--;
                                 scene.getChildren().remove(brick.getImageView());
                                 PowerUpManager.createPowerUps(brick, scene);
                                 return true;

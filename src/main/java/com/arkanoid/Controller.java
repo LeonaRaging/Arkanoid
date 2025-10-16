@@ -5,11 +5,13 @@ import com.arkanoid.Brick.BrickManager;
 import com.arkanoid.Core.Ball;
 import com.arkanoid.Core.BallManager;
 import com.arkanoid.Core.Entity;
-import com.arkanoid.Core.Field;
+import com.arkanoid.Field.Field;
 import com.arkanoid.Core.Paddle;
 import com.arkanoid.Enemies.EnemiesManager;
+import com.arkanoid.Field.Gate;
 import com.arkanoid.PowerUp.PowerUp;
 import com.arkanoid.PowerUp.PowerUpManager;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -36,7 +38,7 @@ public class Controller implements Initializable {
     public static Rectangle bottomZone;
     public static Field field;
     private static Field outline;
-    private static Field [] gates = new Field[4];
+    public static Gate [] gates = new Gate[4];
 
     private ScoreDisplay score;
     private HP hp;
@@ -62,41 +64,17 @@ public class Controller implements Initializable {
             long CurrentTime = System.nanoTime();
             double DeltaTime = (CurrentTime - LastTime) / 1_000_000_000.0;
             LastTime = CurrentTime;
+
+            EnemiesManager.update(scene, level);
             EnemiesManager.updateEnemies(scene, DeltaTime);
 
-            if (BrickManager.brick_remain > 0) {
-                for (Ball ball : BallManager.getBalls()) {
-                    BrickManager.update(ball, scene);
-                }
-            } else {
-                level++;
-                // will replace as boss level later
-                if (level == 5 || level == 10 || level == 15) level++;
-                if (level > 15) gameOver();
-                newLife();
-                for (Brick brick : BrickManager.getBricks()) {
-                    scene.getChildren().remove(brick.getImageView());
-                }
-                BrickManager.getBricks().clear();
-                BrickManager.createBricks(scene, level);
-            }
+            brickUpdate();
 
-            PowerUpManager.movePowerUps(scene);
-            PowerUpManager.checkCollisionPowerUps(paddle, scene);
-            PowerUpManager.update(paddle, scene);
-            BallManager.checkCollisionScene(field.getRectangle());
+            powerUpUpdate();
 
-            BallManager.getBalls().removeIf(ball1->{
-                if (ball1.ballType > 0) {
-                    for(Ball ball: BallManager.getBalls())
-                        if (ball.ballType == 0 && ball1.getCircle().getBoundsInParent().intersects(ball.getCircle().getBoundsInParent()))
-                        {
-                            scene.getChildren().remove(ball1.getImageView());
-                            return true;
-                        }
-                }
-                return false;
-            });
+            ballUpdate();
+
+            gateUpdate();
 
             if (BallManager.checkCollisionBottomZone(scene)) {
                 HP.loseLife();
@@ -121,7 +99,7 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    void startGameButtonAction(ActionEvent event) {
+    void startGameButtonAction(ActionEvent event) throws FileNotFoundException {
         startButton.setVisible(false);
 
         ScoreDisplay.setScore(0);
@@ -129,10 +107,10 @@ public class Controller implements Initializable {
 
         field = new Field(16, 16, 160, 208, "field");
         outline = new Field(8, 8, 176, 216, "outline");
-        gates[0] = new Field(32, 8, 32, 8, "gate0");
-        gates[1] = new Field(128, 8, 32, 8, "gate0");
-        gates[2] = new Field(8, 181, 8, 30, "gate1");
-        gates[3] = new Field(176, 181, 8, 30, "gate1");
+        gates[0] = new Gate(32, 8, 32, 8, "gate0");
+        gates[1] = new Gate(128, 8, 32, 8, "gate0");
+        gates[2] = new Gate(8, 181, 8, 30, "gate1");
+        gates[3] = new Gate(176, 181, 8, 30, "gate1");
 
         scene.getChildren().add(field.getImageView());
         scene.getChildren().add(outline.getImageView());
@@ -149,7 +127,8 @@ public class Controller implements Initializable {
         level = 1;
 
         BrickManager.createBricks(scene, level);
-        EnemiesManager.CreateEnemies(scene);
+
+        EnemiesManager.initEnemiesManager();
 
         score = new ScoreDisplay(0);
         score.showScore(scene);
@@ -226,5 +205,50 @@ public class Controller implements Initializable {
         BallManager.getBalls().clear();
 
         startButton.setVisible(true);
+    }
+
+    private void brickUpdate() {
+        if (BrickManager.brickRemain > 0) {
+            for (Ball ball : BallManager.getBalls()) {
+                BrickManager.update(ball, scene);
+            }
+        } else {
+            level++;
+            // will replace as boss level later
+            if (level == 5 || level == 10 || level == 15) level++;
+            if (level > 15) gameOver();
+            newLife();
+            for (Brick brick : BrickManager.getBricks()) {
+                scene.getChildren().remove(brick.getImageView());
+            }
+            BrickManager.getBricks().clear();
+            BrickManager.createBricks(scene, level);
+        }
+    }
+
+    private void powerUpUpdate() {
+        PowerUpManager.movePowerUps(scene);
+        PowerUpManager.checkCollisionPowerUps(paddle, scene);
+        PowerUpManager.update(paddle, scene);
+        BallManager.checkCollisionScene(field.getRectangle());
+    }
+
+    private void ballUpdate() {
+        BallManager.getBalls().removeIf(ball1->{
+            if (ball1.ballType > 0) {
+                for(Ball ball: BallManager.getBalls())
+                    if (ball.ballType == 0 && ball1.getCircle().getBoundsInParent().intersects(ball.getCircle().getBoundsInParent()))
+                    {
+                        scene.getChildren().remove(ball1.getImageView());
+                        return true;
+                    }
+            }
+            return false;
+        });
+    }
+
+    private void gateUpdate() {
+        gates[0].update();
+        gates[1].update();
     }
 }
