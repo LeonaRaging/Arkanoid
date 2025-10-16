@@ -1,5 +1,9 @@
 package com.arkanoid.Enemies;
 
+import com.arkanoid.Brick.BrickManager;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 import com.arkanoid.Controller;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -8,39 +12,57 @@ import java.util.ArrayList;
 
 public class EnemiesManager {
     public static ArrayList<Enemies> enemies = new ArrayList<>();
+
+    public static ArrayList<Enemies> getEnemies() {
+        return enemies;
+    }
+
+    private static class spawnEnemy {
+        public int number;
+        public int type;
+        public double x;
+        public double y;
+
+        spawnEnemy(int number, int type, double x, double y) {
+            this.number = number;
+            this.type = type;
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    static ArrayList<spawnEnemy>[] spawnEnemies = new ArrayList[16];
     public static boolean gameOver = false;
 
-    public static void CreateEnemies(AnchorPane scene) {
-//        TriangleC mob1 = new TriangleC(70, 100, 15, 15);
-//        enemies.add(mob1);
-//        scene.getChildren().add(mob1.getImageView());
-//
-//        MiniSaturn mob2 = new MiniSaturn(65, 100, 8);
-//        enemies.add(mob2);
-//        scene.getChildren().add(mob2.getImageView());
-//
-//        RedBlob mob3 = new RedBlob(108, 100, 8);
-//        enemies.add(mob3);
-//        scene.getChildren().add(mob3.getImageView());
-//
-//        Bubble mob4 = new Bubble(36, 136, 15, 15); // 70 50 30 30
-//        enemies.add(mob4);
-//        scene.getChildren().add(mob4.getImageView());
-//
-//        MolecularModel mob5 = new MolecularModel(55, 100, 5);
-//        enemies.add(mob5);
-//        scene.getChildren().add(mob5.getImageView());
-//
-//        Infinity mob6 = new Infinity(70, 100, 16, 16);
-//        enemies.add(mob6);
-//        scene.getChildren().add(mob6.getImageView());
+    public static void initEnemiesManager() throws FileNotFoundException {
+        for (int level = 1; level <= 1; level++) {
+            File file = new File("src/main/resources/com/arkanoid/Level/level" + level + "enemy.txt");
+            Scanner sc = new Scanner(file);
+            spawnEnemies[level] = new ArrayList<>();
+            while (sc.hasNextLine()) {
+                int number = sc.nextInt();
+                int type = sc.nextInt();
+                double x = sc.nextDouble();
+                double y = sc.nextDouble();
+                System.out.println(x + " " + y);
+                spawnEnemies[level].add(new spawnEnemy(number, type, x, y));
+            }
+        }
+    }
 
-//        GiantCentipedeBoss mob7 = new GiantCentipedeBoss(90, 80, 13, scene);
-//        enemies.add(mob7);
-
-        DohFace mob8 = new DohFace(scene);
-        scene.getChildren().add(mob8.getImageView());
-        enemies.add(mob8);
+    public static void update(AnchorPane scene, int level) {
+        spawnEnemies[level].removeIf(spawnEnemy -> {
+//            System.out.println(spawnEnemy.number + " " + BrickManager.brickRemain);
+            if (spawnEnemy.number == BrickManager.brickRemain) {
+                if (spawnEnemy.type == 0) {
+                    TriangleC triangleC = new TriangleC(spawnEnemy.x, spawnEnemy.y, 15, 15);
+                    enemies.add(triangleC);
+                    scene.getChildren().add(triangleC.getImageView());
+                }
+                return true;
+            }
+            return false;
+        });
     }
 
     public static void updateEnemies(AnchorPane scene, double DeltaTime) {

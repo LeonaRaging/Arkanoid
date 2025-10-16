@@ -6,6 +6,7 @@ import com.arkanoid.PowerUp.PowerUpManager;
 import com.arkanoid.Sound.Sound;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.scene.layout.AnchorPane;
@@ -14,15 +15,15 @@ import com.arkanoid.Score.ScoreDisplay;
 public class BrickManager {
   private static ArrayList<Brick> bricks = new ArrayList<>();
 
-  public static int brick_remain;
+  public static int brickRemain;
 
   public static ArrayList<Brick> getBricks() {
     return bricks;
   }
 
   public static void createBricks(AnchorPane scene, int level) {
-    brick_remain = 1;
-    /*
+    brickRemain = 0;
+
     File file = new File("src/main/resources/com/arkanoid/Level/level" + level + ".txt");
     try {
       Scanner sc = new Scanner(file);
@@ -34,10 +35,10 @@ public class BrickManager {
             Brick brick = new Brick(j * 16 + 16, i * 8 + 16, 16, 8, index);
             switch (brick.getHP()) {
               case 1:
-                brick_remain++;
+                brickRemain++;
                 break;
               case 3:
-                brick_remain++;
+                brickRemain++;
                 break;
               default:
                 break;
@@ -50,7 +51,6 @@ public class BrickManager {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    */
   }
 
   public static boolean update(Entity entity, AnchorPane scene) {
@@ -67,9 +67,12 @@ public class BrickManager {
         }
       }
       if (brick.getHP() == 0) {
-        BrickManager.brick_remain--;
+        BrickManager.brickRemain--;
         scene.getChildren().remove(brick.getImageView());
-        PowerUpManager.createPowerUps(brick, scene);
+        Random rand = new Random();
+        if (rand.nextDouble() <= 0.25) {
+          PowerUpManager.createPowerUps(brick, scene);
+        }
         ScoreDisplay.addScore(brick.getScore());
         return true;
       }

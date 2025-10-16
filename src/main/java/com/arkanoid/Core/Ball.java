@@ -20,8 +20,6 @@ public class Ball extends Entity {
 
   @Override
   public void update(AnchorPane scene) {
-//    System.out.println(this.getShape().boundsInParentProperty());
-    //deltaX = deltaY = 0.01;
     imageView.setImage(images[ballType]);
     this.getShape().setLayoutX(this.getShape().getLayoutX() + deltaX);
     this.getShape().setLayoutY(this.getShape().getLayoutY() + deltaY);

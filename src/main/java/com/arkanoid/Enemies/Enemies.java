@@ -37,7 +37,30 @@ public class Enemies extends Entity {
         return false;
     }
 
+    public boolean isAbove(Rectangle rect) {
+        if (this.getShape() instanceof Rectangle rec) {
+            if (rec.getX() >= rect.getX() &&
+                rec.getX() + rec.getWidth() <= rect.getX() + rect.getWidth() &&
+                rec.getY() <= rect.getY() + rect.getHeight()) {
+                return true;
+            }
+        }
+        if (this.getShape() instanceof Circle cir) {
+            if (cir.getCenterX() - cir.getRadius() >= rect.getX() &&
+                cir.getCenterX() + cir.getRadius() <= rect.getX() + rect.getWidth() &&
+                cir.getCenterY() <= rect.getY() + rect.getHeight()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean checkCollisionScene() {
+        for (int i = 0; i < 2; i++) if (Controller.gates[i].getState() == 3) {
+            if (isAbove(Controller.gates[i].getRectangle())) {
+                return false;
+            }
+        }
         Rectangle rect = Controller.field.getRectangle();
         if (this.getShape() instanceof Rectangle rec) {
             return (rec.getX() + rec.getWidth() >= rect.getX() + rect.getWidth() ||
@@ -69,7 +92,7 @@ public class Enemies extends Entity {
     }
 
     public boolean checkCollisionEnemy() {
-        for (Enemies e: EnemiesManager.enemies)
+        for (Enemies e: EnemiesManager.getEnemies())
             if (this != e && this.getShape().getBoundsInParent().intersects(e.getShape().getBoundsInParent()))
                 return true;
         return false;
