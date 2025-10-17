@@ -30,7 +30,7 @@ public class Controller implements Initializable {
     @FXML
     private AnchorPane scene;
 
-    private Paddle paddle;
+    public static Paddle paddle;
 
     public static Rectangle bottomZone;
 
@@ -85,7 +85,8 @@ public class Controller implements Initializable {
                return false;
             });
 
-            if (BallManager.checkCollisionBottomZone(scene)) {
+            if (BallManager.checkCollisionBottomZone(scene) ||
+                EnemiesManager.isGameOver()) {
                 gameOver();
             }
         }
@@ -124,8 +125,9 @@ public class Controller implements Initializable {
         BallManager.getBalls().add(ball);
 
         BrickManager.createBricks(scene);
-        EnemiesManager.CreateEnemies(scene);
 
+        EnemiesManager.CreateEnemies(scene);
+        EnemiesManager.setGameOver(false);
 
         bottomZone = new Rectangle(0, 220, 256, 10);
 
@@ -154,6 +156,7 @@ public class Controller implements Initializable {
             scene.getChildren().remove(gates[i].getImageView());
         }
 
+        EnemiesManager.enemies.clear();
         BrickManager.getBricks().clear();
         PowerUpManager.powerUps.clear();
         PowerUpManager.projectiles.clear();

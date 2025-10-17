@@ -1,11 +1,13 @@
 package com.arkanoid.Enemies;
 
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
 public class EnemiesManager {
     public static ArrayList<Enemies> enemies = new ArrayList<>();
+    public static boolean gameOver = false;
 
     public static void CreateEnemies(AnchorPane scene) {
 //        TriangleC mob1 = new TriangleC(70, 100, 15, 15);
@@ -32,6 +34,8 @@ public class EnemiesManager {
 //        enemies.add(mob6);
 //        scene.getChildren().add(mob6.getImageView());
 
+        GiantCentipedeBoss mob7 = new GiantCentipedeBoss(90, 80, 13, scene);
+        enemies.add(mob7);
     }
 
     public static void updateEnemies(AnchorPane scene, double DeltaTime) {
@@ -39,9 +43,19 @@ public class EnemiesManager {
         enemies.removeIf(e -> {
             if(e.update(DeltaTime, scene)) {
                 scene.getChildren().remove(e.getImageView());
+                scene.getChildren().remove(e.getShape());
                 return true;
             }
             return false;
         });
+
+    }
+
+    public static boolean isGameOver() {
+        return gameOver;
+    }
+
+    public static void setGameOver(boolean gameOver) {
+        EnemiesManager.gameOver = gameOver;
     }
 }

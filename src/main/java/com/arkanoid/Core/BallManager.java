@@ -34,7 +34,7 @@ public class BallManager {
 
       if (bottomBorder || topBorder) {
         ball.updateY();
-        ball.getShape().setLayoutX(ball.getShape().getLayoutY() + ball.getDeltaY());
+        ball.getShape().setLayoutY(ball.getShape().getLayoutY() + ball.getDeltaY());
         if (PowerUpManager.powerUpState[0] > 0) {
           PowerUpManager.powerUpState[0]--;
         }
