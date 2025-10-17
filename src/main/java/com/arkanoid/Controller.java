@@ -1,16 +1,17 @@
 package com.arkanoid;
 
-import com.arkanoid.Brick.Brick;
-import com.arkanoid.Brick.BrickManager;
-import com.arkanoid.Core.Ball;
-import com.arkanoid.Core.BallManager;
-import com.arkanoid.Core.Entity;
-import com.arkanoid.Field.Field;
-import com.arkanoid.Core.Paddle;
-import com.arkanoid.Enemies.EnemiesManager;
-import com.arkanoid.Field.Gate;
-import com.arkanoid.PowerUp.PowerUp;
-import com.arkanoid.PowerUp.PowerUpManager;
+import com.arkanoid.brick.Brick;
+import com.arkanoid.brick.BrickManager;
+import com.arkanoid.core.Ball;
+import com.arkanoid.core.BallManager;
+import com.arkanoid.core.Entity;
+import com.arkanoid.core.Paddle;
+import com.arkanoid.enemies.EnemiesManager;
+import com.arkanoid.field.Field;
+import com.arkanoid.field.Gate;
+import com.arkanoid.powerup.PowerUp;
+import com.arkanoid.powerup.PowerUpManager;
+import com.arkanoid.score.ScoreDisplay;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.HashSet;
@@ -27,232 +28,239 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import com.arkanoid.Score.ScoreDisplay;
-import com.arkanoid.Score.HP;
+import com.arkanoid.score.ScoreDisplay;
+import com.arkanoid.score.Hp;
 
 public class Controller implements Initializable {
-    @FXML
-    private AnchorPane scene;
 
-    public static Paddle paddle;
+  @FXML
+  private AnchorPane scene;
 
-    public static Rectangle bottomZone;
-    public static Field field;
-    private static Field outline;
-    public static Gate [] gates = new Gate[4];
+  public static Paddle paddle;
+  public static Rectangle bottomZone;
+  public static Field field;
+  private static Field outline;
+  public static Gate[] gates = new Gate[4];
 
-    private ScoreDisplay score;
-    private HP hp;
+  private ScoreDisplay score;
+  private Hp hp;
 
-    private int level;
+  private int level;
 
-    @FXML
-    private Button startButton;
+  @FXML
+  private Button startButton;
 
-    public static final Set<KeyCode> pressedKeys = new HashSet<>();
+  public static final Set<KeyCode> pressedKeys = new HashSet<>();
 
-    Timeline timeline = new Timeline(new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
-        long LastTime = System.nanoTime();
+  Timeline timeline = new Timeline(
+      new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+        long lastTime = System.nanoTime();
+
         @Override
         public void handle(ActionEvent actionEvent) {
-            paddle.update(field.getRectangle());
+          paddle.update(field.getRectangle());
 
-            for (Ball ball : BallManager.getBalls()) {
-                paddle.checkCollisionPaddle(ball);
-                ball.update(scene);
+          for (Ball ball : BallManager.getBalls()) {
+            paddle.checkCollisionPaddle(ball);
+            ball.update(scene);
+          }
+
+          long currentTime = System.nanoTime();
+          double deltaTime = (currentTime - lastTime) / 1_000_000_000.0;
+          lastTime = currentTime;
+
+          EnemiesManager.update(scene, level);
+          EnemiesManager.updateEnemies(scene, deltaTime);
+
+          brickUpdate();
+
+          powerUpUpdate();
+
+          ballUpdate();
+
+          gateUpdate();
+
+          if (BallManager.checkCollisionBottomZone(scene)) {
+            Hp.loseLife();
+            hp.updateDisplay();
+
+            if (Hp.getHp() <= 0) {
+              EnemiesManager.isGameOver();
+              gameOver();
+            } else {
+              newLife();
             }
+          }
 
-            long CurrentTime = System.nanoTime();
-            double DeltaTime = (CurrentTime - LastTime) / 1_000_000_000.0;
-            LastTime = CurrentTime;
-
-            EnemiesManager.update(scene, level);
-            EnemiesManager.updateEnemies(scene, DeltaTime);
-
-            brickUpdate();
-
-            powerUpUpdate();
-
-            ballUpdate();
-
-            gateUpdate();
-
-            if (BallManager.checkCollisionBottomZone(scene)) {
-                HP.loseLife();
-                hp.updateDisplay();
-
-                if (HP.getHp() <= 0) {
-                    EnemiesManager.isGameOver();
-                    gameOver();
-                } else {
-                    newLife();
-                }
-            }
-
-            if (score != null) {
-                score.reup();
-            }
+          if (score != null) {
+            score.reup();
+          }
         }
-    }));
+      }));
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        timeline.setCycleCount(Timeline.INDEFINITE);
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    timeline.setCycleCount(Timeline.INDEFINITE);
+  }
+
+  @FXML
+  void startGameButtonAction(ActionEvent event) throws FileNotFoundException {
+    startButton.setVisible(false);
+
+    ScoreDisplay.setScore(0);
+    Hp.resetHp();
+
+    field = new Field(16, 16, 160, 208, "field");
+    outline = new Field(8, 8, 176, 216, "outline");
+    gates[0] = new Gate(32, 8, 32, 8, "gate0");
+    gates[1] = new Gate(128, 8, 32, 8, "gate0");
+    gates[2] = new Gate(8, 181, 8, 30, "gate1");
+    gates[3] = new Gate(176, 181, 8, 30, "gate1");
+
+    scene.getChildren().add(field.getImageView());
+    scene.getChildren().add(outline.getImageView());
+
+    for (int i = 0; i < 4; i++) {
+      scene.getChildren().add(gates[i].getImageView());
     }
 
-    @FXML
-    void startGameButtonAction(ActionEvent event) throws FileNotFoundException {
-        startButton.setVisible(false);
+    paddle = new Paddle(112, 210, 32, 8);
+    scene.getChildren().add(paddle.getImageView());
 
-        ScoreDisplay.setScore(0);
-        HP.resetHp();
+    newLife();
 
-        field = new Field(16, 16, 160, 208, "field");
-        outline = new Field(8, 8, 176, 216, "outline");
-        gates[0] = new Gate(32, 8, 32, 8, "gate0");
-        gates[1] = new Gate(128, 8, 32, 8, "gate0");
-        gates[2] = new Gate(8, 181, 8, 30, "gate1");
-        gates[3] = new Gate(176, 181, 8, 30, "gate1");
+    level = 1;
 
-        scene.getChildren().add(field.getImageView());
-        scene.getChildren().add(outline.getImageView());
+    BrickManager.createBricks(scene, level);
 
-        for (int i = 0; i < 4; i++) {
-            scene.getChildren().add(gates[i].getImageView());
-        }
+    EnemiesManager.initEnemiesManager();
 
-        paddle = new Paddle(112, 210, 32, 8);
-        scene.getChildren().add(paddle.getImageView());
+    score = new ScoreDisplay(0);
+    score.showScore(scene);
+    hp = new Hp(scene);
+    EnemiesManager.isGameOver();
 
-        newLife();
+    bottomZone = new Rectangle(0, 220, 256, 10);
 
-        level = 1;
+    scene.setOnKeyPressed(e -> pressedKeys.add(e.getCode()));
+    scene.setOnKeyReleased(e -> pressedKeys.remove(e.getCode()));
+    scene.requestFocus();
 
-        BrickManager.createBricks(scene, level);
+    timeline.play();
+  }
 
-        EnemiesManager.initEnemiesManager();
+  private void newLife() {
+    for (Ball ball : BallManager.getBalls()) {
+      scene.getChildren().remove(ball.getImageView());
+    }
+    BallManager.getBalls().clear();
 
-        score = new ScoreDisplay(0);
-        score.showScore(scene);
-        hp = new HP(scene);
-        EnemiesManager.setGameOver(false);
-
-        bottomZone = new Rectangle(0, 220, 256, 10);
-
-        scene.setOnKeyPressed(e -> pressedKeys.add(e.getCode()));
-        scene.setOnKeyReleased(e -> pressedKeys.remove(e.getCode()));
-        scene.requestFocus();
-
-        timeline.play();
+    for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
+      scene.getChildren().remove(powerUp.getImageView());
+    }
+    for (Entity projectile : PowerUpManager.getProjectiles()) {
+      scene.getChildren().remove(projectile.getImageView());
     }
 
-    private void newLife() {
+    PowerUpManager.resetPower();
+
+    paddle.getRectangle().setX(112);
+    paddle.getRectangle().setY(210);
+    paddle.setState(0);
+
+    Ball ball = new Ball(0, 0, 2.5);
+    ball.getCircle().setLayoutX(112);
+    ball.getCircle().setLayoutY(200);
+    ball.setDeltaX(1);
+    ball.setDeltaY(1);
+    scene.getChildren().add(ball.getImageView());
+    BallManager.getBalls().add(ball);
+  }
+
+  public void gameOver() {
+    timeline.stop();
+
+    for (Brick brick : BrickManager.getBricks()) {
+      scene.getChildren().remove(brick.getImageView());
+    }
+    for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
+      scene.getChildren().remove(powerUp.getImageView());
+    }
+    for (Entity projectile : PowerUpManager.getProjectiles()) {
+      scene.getChildren().remove(projectile.getImageView());
+    }
+    scene.getChildren().remove(paddle.getImageView());
+    scene.getChildren().remove(field.getImageView());
+    scene.getChildren().remove(outline.getImageView());
+    for (int i = 0; i < 4; i++) {
+      scene.getChildren().remove(gates[i].getImageView());
+    }
+
+    /*
+    clear hp and score
+     */
+    score.clear(scene);
+    hp.clear(scene);
+
+    EnemiesManager.isGameOver();
+    BrickManager.getBricks().clear();
+    PowerUpManager.getPowerUps().clear();
+    PowerUpManager.getProjectiles().clear();
+    for (Ball ball : BallManager.getBalls()) {
+      scene.getChildren().remove(ball.getImageView());
+    }
+    BallManager.getBalls().clear();
+
+    startButton.setVisible(true);
+  }
+
+  private void brickUpdate() {
+    if (BrickManager.brickRemain > 0) {
+      for (Ball ball : BallManager.getBalls()) {
+        BrickManager.update(ball, scene);
+      }
+    } else {
+      level++;
+      // will replace as boss level later
+      if (level == 5 || level == 10 || level == 15) {
+        level++;
+      }
+      if (level > 15) {
+        gameOver();
+      }
+      newLife();
+      for (Brick brick : BrickManager.getBricks()) {
+        scene.getChildren().remove(brick.getImageView());
+      }
+      BrickManager.getBricks().clear();
+      BrickManager.createBricks(scene, level);
+    }
+  }
+
+  private void powerUpUpdate() {
+    PowerUpManager.movePowerUps(scene);
+    PowerUpManager.checkCollisionPowerUps(paddle, scene);
+    PowerUpManager.update(paddle, scene);
+    BallManager.checkCollisionScene(field.getRectangle());
+  }
+
+  private void ballUpdate() {
+    BallManager.getBalls().removeIf(ball1 -> {
+      if (ball1.ballType > 0) {
         for (Ball ball : BallManager.getBalls()) {
-            scene.getChildren().remove(ball.getImageView());
+          if (ball.ballType == 0 && ball1.getCircle().getBoundsInParent()
+              .intersects(ball.getCircle().getBoundsInParent())) {
+            scene.getChildren().remove(ball1.getImageView());
+            return true;
+          }
         }
-        BallManager.getBalls().clear();
+      }
+      return false;
+    });
+  }
 
-        for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
-            scene.getChildren().remove(powerUp.getImageView());
-        }
-        for (Entity projectile : PowerUpManager.getProjectiles()) {
-            scene.getChildren().remove(projectile.getImageView());
-        }
-
-        PowerUpManager.resetPower();
-
-        paddle.getRectangle().setX(112);
-        paddle.getRectangle().setY(210);
-        paddle.setState(0);
-
-        Ball ball = new Ball(0, 0, 2.5);
-        ball.getCircle().setLayoutX(112);
-        ball.getCircle().setLayoutY(200);
-        ball.setDeltaX(1);
-        ball.setDeltaY(1);
-        scene.getChildren().add(ball.getImageView());
-        BallManager.getBalls().add(ball);
-    }
-
-    public void gameOver() {
-        timeline.stop();
-
-        for (Brick brick : BrickManager.getBricks()) {
-            scene.getChildren().remove(brick.getImageView());
-        }
-        for (PowerUp powerUp : PowerUpManager.getPowerUps() ){
-            scene.getChildren().remove(powerUp.getImageView());
-        }
-        for (Entity projectile : PowerUpManager.getProjectiles()){
-            scene.getChildren().remove(projectile.getImageView());
-        }
-        scene.getChildren().remove(paddle.getImageView());
-        scene.getChildren().remove(field.getImageView());
-        scene.getChildren().remove(outline.getImageView());
-        for (int i = 0; i < 4; i++) {
-            scene.getChildren().remove(gates[i].getImageView());
-        }
-
-        /*
-        clear hp and score
-         */
-        score.clear(scene);
-        hp.clear(scene);
-
-        EnemiesManager.enemies.clear();
-        BrickManager.getBricks().clear();
-        PowerUpManager.getPowerUps().clear();
-        PowerUpManager.getProjectiles().clear();
-        for (Ball ball : BallManager.getBalls()) {
-            scene.getChildren().remove(ball.getImageView());
-        }
-        BallManager.getBalls().clear();
-
-        startButton.setVisible(true);
-    }
-
-    private void brickUpdate() {
-        if (BrickManager.brickRemain > 0) {
-            for (Ball ball : BallManager.getBalls()) {
-                BrickManager.update(ball, scene);
-            }
-        } else {
-            level++;
-            // will replace as boss level later
-            if (level == 5 || level == 10 || level == 15) level++;
-            if (level > 15) gameOver();
-            newLife();
-            for (Brick brick : BrickManager.getBricks()) {
-                scene.getChildren().remove(brick.getImageView());
-            }
-            BrickManager.getBricks().clear();
-            BrickManager.createBricks(scene, level);
-        }
-    }
-
-    private void powerUpUpdate() {
-        PowerUpManager.movePowerUps(scene);
-        PowerUpManager.checkCollisionPowerUps(paddle, scene);
-        PowerUpManager.update(paddle, scene);
-        BallManager.checkCollisionScene(field.getRectangle());
-    }
-
-    private void ballUpdate() {
-        BallManager.getBalls().removeIf(ball1->{
-            if (ball1.ballType > 0) {
-                for(Ball ball: BallManager.getBalls())
-                    if (ball.ballType == 0 && ball1.getCircle().getBoundsInParent().intersects(ball.getCircle().getBoundsInParent()))
-                    {
-                        scene.getChildren().remove(ball1.getImageView());
-                        return true;
-                    }
-            }
-            return false;
-        });
-    }
-
-    private void gateUpdate() {
-        gates[0].update();
-        gates[1].update();
-    }
+  private void gateUpdate() {
+    gates[0].update();
+    gates[1].update();
+  }
 }
