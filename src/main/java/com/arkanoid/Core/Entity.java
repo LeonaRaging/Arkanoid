@@ -1,4 +1,4 @@
-package com.arkanoid.Core;
+package com.arkanoid.core;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -7,6 +7,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 public class Entity {
+
   protected Shape shape;
   protected double deltaX;
   protected double deltaY;
@@ -32,16 +33,27 @@ public class Entity {
     return (Circle) shape;
   }
 
-  public ImageView getImageView() {return imageView;}
+  public ImageView getImageView() {
+    return imageView;
+  }
 
-  public double getDeltaX() {return deltaX;}
+  public double getDeltaX() {
+    return deltaX;
+  }
 
-  public double getDeltaY() {return deltaY;}
+  public double getDeltaY() {
+    return deltaY;
+  }
 
-  public void setDeltaX(double x) {deltaX = x;}
+  public void setDeltaX(double x) {
+    deltaX = x;
+  }
 
-  public void setDeltaY(double y) {deltaY = y;}
+  public void setDeltaY(double y) {
+    deltaY = y;
+  }
 
-  public void update(AnchorPane scene) {}
+  public void update(AnchorPane scene) {
+  }
 
 }

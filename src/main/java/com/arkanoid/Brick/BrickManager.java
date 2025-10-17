@@ -1,16 +1,16 @@
-package com.arkanoid.Brick;
+package com.arkanoid.brick;
 
-import com.arkanoid.Core.Ball;
-import com.arkanoid.Core.Entity;
-import com.arkanoid.PowerUp.PowerUpManager;
-import com.arkanoid.Sound.Sound;
+import com.arkanoid.core.Ball;
+import com.arkanoid.core.Entity;
+import com.arkanoid.powerup.PowerUpManager;
+import com.arkanoid.score.ScoreDisplay;
+import com.arkanoid.sound.Sound;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.scene.layout.AnchorPane;
-import com.arkanoid.Score.ScoreDisplay;
 
 public class BrickManager {
   private static ArrayList<Brick> bricks = new ArrayList<>();
@@ -33,7 +33,7 @@ public class BrickManager {
           int index = sc.nextInt();
           if (index != -1) {
             Brick brick = new Brick(j * 16 + 16, i * 8 + 16, 16, 8, index);
-            switch (brick.getHP()) {
+            switch (brick.getHp()) {
               case 1:
                 brickRemain++;
                 break;
@@ -59,14 +59,14 @@ public class BrickManager {
       if (brick.checkCollisionBrick(entity)) {
         check.set(true);
         if (entity instanceof Ball) {
-          if (brick.getHP() == 0) {
+          if (brick.getHp() == 0) {
             Sound.playBounceBrick();
           } else {
             Sound.playBounceBrickSilverGold();
           }
         }
       }
-      if (brick.getHP() == 0) {
+      if (brick.getHp() == 0) {
         BrickManager.brickRemain--;
         scene.getChildren().remove(brick.getImageView());
         Random rand = new Random();

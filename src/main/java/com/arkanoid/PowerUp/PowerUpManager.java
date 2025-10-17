@@ -1,13 +1,13 @@
-package com.arkanoid.PowerUp;
+package com.arkanoid.powerup;
 
-import com.arkanoid.Core.BallManager;
-import com.arkanoid.Brick.Brick;
-import com.arkanoid.Brick.BrickManager;
 import com.arkanoid.Controller;
-import com.arkanoid.Core.Ball;
-import com.arkanoid.Core.Entity;
-import com.arkanoid.Core.Paddle;
-import com.arkanoid.Sound.Sound;
+import com.arkanoid.brick.Brick;
+import com.arkanoid.brick.BrickManager;
+import com.arkanoid.core.Ball;
+import com.arkanoid.core.BallManager;
+import com.arkanoid.core.Entity;
+import com.arkanoid.core.Paddle;
+import com.arkanoid.sound.Sound;
 import java.util.ArrayList;
 import java.util.Random;
 import javafx.scene.image.Image;
@@ -15,13 +15,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
 public class PowerUpManager {
+
   private static ArrayList<PowerUp> powerUps = new ArrayList<>();
   private static ArrayList<Entity> projectiles = new ArrayList<>();
 
   private static int numberOfPowerUps = 4;
   private static int shootCooldown;
 
-  public static int[] powerUpState = new int [numberOfPowerUps];
+  public static int[] powerUpState = new int[numberOfPowerUps];
 
   public static ArrayList<PowerUp> getPowerUps() {
     return powerUps;
@@ -48,7 +49,8 @@ public class PowerUpManager {
 
   public static void checkCollisionPowerUps(Paddle paddle, AnchorPane scene) {
     powerUps.removeIf(powerUp -> {
-      if (powerUp.getShape().getBoundsInParent().intersects(paddle.getShape().getBoundsInParent())) {
+      if (powerUp.getShape().getBoundsInParent()
+          .intersects(paddle.getShape().getBoundsInParent())) {
         if (powerUp.getType() == 0) {
           powerUpState[0] = 3;
         }
@@ -62,19 +64,22 @@ public class PowerUpManager {
         }
         if (powerUp.getType() == 3) {
           Ball currentBall = BallManager.getBalls().getFirst();
-          for (int i = -1; i <= 1; i++)
-            for (int j = -1; j <= 1; j++) if (i != 0 && j != 0) {
-              if (2 * i == currentBall.getDeltaX() && 2 * j == currentBall.getDeltaY()) {
-                continue;
+          for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+              if (i != 0 && j != 0) {
+                if (2 * i == currentBall.getDeltaX() && 2 * j == currentBall.getDeltaY()) {
+                  continue;
+                }
+                Ball ball = new Ball(0, 0, 2.5);
+                ball.getCircle().setLayoutX(currentBall.getCircle().getLayoutX());
+                ball.getCircle().setLayoutY(currentBall.getCircle().getLayoutY());
+                ball.setDeltaX(i);
+                ball.setDeltaY(j);
+                BallManager.getBalls().add(ball);
+                scene.getChildren().add(ball.getImageView());
               }
-              Ball ball = new Ball(0, 0, 2.5);
-              ball.getCircle().setLayoutX(currentBall.getCircle().getLayoutX());
-              ball.getCircle().setLayoutY(currentBall.getCircle().getLayoutY());
-              ball.setDeltaX(i);
-              ball.setDeltaY(j);
-              BallManager.getBalls().add(ball);
-              scene.getChildren().add(ball.getImageView());
             }
+          }
         }
         scene.getChildren().remove(powerUp.getImageView());
         return true;
@@ -85,17 +90,17 @@ public class PowerUpManager {
 
   public static void update(Paddle paddle, AnchorPane scene) {
     projectiles.removeIf(entity -> {
-     if (BrickManager.update(entity, scene)) {
-       scene.getChildren().remove(entity.getImageView());
-       return true;
-     }
+      if (BrickManager.update(entity, scene)) {
+        scene.getChildren().remove(entity.getImageView());
+        return true;
+      }
 
-     if (entity.getRectangle().getY() <= Controller.field.getRectangle().getY()) {
-       scene.getChildren().remove(entity.getImageView());
-       return true;
-     }
+      if (entity.getRectangle().getY() <= Controller.field.getRectangle().getY()) {
+        scene.getChildren().remove(entity.getImageView());
+        return true;
+      }
 
-     return false;
+      return false;
     });
 
     for (Entity entity : projectiles) {
@@ -104,13 +109,19 @@ public class PowerUpManager {
       entity.getImageView().setY(entity.getRectangle().getY());
     }
 
-    if (shootCooldown > 0) shootCooldown--;
-    if (powerUpState[1] > 0 && shootCooldown == 0 && Controller.pressedKeys.contains(KeyCode.SPACE)) {
+    if (shootCooldown > 0) {
+      shootCooldown--;
+    }
+    if (powerUpState[1] > 0 && shootCooldown == 0 && Controller.pressedKeys.contains(
+        KeyCode.SPACE)) {
       double paddleWidth = paddle.getRectangle().getWidth();
 
-      Entity projectile1 = new Entity(paddle.getRectangle().getX() + paddleWidth / 2 - 5 , paddle.getRectangle().getY(), 8, 16);
-      Entity projectile2 = new Entity(paddle.getRectangle().getX() + paddleWidth / 2 + 5, paddle.getRectangle().getY(), 8, 16);
-      Image image = new Image(PowerUpManager.class.getResource("/com/arkanoid/Paddle/bullet.png").toExternalForm());
+      Entity projectile1 = new Entity(paddle.getRectangle().getX() + paddleWidth / 2 - 5,
+          paddle.getRectangle().getY(), 8, 16);
+      Entity projectile2 = new Entity(paddle.getRectangle().getX() + paddleWidth / 2 + 5,
+          paddle.getRectangle().getY(), 8, 16);
+      Image image = new Image(
+          PowerUpManager.class.getResource("/com/arkanoid/paddle/bullet.png").toExternalForm());
       projectile1.getImageView().setImage(image);
       projectile2.getImageView().setImage(image);
 

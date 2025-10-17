@@ -1,10 +1,9 @@
-package com.arkanoid.Core;
+package com.arkanoid.core;
 
 import com.arkanoid.Controller;
-import com.arkanoid.PowerUp.PowerUpManager;
-import com.arkanoid.Sound.Sound;
+import com.arkanoid.powerup.PowerUpManager;
+import com.arkanoid.sound.Sound;
 import java.util.ArrayList;
-import java.util.Random;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 
@@ -18,10 +17,14 @@ public class BallManager {
 
   public static void checkCollisionScene(Rectangle rect) {
     for (Ball ball : balls) {
-      boolean rightBorder = ball.getCircle().getLayoutX() >= (rect.getX() + rect.getWidth() - ball.getCircle().getRadius());
-      boolean leftBorder = ball.getCircle().getLayoutX() <= (rect.getX() + ball.getCircle().getRadius());
-      boolean bottomBorder = ball.getCircle().getLayoutY() >= (rect.getY() + rect.getHeight() - ball.getCircle().getRadius());
-      boolean topBorder = ball.getCircle().getLayoutY() <= (rect.getY() + ball.getCircle().getRadius());
+      boolean rightBorder = ball.getCircle().getLayoutX()
+          >= (rect.getX() + rect.getWidth() - ball.getCircle().getRadius());
+      boolean leftBorder = ball.getCircle().getLayoutX()
+          <= (rect.getX() + ball.getCircle().getRadius());
+      boolean bottomBorder = ball.getCircle().getLayoutY()
+          >= (rect.getY() + rect.getHeight() - ball.getCircle().getRadius());
+      boolean topBorder = ball.getCircle().getLayoutY()
+          <= (rect.getY() + ball.getCircle().getRadius());
 
       if (rightBorder || leftBorder) {
         ball.updateX((rightBorder ? -1 : 1));
@@ -44,7 +47,8 @@ public class BallManager {
 
   public static boolean checkCollisionBottomZone(AnchorPane scene) {
     balls.removeIf(ball -> {
-      if (ball.getCircle().getBoundsInParent().intersects(Controller.bottomZone.getBoundsInParent())) {
+      if (ball.getCircle().getBoundsInParent()
+          .intersects(Controller.bottomZone.getBoundsInParent())) {
         scene.getChildren().remove(ball.getImageView());
         return true;
       }

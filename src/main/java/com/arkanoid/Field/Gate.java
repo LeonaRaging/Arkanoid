@@ -1,12 +1,12 @@
-package com.arkanoid.Field;
+package com.arkanoid.field;
 
-import com.arkanoid.Core.Entity;
-import com.arkanoid.Enemies.Enemies;
-import com.arkanoid.Enemies.EnemiesManager;
+import com.arkanoid.core.Entity;
+import com.arkanoid.enemies.Enemies;
+import com.arkanoid.enemies.EnemiesManager;
 import javafx.scene.image.Image;
-import javafx.scene.shape.Rectangle;
 
 public class Gate extends Entity {
+
   private Image[] image = new Image[5];
   private int state;
   private int frame;
@@ -20,10 +20,10 @@ public class Gate extends Entity {
     for (int i = 0; i < 5; i++) {
       if (name == "gate0") {
         image[i] = new Image(getClass()
-            .getResource("/com/arkanoid/Field/" + name + i + ".png").toExternalForm());
+            .getResource("/com/arkanoid/field/" + name + i + ".png").toExternalForm());
       } else {
         image[i] = new Image(getClass()
-            .getResource("/com/arkanoid/Field/" + name + ".png").toExternalForm());
+            .getResource("/com/arkanoid/field/" + name + ".png").toExternalForm());
       }
     }
     state = frame = 0;
@@ -36,11 +36,15 @@ public class Gate extends Entity {
     boolean isNear = false;
     if (state == 1) {
       frame++;
-      if (frame == 39) state = 3;
+      if (frame == 39) {
+        state = 3;
+      }
     }
     if (state == 2) {
       frame--;
-      if (frame == 0) state = 0;
+      if (frame == 0) {
+        state = 0;
+      }
     }
     for (Enemies enemy : EnemiesManager.getEnemies()) {
       if (enemy.isAbove(this.getRectangle())) {
