@@ -4,9 +4,7 @@ import com.arkanoid.brick.BrickManager;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
-import com.arkanoid.Controller;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 
 public class EnemiesManager {
 
@@ -109,10 +107,10 @@ public class EnemiesManager {
   }
 
   public static boolean isGameOver() {
-      return gameOver;
+    return gameOver;
   }
 
   public static void setGameOver(boolean gameOver) {
-      EnemiesManager.gameOver = gameOver;
-  };
+    EnemiesManager.gameOver = gameOver;
+  }
 }

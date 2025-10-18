@@ -44,7 +44,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.scene.image.ImageView;
-import com.arkanoid.score.Hp;
+import com.arkanoid.NumberAndStringDisplay.Hp;
 
 public class Controller implements Initializable {
 
@@ -372,8 +372,8 @@ public class Controller implements Initializable {
   }
 
   @FXML
-  void startGameButtonAction(ActionEvent event, int Level) {
-    resetAnchorPane();
+  void startGameButtonAction(ActionEvent event, int Level) throws FileNotFoundException {
+    startBackground.setVisible(false);
     backgroundView.setVisible(true);
     spaceShip.setVisible(true);
 
