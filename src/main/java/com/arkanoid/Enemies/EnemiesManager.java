@@ -88,15 +88,31 @@ public class EnemiesManager {
 
   public static void updateEnemies(AnchorPane scene, double deltaTime) {
 
-      enemies.removeIf(e -> {
-          if(e.update(deltaTime, scene)) {
-              scene.getChildren().remove(e.getImageView());
-              scene.getChildren().remove(e.getShape());
-              return true;
-          }
-          return false;
-      });
+    double fieldTopY = 16;// in field
 
+    enemies.removeIf(e -> {
+      if (e.update(deltaTime, scene)) {
+        scene.getChildren().remove(e.getImageView());
+        return true;
+      }
+
+      double enemyBottomY = e.getImageView().getY() + e.getImageView().getBoundsInLocal().getHeight();
+
+      if (enemyBottomY < fieldTopY) {
+        e.getImageView().setVisible(false);
+      }
+      else {
+        e.getImageView().setVisible(true);
+      }
+      return false;
+    });
+  }
+
+  public static void removeAllEnemies(AnchorPane scene) {
+    enemies.removeIf(e -> {
+      scene.getChildren().remove(e.getImageView());
+        return true;
+    });
   }
 
   public static boolean isGameOver() {
