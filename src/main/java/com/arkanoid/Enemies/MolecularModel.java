@@ -1,5 +1,6 @@
 package com.arkanoid.enemies;
 
+import com.arkanoid.Controller;
 import com.arkanoid.sound.Sound;
 import com.arkanoid.core.Ball;
 import com.arkanoid.core.BallManager;
@@ -63,7 +64,6 @@ public class MolecularModel extends Enemies {
           this.getCircle().setCenterY(this.getCircle().getCenterY() + deltaY);
           if (this.checkCollisionScene() || this.checkCollisionBrick()
               || this.checkCollisionEnemy()) {
-            this.getCircle().setCenterX(this.getCircle().getCenterX() - deltaX);
             this.getCircle().setCenterY(this.getCircle().getCenterY() - deltaY);
           }
           moveCooldown--;

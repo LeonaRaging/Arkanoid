@@ -1,5 +1,6 @@
 package com.arkanoid.enemies;
 
+import com.arkanoid.Controller;
 import com.arkanoid.brick.BrickManager;
 import com.arkanoid.core.Ball;
 import com.arkanoid.core.BallManager;
@@ -40,7 +41,11 @@ public class MiniSaturn extends Enemies {
         if (moveCooldown == 100) {
           deltaX = (Math.random() - 0.5) * 1.2;
           deltaY = (Math.random() - 0.5) * 1.2;
-          deltaX = deltaY = 0;
+          for (int i = 0; i < 2; i++) {
+            if (isAbove(Controller.gates[i].getRectangle())) {
+              deltaY = Math.abs(deltaY);
+            }
+          }
         }
 
         if (moveCooldown <= 100) {

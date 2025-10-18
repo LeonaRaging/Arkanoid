@@ -1,5 +1,6 @@
 package com.arkanoid.enemies;
 
+import com.arkanoid.Controller;
 import com.arkanoid.core.Ball;
 import com.arkanoid.core.BallManager;
 import com.arkanoid.sound.Sound;
@@ -39,6 +40,12 @@ public class Infinity extends Enemies {
   @Override
   public boolean update(double deltaTime, AnchorPane scene) {
     System.out.println(state);
+    if (isLeft(Controller.gates[2].getRectangle())) {
+      deltaX = 0.2;
+    }
+    if (isRight(Controller.gates[3].getRectangle())) {
+      deltaX = -0.2;
+    }
     switch (state) {
       case 0:
         if (moveCooldown == 0) {

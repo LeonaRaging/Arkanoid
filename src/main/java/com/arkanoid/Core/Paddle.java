@@ -67,7 +67,7 @@ public class Paddle extends Entity {
       ball.updateY(-1);
       double distance = ball.getCircle().getLayoutX() - (this.getRectangle().getX()
           + this.getRectangle().getWidth() / 2);
-      ball.setDeltaX(distance / 10);
+      ball.setDeltaX(Math.max(0.7, distance / 10));
       Sound.playBouncePaddle();
       ball.getShape().setLayoutX(ball.getShape().getLayoutX() + ball.getDeltaX());
     }
