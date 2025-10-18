@@ -30,6 +30,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import javafx.scene.image.ImageView;
 
 public class Controller implements Initializable {
 
@@ -47,8 +48,10 @@ public class Controller implements Initializable {
 
   private int level;
 
-  @FXML
-  private Button startButton;
+  @FXML private Button startButton;
+  @FXML private ImageView startBackground;
+  @FXML private ImageView backgroundView;
+  @FXML private ImageView spaceShip;
 
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
 
@@ -104,7 +107,11 @@ public class Controller implements Initializable {
 
   @FXML
   void startGameButtonAction(ActionEvent event) throws FileNotFoundException {
+
     startButton.setVisible(false);
+    startBackground.setVisible(false);
+    backgroundView.setVisible(true);
+    spaceShip.setVisible(true);
 
     ScoreDisplay.setScore(0);
     Hp.resetHp();
@@ -198,6 +205,8 @@ public class Controller implements Initializable {
       scene.getChildren().remove(gates[i].getImageView());
     }
 
+    EnemiesManager.removeAllEnemies(scene);
+
     /*
     clear hp and score
      */
@@ -214,6 +223,9 @@ public class Controller implements Initializable {
     BallManager.getBalls().clear();
 
     startButton.setVisible(true);
+    startBackground.setVisible(true);
+    backgroundView.setVisible(false);
+    spaceShip.setVisible(false);
   }
 
   private void brickUpdate() {

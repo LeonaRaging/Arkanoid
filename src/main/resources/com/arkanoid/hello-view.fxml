@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="scene" maxHeight="224.0" maxWidth="256.0" minHeight="224.0" minWidth="256.0" prefHeight="224.0" prefWidth="256.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.arkanoid.Controller">
+<AnchorPane fx:id="scene" maxHeight="224.0" maxWidth="256.0" minHeight="224.0" minWidth="256.0" prefHeight="224.0" prefWidth="256.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.arkanoid.Controller">
    <children>
-      <Button fx:id="startButton" layoutX="76.0" layoutY="86.0" mnemonicParsing="false" onAction="#startGameButtonAction" prefHeight="52.0" prefWidth="104.0" text="START">
+      <ImageView fx:id="startBackground" fitHeight="235.0" fitWidth="476.0" layoutX="-107.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Background/2x1_NSwitch_ArkanoidEternalBattle.jpg" />
+         </image>
+      </ImageView>
+      <Button id="startButton" fx:id="startButton" layoutX="99.0" layoutY="160.0" mnemonicParsing="false" onAction="#startGameButtonAction" prefHeight="16.0" prefWidth="58.0" text="START">
          <font>
             <Font size="13.0" />
          </font>
       </Button>
+      <ImageView fx:id="backgroundView" fitHeight="332.0" fitWidth="402.0" layoutX="-73.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@Background/background.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="spaceShip" fitHeight="126.0" fitWidth="227.0" layoutX="29.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@Background/spaceship.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
