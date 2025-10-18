@@ -36,49 +36,23 @@ public class TriangleC extends Enemies {
   public boolean update(double deltaTime, AnchorPane scene) {
     switch (state) {
       case 0:
-        boolean bottomBorder = false;
-        boolean leftBorder = false;
-        boolean rightBorder = false;
-        for (Brick brick : BrickManager.getBricks()) {
-          if (brick.getShape().getBoundsInParent()
-              .intersects(this.getShape().getBoundsInParent())) {
-            if (this.getRectangle().getY() + this.getRectangle().getHeight()
-                >= brick.getRectangle()
-                .getY()) {
-              bottomBorder = true;
-            }
-            if (this.getRectangle().getX()
-                <= brick.getRectangle().getX() + brick.getRectangle()
-                .getWidth()
-                && this.getRectangle().getX() >= brick.getRectangle().getX()) {
-              leftBorder = true;
-            }
-            if (this.getRectangle().getX() + this.getRectangle().getWidth()
-                >= brick.getRectangle()
-                .getX()
-                && this.getRectangle().getX() <= brick.getRectangle().getX()) {
-              rightBorder = true;
-            }
-          }
-        }
 
         totalTime = totalTime + deltaTime;
-        if (!bottomBorder) {
-          double oldY = this.getRectangle().getY();
-          this.getRectangle().setY(this.getRectangle().getY() + fallSpeed * deltaTime);
-          if (this.checkCollisionEnemy() || this.checkCollisionScene()) {
+
+        double oldY = this.getRectangle().getY();
+        this.getRectangle().setY(this.getRectangle().getY() + fallSpeed * deltaTime);
+        if (this.checkCollisionEnemy()
+                || this.checkCollisionScene()
+                || this.checkCollisionBrick()) {
             this.getRectangle().setY(oldY);
-          }
         }
 
         double changeX = amplitude * Math.sin(swingSpeed * totalTime);
-        if ((leftBorder && changeX < 0) || (rightBorder && changeX > 0)) {
-          amplitude = changeX = 0;
-          baseX = this.getRectangle().getX();
-        }
         double oldX = this.getRectangle().getX();
         this.getRectangle().setX(baseX + changeX);
-        if (this.checkCollisionEnemy() || this.checkCollisionScene()) {
+        if (this.checkCollisionEnemy()
+                || this.checkCollisionScene()
+                || this.checkCollisionBrick()) {
           this.getRectangle().setX(oldX);
           totalTime = totalTime - deltaTime;
         }
