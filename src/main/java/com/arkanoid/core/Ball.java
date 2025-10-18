@@ -34,11 +34,23 @@ public class Ball extends Entity {
     Random rand = new Random();
     deltaX = x * Math.abs(deltaX);
     deltaY += (rand.nextDouble() - 0.5) * 0.3;
+    if (deltaY < 0.75 && deltaY >= 0) {
+      deltaY = 0.75;
+    }
+    if (deltaY > -0.75 && deltaY < 0) {
+      deltaY = -0.75;
+    }
   }
 
   public void updateY(double y) {
     Random rand = new Random();
     deltaX += (rand.nextDouble() - 0.5) * 0.3;
     deltaY = y * Math.abs(deltaY);
+    if (deltaX < 0.75 && deltaX >= 0) {
+      deltaY = 0.75;
+    }
+    if (deltaX > -0.75 && deltaX < 0) {
+      deltaY = -0.75;
+    }
   }
 }

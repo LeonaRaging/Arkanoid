@@ -6,6 +6,7 @@ import com.arkanoid.core.Ball;
 import com.arkanoid.core.BallManager;
 import com.arkanoid.core.Entity;
 import com.arkanoid.core.Paddle;
+import com.arkanoid.enemies.Enemies;
 import com.arkanoid.enemies.EnemiesManager;
 import com.arkanoid.field.Field;
 import com.arkanoid.field.Gate;
@@ -114,8 +115,8 @@ public class Controller implements Initializable {
     outline = new Field(8, 8, 176, 216, "outline");
     gates[0] = new Gate(32, 8, 32, 8, "gate0");
     gates[1] = new Gate(128, 8, 32, 8, "gate0");
-    gates[2] = new Gate(8, 181, 8, 30, "gate1");
-    gates[3] = new Gate(176, 181, 8, 30, "gate1");
+    gates[2] = new Gate(8, 47, 8, 30, "gate1");
+    gates[3] = new Gate(176, 47, 8, 30, "gate1");
 
     scene.getChildren().add(field.getImageView());
     scene.getChildren().add(outline.getImageView());
@@ -129,7 +130,7 @@ public class Controller implements Initializable {
 
     newLife();
 
-    level = 1;
+    level = 8;
 
     BrickManager.createBricks(scene, level);
 
@@ -189,9 +190,13 @@ public class Controller implements Initializable {
     for (Entity projectile : PowerUpManager.getProjectiles()) {
       scene.getChildren().remove(projectile.getImageView());
     }
+    for (Enemies enemy :  EnemiesManager.getEnemies()) {
+      scene.getChildren().remove(enemy.getImageView());
+    }
     scene.getChildren().remove(paddle.getImageView());
     scene.getChildren().remove(field.getImageView());
     scene.getChildren().remove(outline.getImageView());
+
     for (int i = 0; i < 4; i++) {
       scene.getChildren().remove(gates[i].getImageView());
     }
@@ -206,6 +211,7 @@ public class Controller implements Initializable {
     BrickManager.getBricks().clear();
     PowerUpManager.getPowerUps().clear();
     PowerUpManager.getProjectiles().clear();
+    EnemiesManager.getEnemies().clear();
     for (Ball ball : BallManager.getBalls()) {
       scene.getChildren().remove(ball.getImageView());
     }
@@ -260,7 +266,8 @@ public class Controller implements Initializable {
   }
 
   private void gateUpdate() {
-    gates[0].update();
-    gates[1].update();
+    for (int i = 0; i < 4; i++) {
+      gates[i].update(i);
+    }
   }
 }

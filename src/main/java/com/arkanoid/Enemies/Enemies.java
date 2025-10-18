@@ -58,7 +58,43 @@ public class Enemies extends Entity {
     if (this.getShape() instanceof Circle cir) {
       if (cir.getCenterX() - cir.getRadius() >= rect.getX()
           && cir.getCenterX() + cir.getRadius() <= rect.getX() + rect.getWidth()
-          && cir.getCenterY() <= rect.getY() + rect.getHeight()) {
+          && cir.getCenterY() - cir.getRadius() <= rect.getY() + rect.getHeight()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean isLeft(Rectangle rect) {
+    if (this.getShape() instanceof Rectangle rec) {
+      if (rec.getY() >= rect.getY()
+          && rec.getY() + rec.getHeight() <= rect.getY() + rect.getHeight()
+          && rec.getX() <= rect.getX() + rect.getWidth()) {
+        return true;
+      }
+    }
+    if (this.getShape() instanceof Circle cir) {
+      if (cir.getCenterY() - cir.getRadius() >= rect.getY()
+          && cir.getCenterY() + cir.getRadius() <= rect.getY() + rect.getHeight()
+          && cir.getCenterX() - cir.getRadius() <= rect.getX() + rect.getWidth()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean isRight(Rectangle rect) {
+    if (this.getShape() instanceof Rectangle rec) {
+      if (rec.getY() >= rect.getY()
+          && rec.getY() + rec.getHeight() <= rect.getY() + rect.getHeight()
+          && rec.getX() + rec.getWidth() >= rect.getX()) {
+        return true;
+      }
+    }
+    if (this.getShape() instanceof Circle cir) {
+      if (cir.getCenterY() - cir.getRadius() >= rect.getY()
+          && cir.getCenterY() + cir.getRadius() <= rect.getY() + rect.getHeight()
+          && cir.getCenterX() - cir.getRadius() >= rect.getX() + rect.getWidth()) {
         return true;
       }
     }
@@ -71,6 +107,16 @@ public class Enemies extends Entity {
         if (isAbove(Controller.gates[i].getRectangle())) {
           return false;
         }
+      }
+    }
+    if (Controller.gates[2].getState() == 3) {
+      if (isLeft(Controller.gates[2].getRectangle())) {
+        return false;
+      }
+    }
+    if (Controller.gates[3].getState() == 3) {
+      if (isRight(Controller.gates[3].getRectangle())) {
+        return false;
       }
     }
     Rectangle rect = Controller.field.getRectangle();

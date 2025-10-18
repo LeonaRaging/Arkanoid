@@ -18,13 +18,10 @@ public class Gate extends Entity {
   public Gate(int x, int y, int w, int h, String name) {
     super(x, y, w, h);
     for (int i = 0; i < 5; i++) {
-      if (name == "gate0") {
         image[i] = new Image(getClass()
             .getResource("/com/arkanoid/field/" + name + i + ".png").toExternalForm());
-      } else {
         image[i] = new Image(getClass()
-            .getResource("/com/arkanoid/field/" + name + ".png").toExternalForm());
-      }
+            .getResource("/com/arkanoid/field/" + name + i + ".png").toExternalForm());
     }
     state = frame = 0;
     imageView.setImage(image[frame]);
@@ -32,7 +29,7 @@ public class Gate extends Entity {
     imageView.setY(this.getRectangle().getY());
   }
 
-  public void update() {
+  public void update(int gateIndex) {
     boolean isNear = false;
     if (state == 1) {
       frame++;
@@ -47,8 +44,29 @@ public class Gate extends Entity {
       }
     }
     for (Enemies enemy : EnemiesManager.getEnemies()) {
-      if (enemy.isAbove(this.getRectangle())) {
-        isNear = true;
+      switch (gateIndex) {
+        case 0:
+          if (enemy.isAbove(this.getRectangle())) {
+            isNear = true;
+          }
+          break;
+        case 1:
+          if (enemy.isAbove(this.getRectangle())) {
+            isNear = true;
+          }
+          break;
+        case 2:
+          if (enemy.isLeft(this.getRectangle())) {
+            isNear = true;
+          }
+          break;
+        case 3:
+          if (enemy.isRight(this.getRectangle())) {
+            isNear = true;
+          }
+          break;
+        default:
+          break;
       }
     }
     if (isNear) {

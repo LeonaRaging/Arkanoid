@@ -36,7 +36,7 @@ public class EnemiesManager {
   public static boolean gameOver = false;
 
   public static void initEnemiesManager() throws FileNotFoundException {
-    for (int level = 1; level <= 1; level++) {
+    for (int level = 1; level <= 8; level++) {
       File file = new File("src/main/resources/com/arkanoid/Level/level" + level + "enemy.txt");
       Scanner sc = new Scanner(file);
       spawnEnemies[level] = new ArrayList<>();
@@ -53,11 +53,32 @@ public class EnemiesManager {
 
   public static void update(AnchorPane scene, int level) {
     spawnEnemies[level].removeIf(spawnEnemy -> {
-      if (spawnEnemy.number == BrickManager.brickRemain) {
+      System.out.printf("SpawnEnemy number = %d, brick remain = %d \n", spawnEnemy.number, BrickManager.brickRemain);
+      if (spawnEnemy.number >= BrickManager.brickRemain) {
         if (spawnEnemy.type == 0) {
           TriangleC triangleC = new TriangleC(spawnEnemy.xpos, spawnEnemy.ypos, 15, 15);
           enemies.add(triangleC);
           scene.getChildren().add(triangleC.getImageView());
+        }
+        if (spawnEnemy.type == 1) {
+          MolecularModel molecularModel = new MolecularModel(spawnEnemy.xpos, spawnEnemy.ypos, 5);
+          enemies.add(molecularModel);
+          scene.getChildren().add(molecularModel.getImageView());
+        }
+        if (spawnEnemy.type == 2) {
+          MiniSaturn miniSaturn = new MiniSaturn(spawnEnemy.xpos, spawnEnemy.ypos, 8);
+          enemies.add(miniSaturn);
+          scene.getChildren().add(miniSaturn.getImageView());
+        }
+        if (spawnEnemy.type == 3) {
+          Infinity infinity = new Infinity(spawnEnemy.xpos, spawnEnemy.ypos, 16, 16);
+          enemies.add(infinity);
+          scene.getChildren().add(infinity.getImageView());
+        }
+        if (spawnEnemy.type == 4) {
+          Bubble bubble = new Bubble(spawnEnemy.xpos, spawnEnemy.ypos, 15, 15);
+          enemies.add(bubble);
+          scene.getChildren().add(bubble.getImageView());
         }
         return true;
       }
