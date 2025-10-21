@@ -13,8 +13,6 @@ import javafx.scene.shape.Rectangle;
 public class Enemies extends Entity {
 
   double totalTime = 0;
-  int order;
-  int state;
 
   public Enemies(double x, double y, double w, double h) {
     super(x, y, w, h);
