@@ -72,7 +72,7 @@ public class Controller implements Initializable {
           double deltaTime = (currentTime - lastTime) / 1_000_000_000.0;
           lastTime = currentTime;
 
-          EnemiesManager.update(scene, level);
+          EnemiesManager.update(scene);
           EnemiesManager.updateEnemies(scene, deltaTime);
 
           brickUpdate();
@@ -106,7 +106,7 @@ public class Controller implements Initializable {
   }
 
   @FXML
-  void startGameButtonAction(ActionEvent event) throws FileNotFoundException {
+  void startGameButtonAction(ActionEvent event) {
 
     startButton.setVisible(false);
     startBackground.setVisible(false);
@@ -135,11 +135,9 @@ public class Controller implements Initializable {
 
     newLife();
 
-    level = 8;
+    level = 1;
 
     BrickManager.createBricks(scene, level);
-
-    EnemiesManager.initEnemiesManager();
 
     score = new ScoreDisplay(0);
     score.showScore(scene);
