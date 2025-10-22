@@ -373,13 +373,14 @@ public class Controller implements Initializable {
 
   @FXML
   void startGameButtonAction(ActionEvent event, int Level) throws FileNotFoundException {
+    resetAnchorPane();
     startBackground.setVisible(false);
     backgroundView.setVisible(true);
 
     ScoreDisplay.setScore(0);
     Hp.resetHp();
 
-    field = new Field(16, 16, 160, 208, "field");
+    field = new Field(16, 16, 160, 208, Integer.toString(Level));
     outline = new Field(8, 8, 176, 216, "outline");
     gates[0] = new Gate(32, 8, 32, 8, "gate0");
     gates[1] = new Gate(128, 8, 32, 8, "gate0");
@@ -399,6 +400,10 @@ public class Controller implements Initializable {
     newLife();
 
     level = Level;
+    ScoreDisplay.setScore(0);
+    Hp.resetHp();
+
+    newLife();
 
     BrickManager.createBricks(scene, level);
 
@@ -411,6 +416,11 @@ public class Controller implements Initializable {
   }
 
   private void newLife() {
+    for (Ball ball : BallManager.getBalls()) {
+      scene.getChildren().remove(ball.getImageView());
+    }
+    BallManager.getBalls().clear();
+
     paddle.getRectangle().setX(112);
     paddle.getRectangle().setY(210);
     paddle.setState(0);

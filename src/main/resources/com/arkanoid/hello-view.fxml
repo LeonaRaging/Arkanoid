@@ -15,9 +15,21 @@
             <Image url="@ui/titlescreen.png" smooth="false"/>
          </image>
       </ImageView>
-      <ImageView fx:id="backgroundView" fitHeight="332.0" fitWidth="402.0" layoutX="-73.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="backgroundView" fitHeight="224.0" fitWidth="256.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@Background/background_1_to_10.gif" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="backgroundView11" fitHeight="224.0" fitWidth="262.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@Background/background.jpg" />
+            <Image url="@Background/background_11.gif" />
+         </image>
+      </ImageView>
+
+      <ImageView fx:id="backgroundViewother" fitHeight="224.0" fitWidth="262.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@Background/Background_other.png" />
          </image>
       </ImageView>
       <ImageView fx:id="spaceShip" fitHeight="126.0" fitWidth="227.0" layoutX="29.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true" visible="false">
