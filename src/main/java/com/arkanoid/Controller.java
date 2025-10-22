@@ -55,66 +55,67 @@ public class Controller implements Initializable {
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
 
   Timeline timeline = new Timeline(
-      new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
-        long lastTime = System.nanoTime();
+          new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+            long lastTime = System.nanoTime();
 
-        @Override
-        public void handle(ActionEvent actionEvent) {
-          paddle.update(field.getRectangle());
+            @Override
+            public void handle(ActionEvent actionEvent) {
+              paddle.update(field.getRectangle());
 
-          for (Ball ball : BallManager.getBalls()) {
-            paddle.checkCollisionPaddle(ball);
-            ball.update(scene);
-          }
+              for (Ball ball : BallManager.getBalls()) {
+                paddle.checkCollisionPaddle(ball);
+                ball.update(scene);
+              }
 
-          long currentTime = System.nanoTime();
-          double deltaTime = (currentTime - lastTime) / 1_000_000_000.0;
-          lastTime = currentTime;
+              long currentTime = System.nanoTime();
+              double deltaTime = (currentTime - lastTime) / 1_000_000_000.0;
+              lastTime = currentTime;
 
-          EnemiesManager.update(scene);
-          EnemiesManager.updateEnemies(scene, deltaTime);
+              EnemiesManager.update(scene);
+              EnemiesManager.updateEnemies(scene, deltaTime);
 
-          brickUpdate();
+              brickUpdate();
 
-          powerUpUpdate();
+              powerUpUpdate();
 
-          ballUpdate();
+              ballUpdate();
 
-          gateUpdate();
+              gateUpdate();
 
-          if (BallManager.checkCollisionBottomZone(scene)) {
-            Hp.loseLife();
-            hp.updateDisplay();
+              if (BallManager.checkCollisionBottomZone(scene)) {
+                Hp.loseLife();
+                hp.updateDisplay();
 
-            if (Hp.getHp() <= 0) {
-              gameOver();
-            } else {
-              newLife();
+                if (Hp.getHp() <= 0) {
+                  gameOver();
+                } else {
+                  newLife();
+                }
+              }
+
+              if (score != null) {
+                score.reup();
+              }
             }
-          }
-
-          if (score != null) {
-            score.reup();
-          }
-        }
-      }));
+          }));
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     timeline.setCycleCount(Timeline.INDEFINITE);
   }
 
-  @FXML
-  void startGameButtonAction(ActionEvent event) {
+  void moveNext(boolean clear) {
+    if (clear == true) {
+      scene.getChildren().remove(field.getImageView());
+      scene.getChildren().remove(outline.getImageView());
 
-    startButton.setVisible(false);
-    startBackground.setVisible(false);
-    backgroundView.setVisible(true);
+      for (int i = 0; i < 4; i++) {
+        scene.getChildren().remove(gates[i].getImageView());
+      }
 
-    ScoreDisplay.setScore(0);
-    Hp.resetHp();
-
-    field = new Field(16, 16, 160, 208, "field");
+      scene.getChildren().remove(paddle.getImageView());
+    }
+    field = new Field(16, 16, 160, 208, Integer.toString(level));
     outline = new Field(8, 8, 176, 216, "outline");
     gates[0] = new Gate(32, 8, 32, 8, "gate0");
     gates[1] = new Gate(128, 8, 32, 8, "gate0");
@@ -130,10 +131,20 @@ public class Controller implements Initializable {
 
     paddle = new Paddle(112, 210, 32, 8);
     scene.getChildren().add(paddle.getImageView());
+  }
+  @FXML
+  void startGameButtonAction(ActionEvent event) {
+
+    startButton.setVisible(false);
+    startBackground.setVisible(false);
+    backgroundView.setVisible(true);
+
+    ScoreDisplay.setScore(0);
+    Hp.resetHp();
+    level = 1;
+    moveNext(false);
 
     newLife();
-
-    level = 1;
 
     BrickManager.createBricks(scene, level);
 
@@ -162,7 +173,6 @@ public class Controller implements Initializable {
     for (Entity projectile : PowerUpManager.getProjectiles()) {
       scene.getChildren().remove(projectile.getImageView());
     }
-
     PowerUpManager.resetPower();
 
     paddle.getRectangle().setX(112);
@@ -237,6 +247,7 @@ public class Controller implements Initializable {
       if (level > 15) {
         gameOver();
       }
+      moveNext(true);
       newLife();
       for (Brick brick : BrickManager.getBricks()) {
         scene.getChildren().remove(brick.getImageView());
@@ -258,7 +269,7 @@ public class Controller implements Initializable {
       if (ball1.ballType > 0) {
         for (Ball ball : BallManager.getBalls()) {
           if (ball.ballType == 0 && ball1.getCircle().getBoundsInParent()
-              .intersects(ball.getCircle().getBoundsInParent())) {
+                  .intersects(ball.getCircle().getBoundsInParent())) {
             scene.getChildren().remove(ball1.getImageView());
             return true;
           }
