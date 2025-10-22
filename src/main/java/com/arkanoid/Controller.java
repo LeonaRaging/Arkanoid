@@ -51,54 +51,53 @@ public class Controller implements Initializable {
   @FXML private Button startButton;
   @FXML private ImageView startBackground;
   @FXML private ImageView backgroundView;
-  @FXML private ImageView spaceShip;
 
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
 
   Timeline timeline = new Timeline(
-      new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
-        long lastTime = System.nanoTime();
+          new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+            long lastTime = System.nanoTime();
 
-        @Override
-        public void handle(ActionEvent actionEvent) {
-          paddle.update(field.getRectangle());
+            @Override
+            public void handle(ActionEvent actionEvent) {
+              paddle.update(field.getRectangle());
 
-          for (Ball ball : BallManager.getBalls()) {
-            paddle.checkCollisionPaddle(ball);
-            ball.update(scene);
-          }
+              for (Ball ball : BallManager.getBalls()) {
+                paddle.checkCollisionPaddle(ball);
+                ball.update(scene);
+              }
 
-          long currentTime = System.nanoTime();
-          double deltaTime = (currentTime - lastTime) / 1_000_000_000.0;
-          lastTime = currentTime;
+              long currentTime = System.nanoTime();
+              double deltaTime = (currentTime - lastTime) / 1_000_000_000.0;
+              lastTime = currentTime;
 
-          EnemiesManager.update(scene, level);
-          EnemiesManager.updateEnemies(scene, deltaTime);
+              EnemiesManager.update(scene, level);
+              EnemiesManager.updateEnemies(scene, deltaTime);
 
-          brickUpdate();
+              brickUpdate();
 
-          powerUpUpdate();
+              powerUpUpdate();
 
-          ballUpdate();
+              ballUpdate();
 
-          gateUpdate();
+              gateUpdate();
 
-          if (BallManager.checkCollisionBottomZone(scene)) {
-            Hp.loseLife();
-            hp.updateDisplay();
+              if (BallManager.checkCollisionBottomZone(scene)) {
+                Hp.loseLife();
+                hp.updateDisplay();
 
-            if (Hp.getHp() <= 0) {
-              gameOver();
-            } else {
-              newLife();
+                if (Hp.getHp() <= 0) {
+                  gameOver();
+                } else {
+                  newLife();
+                }
+              }
+
+              if (score != null) {
+                score.reup();
+              }
             }
-          }
-
-          if (score != null) {
-            score.reup();
-          }
-        }
-      }));
+          }));
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -111,7 +110,6 @@ public class Controller implements Initializable {
     startButton.setVisible(false);
     startBackground.setVisible(false);
     backgroundView.setVisible(true);
-    spaceShip.setVisible(true);
 
     ScoreDisplay.setScore(0);
     Hp.resetHp();
@@ -225,7 +223,6 @@ public class Controller implements Initializable {
     startButton.setVisible(true);
     startBackground.setVisible(true);
     backgroundView.setVisible(false);
-    spaceShip.setVisible(false);
   }
 
   private void brickUpdate() {
@@ -263,7 +260,7 @@ public class Controller implements Initializable {
       if (ball1.ballType > 0) {
         for (Ball ball : BallManager.getBalls()) {
           if (ball.ballType == 0 && ball1.getCircle().getBoundsInParent()
-              .intersects(ball.getCircle().getBoundsInParent())) {
+                  .intersects(ball.getCircle().getBoundsInParent())) {
             scene.getChildren().remove(ball1.getImageView());
             return true;
           }

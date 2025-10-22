@@ -18,9 +18,9 @@
             <Font size="13.0" />
          </font>
       </Button>
-      <ImageView fx:id="backgroundView" fitHeight="332.0" fitWidth="402.0" layoutX="-73.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="backgroundView" fitHeight="274.0" fitWidth="311.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@Background/background.jpg" />
+            <Image url="@Background/background_1.gif" />
          </image>
       </ImageView>
       <ImageView fx:id="spaceShip" fitHeight="126.0" fitWidth="227.0" layoutX="29.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true" visible="false">
