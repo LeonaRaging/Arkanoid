@@ -117,9 +117,9 @@ public class PowerUpManager {
       double paddleWidth = paddle.getRectangle().getWidth();
 
       Entity projectile1 = new Entity(paddle.getRectangle().getX() + paddleWidth / 2 - 5,
-          paddle.getRectangle().getY(), 8, 16);
+          paddle.getRectangle().getY(), 4, 12);
       Entity projectile2 = new Entity(paddle.getRectangle().getX() + paddleWidth / 2 + 5,
-          paddle.getRectangle().getY(), 8, 16);
+          paddle.getRectangle().getY(), 4, 12);
       Image image = new Image(
           PowerUpManager.class.getResource("/com/arkanoid/paddle/bullet.png").toExternalForm());
       projectile1.getImageView().setImage(image);
