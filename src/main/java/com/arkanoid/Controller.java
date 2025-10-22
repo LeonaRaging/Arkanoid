@@ -375,7 +375,6 @@ public class Controller implements Initializable {
   void startGameButtonAction(ActionEvent event, int Level) throws FileNotFoundException {
     startBackground.setVisible(false);
     backgroundView.setVisible(true);
-    spaceShip.setVisible(true);
 
     ScoreDisplay.setScore(0);
     Hp.resetHp();
@@ -482,7 +481,6 @@ public class Controller implements Initializable {
     startMainMenu();
     startBackground.setVisible(true);
     backgroundView.setVisible(false);
-    spaceShip.setVisible(false);
 
     File file = new File("src/main/resources/com/arkanoid/ui/score.txt");
     FileWriter fileWriter = new FileWriter(file, true);
@@ -538,7 +536,7 @@ public class Controller implements Initializable {
       if (ball1.ballType > 0) {
         for (Ball ball : BallManager.getBalls()) {
           if (ball.ballType == 0 && ball1.getCircle().getBoundsInParent()
-              .intersects(ball.getCircle().getBoundsInParent())) {
+                  .intersects(ball.getCircle().getBoundsInParent())) {
             scene.getChildren().remove(ball1.getImageView());
             return true;
           }
