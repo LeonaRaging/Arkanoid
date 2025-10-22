@@ -47,10 +47,10 @@ public class Ball extends Entity {
     deltaX += (rand.nextDouble() - 0.5) * 0.3;
     deltaY = y * Math.abs(deltaY);
     if (deltaX < 0.75 && deltaX >= 0) {
-      deltaY = 0.75;
+      deltaX = 0.75;
     }
     if (deltaX > -0.75 && deltaX < 0) {
-      deltaY = -0.75;
+      deltaX = -0.75;
     }
   }
 }
