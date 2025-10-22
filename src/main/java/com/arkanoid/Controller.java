@@ -172,6 +172,7 @@ public class Controller implements Initializable {
     paddle.getRectangle().setX(112);
     paddle.getRectangle().setY(210);
     paddle.setState(0);
+    paddle.getRectangle().setWidth(32);
 
     Ball ball = new Ball(0, 0, 2.5);
     ball.getCircle().setLayoutX(112);
