@@ -15,7 +15,13 @@ import com.arkanoid.powerup.PowerUpManager;
 import com.arkanoid.score.Hp;
 import com.arkanoid.score.ScoreDisplay;
 import com.arkanoid.ui.MainMenu;
+import com.arkanoid.ui.ScoreBoard;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -55,6 +61,8 @@ public class Controller implements Initializable {
   @FXML private ImageView startBackground;
   @FXML private ImageView backgroundView;
   @FXML private ImageView spaceShip;
+  @FXML private ImageView scoreBoardView;
+  @FXML private ScoreBoard scoreBoard;
 
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
 
@@ -62,7 +70,7 @@ public class Controller implements Initializable {
       new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
         long lastTime = System.nanoTime();
 
-        private void handleIngame() {
+        private void handleIngame() throws IOException {
           paddle.update(field.getRectangle());
 
           for (Ball ball : BallManager.getBalls()) {
@@ -101,7 +109,7 @@ public class Controller implements Initializable {
           }
         }
 
-        private void handleMainMenu() {
+        private void handleMainMenu() throws FileNotFoundException {
           if (pressedKeys.contains(KeyCode.UP)) {
             mainMenu.moveSelector(-1);
             pressedKeys.remove(KeyCode.UP);
@@ -112,18 +120,41 @@ public class Controller implements Initializable {
             pressedKeys.remove(KeyCode.DOWN);
           }
 
-          if (pressedKeys.contains(KeyCode.ENTER) && MainMenu.getCurrentSelection() == 0) {
-            isRunning = true;
-            startGameButtonAction(new ActionEvent());
+          if (pressedKeys.contains(KeyCode.ENTER)) {
+            switch (MainMenu.getCurrentSelection()) {
+              case 0:
+                isRunning = true;
+                startGameButtonAction(new ActionEvent());
+                break;
+              case 2:
+                scoreBoard.setScore();
+                scoreBoardView.setVisible(true);
+                startBackground.setVisible(false);
+                break;
+            }
+          }
+
+          if (pressedKeys.contains(KeyCode.ESCAPE)) {
+            scoreBoardView.setVisible(false);
+            startBackground.setVisible(true);
+            scoreBoard.getChildren().clear();
           }
         }
 
         @Override
         public void handle(ActionEvent actionEvent) {
           if (isRunning) {
-            handleIngame();
+            try {
+              handleIngame();
+            } catch (IOException e) {
+              throw new RuntimeException(e);
+            }
           } else {
-            handleMainMenu();
+            try {
+              handleMainMenu();
+            } catch (FileNotFoundException e) {
+              throw new RuntimeException(e);
+            }
           }
         }
       }));
@@ -210,7 +241,7 @@ public class Controller implements Initializable {
     BallManager.getBalls().add(ball);
   }
 
-  public void gameOver() {
+  public void gameOver() throws IOException {
 
     for (Brick brick : BrickManager.getBricks()) {
       scene.getChildren().remove(brick.getImageView());
@@ -253,9 +284,17 @@ public class Controller implements Initializable {
     startBackground.setVisible(true);
     backgroundView.setVisible(false);
     spaceShip.setVisible(false);
+
+    File file = new File("src/main/resources/com/arkanoid/ui/score.txt");
+    FileWriter fileWriter = new FileWriter(file, true);
+    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+    bufferedWriter.append('\n');
+    bufferedWriter.append(Integer.toString(score.getScore()));
+    bufferedWriter.close();
+    fileWriter.close();
   }
 
-  private void brickUpdate() {
+  private void brickUpdate() throws IOException {
     if (BrickManager.brickRemain > 0) {
       for (Ball ball : BallManager.getBalls()) {
         BrickManager.update(ball, scene);

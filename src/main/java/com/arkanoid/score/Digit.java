@@ -11,7 +11,7 @@ public class Digit extends Entity {
   public Digit(int x, int y, int w, int h, int num) {
     super(x, y, w, h);
     image = new Image(
-        getClass().getResource("/com/arkanoid/number/" + Integer.toString(num) + ".png")
+        getClass().getResource("/com/arkanoid/number/" + num + ".png")
             .toExternalForm());
     imageView.setImage(image);
     imageView.setX(this.getRectangle().getX());
@@ -20,7 +20,7 @@ public class Digit extends Entity {
 
   public void change(int newdigit) {
     image = new Image(
-        getClass().getResource("/com/arkanoid/number/" + Integer.toString(newdigit) + ".png")
+        getClass().getResource("/com/arkanoid/number/" + newdigit + ".png")
             .toExternalForm());
     imageView.setImage(image);
     imageView.setX(this.getRectangle().getX());
