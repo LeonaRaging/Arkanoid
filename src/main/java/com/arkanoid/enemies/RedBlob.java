@@ -133,7 +133,7 @@ public class RedBlob extends Enemies {
         } else {
           if (imageState == 3) {
             Brick brick = new Brick(this.getCircle().getCenterX() - this.getCircle().getRadius(),
-                this.getCircle().getCenterY() - this.getCircle().getRadius(), 16, 8, 14);
+                this.getCircle().getCenterY() - this.getCircle().getRadius(), 16, 8, 4);
             BrickManager.brickRemain++;
             scene.getChildren().add(brick.getImageView());
             BrickManager.getBricks().add(brick);
