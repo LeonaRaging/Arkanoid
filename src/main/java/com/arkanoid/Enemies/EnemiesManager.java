@@ -1,5 +1,6 @@
 package com.arkanoid.enemies;
 
+import com.arkanoid.brick.BrickManager;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -12,11 +13,11 @@ public class EnemiesManager {
   public static ArrayList<Enemies> enemies = new ArrayList<>();
   public static boolean gameOver = false;
 
+  private static boolean isSpawned = false;
+
   public static ArrayList<Enemies> getEnemies() {
     return enemies;
   }
-
-  private static int spawnCooldown = 500;
 
   private static class SpawnEnemy {
 
@@ -32,8 +33,11 @@ public class EnemiesManager {
   }
 
   public static void update(AnchorPane scene) {
-    spawnCooldown--;
-    if (spawnCooldown == 0) {
+    if (BrickManager.brickRemain % 10 != 0) {
+      isSpawned = false;
+    }
+    if (BrickManager.brickRemain % 10 == 0 && !isSpawned) {
+      isSpawned = true;
       Random rand = new Random();
       SpawnEnemy spawnEnemy;
       int type = rand.nextInt(6);
@@ -72,7 +76,6 @@ public class EnemiesManager {
         enemies.add(redBlob);
         scene.getChildren().add(redBlob.getImageView());
       }
-      spawnCooldown = 500;
     }
   }
 

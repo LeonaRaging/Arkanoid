@@ -62,7 +62,7 @@ public class PowerUpManager {
           paddle.setState(1);
           Sound.playPowerUpE();
         }
-        if (powerUp.getType() == 3) {
+        if (powerUp.getType() == 3 && !BallManager.getBalls().isEmpty()) {
           Ball currentBall = BallManager.getBalls().getFirst();
           for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
