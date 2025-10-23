@@ -6,11 +6,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class MainMenu extends VBox {
-  private HBox selector;
-  private static int currentSelection = 0;
-  private HBox[] menuItems;
+  protected HBox selector;
+  protected static int currentSelection = 0;
+  protected HBox[] menuItems;
 
-  private HBox createLabel(String text) {
+  protected HBox createLabel(String text) {
     HBox hbox = new HBox();
     for (int i = 0; i < text.length(); i++) {
       Image image = FontManager.whiteFont.getCharImage(text.charAt(i));
@@ -20,7 +20,7 @@ public class MainMenu extends VBox {
     return hbox;
   }
 
-  private HBox createMenuRow(HBox item, boolean isSelected) {
+  protected HBox createMenuRow(HBox item, boolean isSelected) {
     if (isSelected) {
       HBox hbox = new HBox();
       hbox.setSpacing(8);
@@ -54,6 +54,9 @@ public class MainMenu extends VBox {
   public void moveSelector(int direction) {
     currentSelection += direction;
     currentSelection = (currentSelection + menuItems.length) % menuItems.length;
+  }
+
+  public void update() {
     getChildren().clear();
     for (int i = 0; i < menuItems.length; i++) {
       getChildren().add(createMenuRow(menuItems[i], i == currentSelection));
