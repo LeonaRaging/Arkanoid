@@ -3,7 +3,7 @@ package com.arkanoid.brick;
 import com.arkanoid.core.Ball;
 import com.arkanoid.core.Entity;
 import com.arkanoid.powerup.PowerUpManager;
-import com.arkanoid.score.ScoreDisplay;
+import com.arkanoid.Number_and_string_display.ScoreDisplay;
 import com.arkanoid.sound.Sound;
 import java.io.File;
 import java.util.ArrayList;

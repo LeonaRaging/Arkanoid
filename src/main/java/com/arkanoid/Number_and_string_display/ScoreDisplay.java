@@ -1,4 +1,4 @@
-package com.arkanoid.score;
+package com.arkanoid.Number_and_string_display;
 
 import javafx.scene.layout.AnchorPane;
 
@@ -11,8 +11,8 @@ public class ScoreDisplay {
     this.score = score;
     int startX = 200;
     int y = 50;
-    int width = 10;
-    int height = 16;
+    int width = 8;
+    int height = 8;
     int spacing = 8;
     int copyscore = score;
     for (int i = 0; i < 6; i++) {

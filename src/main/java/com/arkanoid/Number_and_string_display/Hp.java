@@ -1,4 +1,4 @@
-package com.arkanoid.score;
+package com.arkanoid.Number_and_string_display;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,7 +18,7 @@ public class Hp {
     final double ypos = 74;
     double iconWidth = 16;
     double spacing = 8;
-    final double digitWidth = 10;
+    final double digitWidth = 8;
     double iconX = startX;
     double digitTensX = iconX + iconWidth + spacing;
     final double digitUnitsX = digitTensX + spacing;
@@ -30,9 +30,9 @@ public class Hp {
     paddleIcon.setY(ypos);
 
     int displayHp = (hp > 0) ? hp - 1 : 0;
-    showHp[0] = new Digit((int) digitTensX, (int) ypos, (int) digitWidth, 16,
+    showHp[0] = new Digit((int) digitTensX, (int) ypos, (int) digitWidth, 8,
         displayHp / 10); // Hàng chục
-    showHp[1] = new Digit((int) digitUnitsX, (int) ypos, (int) digitWidth, 16,
+    showHp[1] = new Digit((int) digitUnitsX, (int) ypos, (int) digitWidth, 8,
         displayHp % 10);  // Hàng đơn vị
 
     scene.getChildren().addAll(paddleIcon, showHp[0].getImageView(), showHp[1].getImageView());
