@@ -40,7 +40,7 @@ public class EnemiesManager {
       isSpawned = true;
       Random rand = new Random();
       SpawnEnemy spawnEnemy;
-      int type = rand.nextInt(6);
+      int type = rand.nextInt(0);
       if (type == 3) {
         spawnEnemy = new SpawnEnemy(type, (rand.nextInt(2) == 0 ? 10 : 180), 55);
       } else {

@@ -12,6 +12,8 @@ import com.arkanoid.field.Field;
 import com.arkanoid.field.Gate;
 import com.arkanoid.powerup.PowerUp;
 import com.arkanoid.powerup.PowerUpManager;
+import com.arkanoid.Number_and_string_display.Hp;
+import com.arkanoid.Number_and_string_display.ScoreDisplay;
 import com.arkanoid.score.ScoreDisplay;
 import com.arkanoid.ui.IngameMenu;
 import com.arkanoid.ui.Load;
