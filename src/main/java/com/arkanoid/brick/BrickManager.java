@@ -22,6 +22,7 @@ public class BrickManager {
   }
 
   public static void createBricks(AnchorPane scene, int level) {
+    bricks.clear();
     brickRemain = 0;
 
     File file = new File("src/main/resources/com/arkanoid/Level/level" + level + ".txt");

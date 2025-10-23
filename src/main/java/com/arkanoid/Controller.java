@@ -13,7 +13,10 @@ import com.arkanoid.field.Gate;
 import com.arkanoid.powerup.PowerUp;
 import com.arkanoid.powerup.PowerUpManager;
 import com.arkanoid.score.ScoreDisplay;
+import com.arkanoid.ui.IngameMenu;
+import com.arkanoid.ui.Load;
 import com.arkanoid.ui.MainMenu;
+import com.arkanoid.ui.Save;
 import com.arkanoid.ui.ScoreBoard;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,6 +27,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 import java.util.Set;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -31,6 +35,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -55,7 +60,9 @@ public class Controller implements Initializable {
 
   private int level;
 
-  private boolean isRunning = false;
+  private int isRunning = 0;
+
+  private int initialScore = 0;
 
   @FXML private MainMenu mainMenu;
   @FXML private ImageView startBackground;
@@ -63,6 +70,9 @@ public class Controller implements Initializable {
   @FXML private ImageView spaceShip;
   @FXML private ImageView scoreBoardView;
   @FXML private ScoreBoard scoreBoard;
+  @FXML private IngameMenu ingameMenu;
+  @FXML private Save save;
+  @FXML private Load load;
 
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
 
@@ -71,6 +81,11 @@ public class Controller implements Initializable {
         long lastTime = System.nanoTime();
 
         private void handleIngame() throws IOException {
+          if (pressedKeys.contains(KeyCode.ESCAPE)) {
+            startIngameMenu();
+            return;
+          }
+
           paddle.update(field.getRectangle());
 
           for (Ball ball : BallManager.getBalls()) {
@@ -111,6 +126,7 @@ public class Controller implements Initializable {
         }
 
         private void handleMainMenu() throws FileNotFoundException {
+          mainMenu.update();
           if (pressedKeys.contains(KeyCode.UP)) {
             mainMenu.moveSelector(-1);
             pressedKeys.remove(KeyCode.UP);
@@ -124,38 +140,145 @@ public class Controller implements Initializable {
           if (pressedKeys.contains(KeyCode.ENTER)) {
             switch (MainMenu.getCurrentSelection()) {
               case 0:
-                isRunning = true;
-                startGameButtonAction(new ActionEvent());
+                isRunning = 1;
+                startGameButtonAction(new ActionEvent(), 1);
+                break;
+              case 1:
+                startLoad();
                 break;
               case 2:
-                scoreBoard.setScore();
-                scoreBoardView.setVisible(true);
-                startBackground.setVisible(false);
+                startScoreBoard();
                 break;
             }
+            pressedKeys.remove(KeyCode.ENTER);
           }
 
           if (pressedKeys.contains(KeyCode.ESCAPE)) {
-            scoreBoardView.setVisible(false);
-            startBackground.setVisible(true);
-            scoreBoard.getChildren().clear();
+            startMainMenu();
+          }
+        }
+
+        private void handleIngameMenu() throws IOException {
+          ingameMenu.update();
+          if (pressedKeys.contains(KeyCode.UP)) {
+            ingameMenu.moveSelector(-1);
+            pressedKeys.remove(KeyCode.UP);
+          }
+
+          if (pressedKeys.contains(KeyCode.DOWN)) {
+            ingameMenu.moveSelector(1);
+            pressedKeys.remove(KeyCode.DOWN);
+          }
+
+          if (pressedKeys.contains(KeyCode.ENTER)) {
+            switch (ingameMenu.getCurrentSelection()) {
+              case 0:
+                isRunning = 1;
+                resetAnchorPane();
+                for (Node node : scene.getChildren()) {
+                  if (node != mainMenu && node != scoreBoardView && node != scoreBoard) {
+                    node.setVisible(true);
+                  }
+                }
+                break;
+              case 1:
+                startSave();
+                break;
+              case 2:
+                startMainMenu();
+                break;
+            }
+            pressedKeys.remove(KeyCode.ENTER);
+          }
+
+          if (pressedKeys.contains(KeyCode.ESCAPE)) {
+            startIngameMenu();
+            pressedKeys.remove(KeyCode.ESCAPE);
+          }
+        }
+
+        private void handleSave() throws IOException {
+          save.update();
+          if (pressedKeys.contains(KeyCode.UP)) {
+            save.moveSelector(-1);
+            pressedKeys.remove(KeyCode.UP);
+          }
+          if (pressedKeys.contains(KeyCode.DOWN)) {
+            save.moveSelector(1);
+            pressedKeys.remove(KeyCode.DOWN);
+          }
+          if (pressedKeys.contains(KeyCode.ENTER)) {
+            File file = new File("src/main/resources/com/arkanoid/ui/save" + Save.getCurrentSelection() + ".txt");
+            FileWriter fileWriter = new FileWriter(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.append(Integer.toString(level));
+            bufferedWriter.newLine();
+            bufferedWriter.append(Integer.toString(initialScore));
+            bufferedWriter.close();
+            fileWriter.close();
+
+            startIngameMenu();
+            pressedKeys.remove(KeyCode.ENTER);
+          }
+
+          if (pressedKeys.contains(KeyCode.ESCAPE)) {
+            startIngameMenu();
+            pressedKeys.remove(KeyCode.ESCAPE);
+          }
+        }
+
+        private void handleLoad() throws IOException {
+          load.update();
+          if (pressedKeys.contains(KeyCode.UP)) {
+            load.moveSelector(-1);
+            pressedKeys.remove(KeyCode.UP);
+          }
+          if (pressedKeys.contains(KeyCode.DOWN)) {
+            load.moveSelector(1);
+            pressedKeys.remove(KeyCode.DOWN);
+          }
+          if (pressedKeys.contains(KeyCode.ENTER)) {
+            File file = new File("src/main/resources/com/arkanoid/ui/save" + Load.getCurrentSelection() + ".txt");
+            Scanner sc = new Scanner(file);
+            int loadedLevel = sc.nextInt();
+            int loadedScore = sc.nextInt();
+            sc.close();
+            isRunning = 1;
+            startGameButtonAction(new ActionEvent(), loadedLevel);
+            ScoreDisplay.setScore(loadedScore);
+            initialScore = loadedScore;
+            pressedKeys.remove(KeyCode.ENTER);
+          }
+
+          if (pressedKeys.contains(KeyCode.ESCAPE)) {
+            startMainMenu();
+            pressedKeys.remove(KeyCode.ESCAPE);
           }
         }
 
         @Override
         public void handle(ActionEvent actionEvent) {
-          if (isRunning) {
-            try {
-              handleIngame();
-            } catch (IOException e) {
-              throw new RuntimeException(e);
+          try {
+            switch(isRunning) {
+              case 0:
+                handleMainMenu();
+                break;
+              case 1:
+                handleIngame();
+                break;
+              case 2:
+                handleIngameMenu();
+                break;
+              case 3:
+                handleSave();
+                break;
+              case 4:
+                handleLoad();
+                break;
             }
-          } else {
-            try {
-              handleMainMenu();
-            } catch (FileNotFoundException e) {
-              throw new RuntimeException(e);
-            }
+          }
+          catch (Exception e) {
+            throw new RuntimeException(e);
           }
         }
       }));
@@ -164,6 +287,9 @@ public class Controller implements Initializable {
   public void initialize(URL url, ResourceBundle resourceBundle) {
     timeline.setCycleCount(Timeline.INDEFINITE);
     mainMenu.setChoices();
+    ingameMenu.setChoices();
+    save.setChoices();
+    load.setChoices();
 
     scene.setFocusTraversable(true);
 
@@ -171,12 +297,14 @@ public class Controller implements Initializable {
     scene.setOnKeyReleased(e -> pressedKeys.remove(e.getCode()));
     scene.requestFocus();
 
+    startMainMenu();
+
     timeline.play();
   }
 
   @FXML
-  void startGameButtonAction(ActionEvent event) {
-    startBackground.setVisible(false);
+  void startGameButtonAction(ActionEvent event, int Level) {
+    resetAnchorPane();
     backgroundView.setVisible(true);
     spaceShip.setVisible(true);
 
@@ -202,7 +330,7 @@ public class Controller implements Initializable {
 
     newLife();
 
-    level = 1;
+    level = Level;
 
     BrickManager.createBricks(scene, level);
 
@@ -283,7 +411,7 @@ public class Controller implements Initializable {
     }
     BallManager.getBalls().clear();
 
-    isRunning = false;
+    isRunning = 0;
     startBackground.setVisible(true);
     backgroundView.setVisible(false);
     spaceShip.setVisible(false);
@@ -312,11 +440,13 @@ public class Controller implements Initializable {
         gameOver();
       }
       newLife();
+      EnemiesManager.removeAllEnemies(scene);
       for (Brick brick : BrickManager.getBricks()) {
         scene.getChildren().remove(brick.getImageView());
       }
       BrickManager.getBricks().clear();
       BrickManager.createBricks(scene, level);
+      initialScore = score.getScore();
     }
   }
 
@@ -346,5 +476,46 @@ public class Controller implements Initializable {
     for (int i = 0; i < 4; i++) {
       gates[i].update(i);
     }
+  }
+
+  private void resetAnchorPane() {
+    for (Node node : scene.getChildren()) {
+      node.setVisible(false);
+    }
+  }
+
+  private void startMainMenu() {
+    isRunning = 0;
+    resetAnchorPane();
+    mainMenu.setVisible(true);
+    startBackground.setVisible(true);
+  }
+
+  private void startIngameMenu() {
+    isRunning = 2;
+    resetAnchorPane();
+    ingameMenu.setVisible(true);
+    startBackground.setVisible(true);
+  }
+
+  private void startScoreBoard() throws FileNotFoundException {
+    resetAnchorPane();
+    scoreBoard.setScore();
+    scoreBoard.setVisible(true);
+    scoreBoardView.setVisible(true);
+  }
+
+  private void startSave()  {
+    isRunning = 3;
+    resetAnchorPane();
+    save.setVisible(true);
+    startBackground.setVisible(true);
+  }
+
+  private void startLoad() {
+    isRunning = 4;
+    resetAnchorPane();
+    load.setVisible(true);
+    startBackground.setVisible(true);
   }
 }

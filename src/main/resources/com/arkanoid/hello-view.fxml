@@ -5,6 +5,9 @@
 
 <?import com.arkanoid.ui.MainMenu?>
 <?import com.arkanoid.ui.ScoreBoard?>
+<?import com.arkanoid.ui.IngameMenu?>
+<?import com.arkanoid.ui.Save?>
+<?import com.arkanoid.ui.Load?>
 <AnchorPane fx:id="scene" maxHeight="224.0" maxWidth="256.0" minHeight="224.0" minWidth="256.0" prefHeight="224.0" prefWidth="256.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.arkanoid.Controller" focusTraversable="true">
    <children>
       <ImageView fx:id="startBackground" fitHeight="224.0" fitWidth="256.0" layoutX="0" layoutY="0" pickOnBounds="true" smooth="false">
@@ -29,5 +32,8 @@
          </image>
       </ImageView>
       <ScoreBoard fx:id = "scoreBoard" layoutX="24.0" layoutY="32.0" prefHeight="168.0" prefWidth="209.0" />
+      <IngameMenu fx:id = "ingameMenu" layoutX="96.0" layoutY="128.0" prefHeight="72.0" prefWidth="100.0" />
+      <Save fx:id = "save" layoutX="96.0" layoutY="128.0" prefHeight="72.0" prefWidth="100.0" />
+      <Load fx:id = "load" layoutX="96.0" layoutY="128.0" prefHeight="72.0" prefWidth="100.0" />
    </children>
 </AnchorPane>
