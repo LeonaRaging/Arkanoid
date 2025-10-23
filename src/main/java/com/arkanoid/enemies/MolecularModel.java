@@ -34,7 +34,6 @@ public class MolecularModel extends Enemies {
 
   @Override
   public boolean update(double deltaTime, AnchorPane scene) {
-    System.out.println("MolecularModel state: " + state);
     switch (state) {
       case 0:
         if (this.checkCollisionBall()) {

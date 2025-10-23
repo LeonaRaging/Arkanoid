@@ -12,9 +12,16 @@ import com.arkanoid.field.Field;
 import com.arkanoid.field.Gate;
 import com.arkanoid.powerup.PowerUp;
 import com.arkanoid.powerup.PowerUpManager;
-import com.arkanoid.Number_and_string_display.Hp;
-import com.arkanoid.Number_and_string_display.ScoreDisplay;
-
+import com.arkanoid.score.Hp;
+import com.arkanoid.score.ScoreDisplay;
+import com.arkanoid.ui.MainMenu;
+import com.arkanoid.ui.ScoreBoard;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.ResourceBundle;
@@ -48,10 +55,14 @@ public class Controller implements Initializable {
 
   private int level;
 
-  @FXML private Button startButton;
+  private boolean isRunning = false;
+
+  @FXML private MainMenu mainMenu;
   @FXML private ImageView startBackground;
   @FXML private ImageView backgroundView;
   @FXML private ImageView spaceShip;
+  @FXML private ImageView scoreBoardView;
+  @FXML private ScoreBoard scoreBoard;
 
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
 
@@ -59,8 +70,7 @@ public class Controller implements Initializable {
       new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
         long lastTime = System.nanoTime();
 
-        @Override
-        public void handle(ActionEvent actionEvent) {
+        private void handleIngame() throws IOException {
           paddle.update(field.getRectangle());
 
           for (Ball ball : BallManager.getBalls()) {
@@ -98,17 +108,73 @@ public class Controller implements Initializable {
             score.reup();
           }
         }
+
+        private void handleMainMenu() throws FileNotFoundException {
+          if (pressedKeys.contains(KeyCode.UP)) {
+            mainMenu.moveSelector(-1);
+            pressedKeys.remove(KeyCode.UP);
+          }
+
+          if (pressedKeys.contains(KeyCode.DOWN)) {
+            mainMenu.moveSelector(1);
+            pressedKeys.remove(KeyCode.DOWN);
+          }
+
+          if (pressedKeys.contains(KeyCode.ENTER)) {
+            switch (MainMenu.getCurrentSelection()) {
+              case 0:
+                isRunning = true;
+                startGameButtonAction(new ActionEvent());
+                break;
+              case 2:
+                scoreBoard.setScore();
+                scoreBoardView.setVisible(true);
+                startBackground.setVisible(false);
+                break;
+            }
+          }
+
+          if (pressedKeys.contains(KeyCode.ESCAPE)) {
+            scoreBoardView.setVisible(false);
+            startBackground.setVisible(true);
+            scoreBoard.getChildren().clear();
+          }
+        }
+
+        @Override
+        public void handle(ActionEvent actionEvent) {
+          if (isRunning) {
+            try {
+              handleIngame();
+            } catch (IOException e) {
+              throw new RuntimeException(e);
+            }
+          } else {
+            try {
+              handleMainMenu();
+            } catch (FileNotFoundException e) {
+              throw new RuntimeException(e);
+            }
+          }
+        }
       }));
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     timeline.setCycleCount(Timeline.INDEFINITE);
+    mainMenu.setChoices();
+
+    scene.setFocusTraversable(true);
+
+    scene.setOnKeyPressed(e -> pressedKeys.add(e.getCode()));
+    scene.setOnKeyReleased(e -> pressedKeys.remove(e.getCode()));
+    scene.requestFocus();
+
+    timeline.play();
   }
 
   @FXML
   void startGameButtonAction(ActionEvent event) {
-
-    startButton.setVisible(false);
     startBackground.setVisible(false);
     backgroundView.setVisible(true);
     spaceShip.setVisible(true);
@@ -144,12 +210,6 @@ public class Controller implements Initializable {
     hp = new Hp(scene);
 
     bottomZone = new Rectangle(0, 220, 256, 10);
-
-    scene.setOnKeyPressed(e -> pressedKeys.add(e.getCode()));
-    scene.setOnKeyReleased(e -> pressedKeys.remove(e.getCode()));
-    scene.requestFocus();
-
-    timeline.play();
   }
 
   private void newLife() {
@@ -181,8 +241,7 @@ public class Controller implements Initializable {
     BallManager.getBalls().add(ball);
   }
 
-  public void gameOver() {
-    timeline.stop();
+  public void gameOver() throws IOException {
 
     for (Brick brick : BrickManager.getBricks()) {
       scene.getChildren().remove(brick.getImageView());
@@ -221,13 +280,21 @@ public class Controller implements Initializable {
     }
     BallManager.getBalls().clear();
 
-    startButton.setVisible(true);
+    isRunning = false;
     startBackground.setVisible(true);
     backgroundView.setVisible(false);
     spaceShip.setVisible(false);
+
+    File file = new File("src/main/resources/com/arkanoid/ui/score.txt");
+    FileWriter fileWriter = new FileWriter(file, true);
+    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+    bufferedWriter.append('\n');
+    bufferedWriter.append(Integer.toString(score.getScore()));
+    bufferedWriter.close();
+    fileWriter.close();
   }
 
-  private void brickUpdate() {
+  private void brickUpdate() throws IOException {
     if (BrickManager.brickRemain > 0) {
       for (Ball ball : BallManager.getBalls()) {
         BrickManager.update(ball, scene);

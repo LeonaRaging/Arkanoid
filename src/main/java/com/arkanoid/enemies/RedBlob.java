@@ -1,5 +1,6 @@
 package com.arkanoid.enemies;
 
+import com.arkanoid.Controller;
 import com.arkanoid.brick.Brick;
 import com.arkanoid.brick.BrickManager;
 import com.arkanoid.core.Ball;
@@ -86,7 +87,9 @@ public class RedBlob extends Enemies {
           imageState = 0;
           moveCooldown = imageCooldown * 12;
         } else {
-          if (transformCooldown <= 0 && imageState == 9 && imageCooldown == 1) {
+          if (transformCooldown <= 0 && imageState == 9 && imageCooldown == 1
+          && this.getCircle().getCenterY() - this.getCircle().getRadius()
+              >= Controller.field.getRectangle().getY()) {
             state = 2;
             imageCooldown = 20;
             imageState = 0;
@@ -130,7 +133,7 @@ public class RedBlob extends Enemies {
         } else {
           if (imageState == 3) {
             Brick brick = new Brick(this.getCircle().getCenterX() - this.getCircle().getRadius(),
-                this.getCircle().getCenterY() - this.getCircle().getRadius(), 16, 8, 1);
+                this.getCircle().getCenterY() - this.getCircle().getRadius(), 16, 8, 4);
             BrickManager.brickRemain++;
             scene.getChildren().add(brick.getImageView());
             BrickManager.getBricks().add(brick);
