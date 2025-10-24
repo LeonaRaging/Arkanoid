@@ -213,7 +213,7 @@ public class Bubble extends Enemies {
           state = 0;
           imageState = 0;
           imageCooldown = 20;
-          teleport();
+          return true;
         }
         break;
     }

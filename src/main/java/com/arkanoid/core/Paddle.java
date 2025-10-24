@@ -1,6 +1,7 @@
 package com.arkanoid.core;
 
 import com.arkanoid.Controller;
+import com.arkanoid.powerup.PowerUpManager;
 import com.arkanoid.sound.Sound;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -152,8 +153,13 @@ public class Paddle extends Entity {
       imageView.setImage(images[state][imageState]);
     } else {
       imageView.setImage(powerUpImages[powerUpCooldown / 2]);
-      if (powerUpCooldown < 26) {
-        powerUpCooldown++;
+      if (state == 2) {
+        if (powerUpCooldown < 26) {
+          powerUpCooldown++;
+        }
+      } else {
+        powerUpCooldown--;
+        if (powerUpCooldown == 0) state = 0;
       }
     }
     imageView.setX(this.getRectangle().getX());
@@ -164,6 +170,9 @@ public class Paddle extends Entity {
     if (ball.getCircle().getBoundsInParent().intersects(this.getRectangle().getBoundsInParent())) {
       double distance = ball.getCircle().getLayoutX() - (this.getRectangle().getX()
           + this.getRectangle().getWidth() / 2);
+      if (PowerUpManager.powerUpState[0] == 1) {
+        distance *= 2;
+      }
       ball.setDeltaX(distance / 10);
       ball.setDeltaY(-Math.abs(ball.getDeltaY()));
       Sound.playBouncePaddle();
