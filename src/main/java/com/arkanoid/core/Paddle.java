@@ -13,12 +13,12 @@ public class Paddle extends Entity {
   private final Image[] appearImages = new Image[10];
   private int appearFrame;
   private int appearCooldown;
-  private static final int APPEAR_FRAME_DELAY = 5;
+  private static final int APPEAR_FRAME_DELAY = 3;
 
   private final Image[] breakImages = new Image[15];
   private int breakFrame;
   private int breakCooldown;
-  private static final int BREAK_FRAME_DELAY = 5;
+  private static final int BREAK_FRAME_DELAY = 3;
 
   private int state;
   private int imageState;
@@ -67,6 +67,8 @@ public class Paddle extends Entity {
 
     breakCooldown--;
     if (breakCooldown <= 0) {
+      imageView.setX(this.getRectangle().getX());
+      imageView.setY(this.getRectangle().getY()-5);
       imageView.setImage(breakImages[breakFrame]);
       breakFrame++;
       breakCooldown = BREAK_FRAME_DELAY;
@@ -86,16 +88,17 @@ public class Paddle extends Entity {
       imageView.setVisible(true);
     }
 
-    imageView.setX(this.getRectangle().getX());
-    imageView.setY(this.getRectangle().getY());
-
     if (appearFrame >= appearImages.length) {
+      imageView.setX(this.getRectangle().getX());
+      imageView.setY(this.getRectangle().getY());
       imageView.setImage(images[state][imageState]);
       return false;
     }
 
     appearCooldown--;
     if (appearCooldown <= 0) {
+      imageView.setX(this.getRectangle().getX());
+      imageView.setY(this.getRectangle().getY()-5);
       imageView.setImage(appearImages[appearFrame]);
       appearFrame++;
       appearCooldown = APPEAR_FRAME_DELAY;

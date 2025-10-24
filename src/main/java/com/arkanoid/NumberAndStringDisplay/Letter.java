@@ -1,4 +1,4 @@
-package com.arkanoid.Number_and_string_display;
+package com.arkanoid.NumberAndStringDisplay;
 
 import com.arkanoid.core.Entity;
 import javafx.scene.image.Image;
