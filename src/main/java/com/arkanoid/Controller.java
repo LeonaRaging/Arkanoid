@@ -82,6 +82,8 @@ public class Controller implements Initializable {
   @FXML private IngameMenu ingameMenu;
   @FXML private Save save;
   @FXML private Load load;
+  @FXML private ImageView backgroundView11;
+  @FXML private ImageView backgroundViewother;
 
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
   long lastTime;
@@ -522,6 +524,14 @@ public class Controller implements Initializable {
         }
       }
       BallManager.getBalls().clear();
+      if (level==11){
+        backgroundView.setVisible(false);
+        backgroundView11.setVisible(true);
+      }
+      if (level==12){
+        backgroundView11.setVisible(false);
+        backgroundViewother.setVisible(true);
+      }
       newLife();
       EnemiesManager.removeAllEnemies(scene);
       for (Brick brick : BrickManager.getBricks()) {
