@@ -3,6 +3,7 @@ package com.arkanoid.enemies;
 import com.arkanoid.Controller;
 import com.arkanoid.core.Ball;
 import com.arkanoid.core.BallManager;
+import com.arkanoid.powerup.PowerUpManager;
 import com.arkanoid.sound.Sound;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -73,7 +74,7 @@ public class Bubble extends Enemies {
           imageCooldown = 20;
         }
 
-        if (checkCollisionBall()) {
+        if (PowerUpManager.powerUpState[0] == 0 && checkCollisionBall()) {
           BallManager.getBalls().removeIf(ball -> {
             if (ball.getShape().getBoundsInParent()
                 .intersects(this.getShape().getBoundsInParent())) {

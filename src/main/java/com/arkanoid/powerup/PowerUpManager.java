@@ -35,7 +35,7 @@ public class PowerUpManager {
   public static void createPowerUps(Brick brick, AnchorPane scene) {
     Random rand = new Random();
     PowerUp powerUp = new PowerUp(brick.getRectangle().getX(), brick.getRectangle().getY(),
-        brick.getRectangle().getWidth(), brick.getRectangle().getHeight(), rand.nextInt(4));
+        brick.getRectangle().getWidth(), brick.getRectangle().getHeight(), 0);
     powerUps.add(powerUp);
 
     scene.getChildren().add(powerUp.getImageView());
@@ -52,10 +52,16 @@ public class PowerUpManager {
       if (powerUp.getShape().getBoundsInParent()
           .intersects(paddle.getShape().getBoundsInParent())) {
         if (powerUp.getType() == 0) {
-          powerUpState[0] = 3;
+          if (powerUpState[0] == 0) {
+            powerUpState[0] = 1;
+            for (int i = 0; i < 6; i++) {
+              scene.getChildren().add(BallManager.getBalls().getFirst().imageViews[i]);
+            }
+            scene.getChildren().remove(BallManager.getBalls().getFirst().getImageView());
+          }
         }
         if (powerUp.getType() == 1) {
-          powerUpState[1] = 5;
+          powerUpState[1] = 1;
         }
         if (powerUp.getType() == 2) {
           paddle.getRectangle().setWidth(48);
