@@ -11,7 +11,7 @@ public class Letter extends Entity {
     public Letter(int x, int y, int w, int h, char letter) {
         super(x, y, w, h);
         image = new Image(
-                getClass().getResource("/com/arkanoid/number_and_alphabet/blue" + letter + ".png")
+                getClass().getResource("/com/arkanoid/number_and_alphabet/blue/" + letter + ".png")
                         .toExternalForm());
         imageView.setImage(image);
         imageView.setX(this.getRectangle().getX());
