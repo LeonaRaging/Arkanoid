@@ -1,5 +1,7 @@
 package com.arkanoid.brick;
 
+import static com.arkanoid.Controller.field;
+
 import com.arkanoid.core.Ball;
 import com.arkanoid.core.Entity;
 import com.arkanoid.powerup.PowerUpManager;
@@ -44,10 +46,16 @@ public class BrickManager {
               default:
                 break;
             }
-            scene.getChildren().add(brick.getImageView());
             bricks.add(brick);
+            if (brick.getRectangle().getX() + 1.5 * brick.getRectangle().getWidth()
+                <= field.getRectangle().getX() + field.getRectangle().getWidth()) {
+              scene.getChildren().add(brick.shadow);
+            }
           }
         }
+      }
+      for (Brick brick : bricks) {
+        scene.getChildren().add(brick.getImageView());
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -70,13 +78,16 @@ public class BrickManager {
       if (brick.getHp() == 0) {
         BrickManager.brickRemain--;
         scene.getChildren().remove(brick.getImageView());
+        scene.getChildren().remove(brick.shadow);
         Random rand = new Random();
-        if (rand.nextDouble() <= 0.25) {
+        if (rand.nextDouble() <= 0.25 && PowerUpManager.powerUpCooldown <= 0) {
           PowerUpManager.createPowerUps(brick, scene);
+          PowerUpManager.powerUpCooldown = 30;
         }
         ScoreDisplay.addScore(brick.getScore());
         return true;
       }
+      PowerUpManager.powerUpCooldown--;
       return false;
     });
     return check.get();

@@ -452,6 +452,7 @@ public class Controller implements Initializable {
 
     for (Brick brick : BrickManager.getBricks()) {
       scene.getChildren().remove(brick.getImageView());
+      scene.getChildren().remove(brick.shadow);
     }
     for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
       scene.getChildren().remove(powerUp.getImageView());
@@ -539,6 +540,7 @@ public class Controller implements Initializable {
       EnemiesManager.removeAllEnemies(scene);
       for (Brick brick : BrickManager.getBricks()) {
         scene.getChildren().remove(brick.getImageView());
+        scene.getChildren().remove(brick.shadow);
       }
       BrickManager.getBricks().clear();
       BrickManager.createBricks(scene, level);
@@ -555,6 +557,10 @@ public class Controller implements Initializable {
   }
 
   private void ballUpdate() {
+    for (Ball ball : BallManager.getBalls()) {
+      scene.getChildren().remove(ball.getImageView());
+      scene.getChildren().add(ball.getImageView());
+    }
     BallManager.getBalls().removeIf(ball1 -> {
       if (ball1.ballType > 0) {
         for (Ball ball : BallManager.getBalls()) {

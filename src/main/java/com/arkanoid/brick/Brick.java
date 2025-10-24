@@ -5,10 +5,12 @@ import com.arkanoid.core.Ball;
 import com.arkanoid.core.Entity;
 import com.arkanoid.powerup.PowerUpManager;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 
 public class Brick extends Entity {
   private Image[] images = new Image[6];
+  public ImageView shadow = new ImageView();
   protected int hp; // The brick will be destroyed when it runs out of hp
   private int hitCooldown;
   private int score;
@@ -42,6 +44,10 @@ public class Brick extends Entity {
     imageView.setImage(images[0]);
     imageView.setX(this.getRectangle().getX());
     imageView.setY(this.getRectangle().getY());
+    Image image = new Image(getClass().getResource("/com/arkanoid/brick/shadow.png").toExternalForm());
+    shadow.setImage(image);
+    shadow.setX(this.getRectangle().getX() + this.getRectangle().getWidth() / 2);
+    shadow.setY(this.getRectangle().getY() + this.getRectangle().getHeight());
   }
 
   // get hp

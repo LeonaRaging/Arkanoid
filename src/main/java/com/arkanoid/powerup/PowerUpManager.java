@@ -22,6 +22,7 @@ public class PowerUpManager {
 
   private static int numberOfPowerUps = 4;
   private static int shootCooldown;
+  public static int powerUpCooldown = 30;
 
   public static int[] powerUpState = new int[numberOfPowerUps];
 
@@ -40,6 +41,8 @@ public class PowerUpManager {
     powerUps.add(powerUp);
 
     scene.getChildren().add(powerUp.getImageView());
+
+    powerUpCooldown = 30;
   }
 
   public static void movePowerUps(AnchorPane scene) {
@@ -101,21 +104,16 @@ public class PowerUpManager {
         }
         if (powerUp.getType() == 3 && !BallManager.getBalls().isEmpty()) {
           Ball currentBall = BallManager.getBalls().getFirst();
-          for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-              if (i != 0 && j != 0) {
-                if (2 * i == currentBall.getDeltaX() && 2 * j == currentBall.getDeltaY()) {
-                  continue;
-                }
-                Ball ball = new Ball(0, 0, 2.5);
-                ball.getCircle().setLayoutX(currentBall.getCircle().getLayoutX());
-                ball.getCircle().setLayoutY(currentBall.getCircle().getLayoutY());
-                ball.setDeltaX(i);
-                ball.setDeltaY(j);
-                BallManager.getBalls().add(ball);
-                scene.getChildren().add(ball.getImageView());
-              }
-            }
+          int [] dx = { 0,  1, 1, 1, 0, -1, -1, -1};
+          int [] dy = {-1, -1, 0, 1, 1,  1,  0, -1};
+          for (int i = 0; i < 8; i++) {
+            Ball ball = new Ball(0, 0, 2.5);
+            ball.getCircle().setLayoutX(currentBall.getCircle().getLayoutX());
+            ball.getCircle().setLayoutY(currentBall.getCircle().getLayoutY());
+            ball.setDeltaX(dx[i]);
+            ball.setDeltaY(dy[i]);
+            BallManager.getBalls().add(ball);
+            scene.getChildren().add(ball.getImageView());
           }
         }
         powerUpState[powerUp.getType()] = 1;
