@@ -174,7 +174,7 @@ public class Controller implements Initializable {
           if (pressedKeys.contains(KeyCode.ENTER)) {
             switch (MainMenu.getCurrentSelection()) {
               case 0:
-                startGameButtonAction(new ActionEvent());
+                startGameButtonAction(new ActionEvent(), 1);
                 goReadyState();
                 pressedKeys.remove(KeyCode.ENTER);
                 break;
