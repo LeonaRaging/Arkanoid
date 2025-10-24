@@ -51,6 +51,8 @@ public class Controller implements Initializable {
   @FXML private Button startButton;
   @FXML private ImageView startBackground;
   @FXML private ImageView backgroundView;
+  @FXML private ImageView backgroundView11;
+  @FXML private ImageView backgroundViewother;
 
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
 
@@ -246,6 +248,14 @@ public class Controller implements Initializable {
       }
       if (level > 15) {
         gameOver();
+      }
+      if (level==11){
+        backgroundView.setVisible(false);
+        backgroundView11.setVisible(true);
+      }
+      if (level==12){
+        backgroundView11.setVisible(false);
+        backgroundViewother.setVisible(true);
       }
       moveNext(true);
       newLife();
