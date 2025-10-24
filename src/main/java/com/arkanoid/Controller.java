@@ -76,6 +76,8 @@ public class Controller implements Initializable {
   @FXML private MainMenu mainMenu;
   @FXML private ImageView startBackground;
   @FXML private ImageView backgroundView;
+  @FXML private ImageView backgroundView11;
+  @FXML private ImageView backgroundViewother;
   @FXML private ImageView spaceShip;
   @FXML private ImageView scoreBoardView;
   @FXML private ScoreBoard scoreBoard;
@@ -380,7 +382,7 @@ public class Controller implements Initializable {
     ScoreDisplay.setScore(0);
     Hp.resetHp();
 
-    field = new Field(16, 16, 160, 208, "field");
+    field = new Field(16, 16, 160, 208, Integer.toString(Level));
     outline = new Field(8, 8, 176, 216, "outline");
     gates[0] = new Gate(32, 8, 32, 8, "gate0");
     gates[1] = new Gate(128, 8, 32, 8, "gate0");
@@ -512,6 +514,16 @@ public class Controller implements Initializable {
         }
       }
       BallManager.getBalls().clear();
+
+      if (level==11){
+        backgroundView.setVisible(false);
+        backgroundView11.setVisible(true);
+      }
+      if (level==12){
+        backgroundView11.setVisible(false);
+        backgroundViewother.setVisible(true);
+      }
+      field = new Field(16, 16, 160, 208, Integer.toString(level));
       newLife();
       EnemiesManager.removeAllEnemies(scene);
       for (Brick brick : BrickManager.getBricks()) {
