@@ -20,6 +20,9 @@ public class Paddle extends Entity {
   private int breakCooldown;
   private static final int BREAK_FRAME_DELAY = 3;
 
+  private final Image[] powerUpImages = new Image[14];
+  private int powerUpCooldown;
+
   private int state;
   private int imageState;
   private int imageCooldown;
@@ -42,6 +45,11 @@ public class Paddle extends Entity {
     for (int i = 0; i < 15; i++) {
       String imagePath = "/com/arkanoid/paddle/paddleBreak" + i + ".png";
       breakImages[i] = new Image(getClass().getResource(imagePath).toExternalForm());
+    }
+
+    for (int i = 0; i < 14; i++) {
+      String imagePath = "/com/arkanoid/paddle/paddlePowerUp" + i + ".png";
+      powerUpImages[i] = new Image(getClass().getResource(imagePath).toExternalForm());
     }
 
     imageState = 0;
@@ -109,6 +117,9 @@ public class Paddle extends Entity {
 
   public void setState(int state) {
     this.state = state;
+    if (state == 2 && powerUpCooldown < 26) {
+      powerUpCooldown = 0;
+    }
   }
 
   public void update(Rectangle rect) {
@@ -137,7 +148,14 @@ public class Paddle extends Entity {
       imageState %= 4;
       imageCooldown = 20;
     }
-    imageView.setImage(images[state][imageState]);
+    if (state <= 1) {
+      imageView.setImage(images[state][imageState]);
+    } else {
+      imageView.setImage(powerUpImages[powerUpCooldown / 2]);
+      if (powerUpCooldown < 26) {
+        powerUpCooldown++;
+      }
+    }
     imageView.setX(this.getRectangle().getX());
     imageView.setY(this.getRectangle().getY());
   }

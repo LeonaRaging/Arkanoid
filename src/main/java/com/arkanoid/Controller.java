@@ -12,10 +12,12 @@ import com.arkanoid.field.Field;
 import com.arkanoid.field.Gate;
 import com.arkanoid.powerup.PowerUp;
 import com.arkanoid.powerup.PowerUpManager;
-import com.arkanoid.Number_and_string_display.Digit;
-import com.arkanoid.Number_and_string_display.Hp;
-import com.arkanoid.Number_and_string_display.ScoreDisplay;
-import com.arkanoid.Number_and_string_display.StringDisplay;
+import com.arkanoid.NumberAndStringDisplay.Digit;
+import com.arkanoid.NumberAndStringDisplay.Hp;
+import com.arkanoid.NumberAndStringDisplay.ScoreDisplay;
+import com.arkanoid.NumberAndStringDisplay.StringDisplay;
+import com.arkanoid.ui.IngameMenu;
+import com.arkanoid.ui.Load;
 import com.arkanoid.ui.MainMenu;
 import com.arkanoid.ui.Save;
 import com.arkanoid.ui.ScoreBoard;
@@ -61,13 +63,15 @@ public class Controller implements Initializable {
   private int level;
 
   private enum State {
-    MENU, READY, PADDLE_APPEARING, PADDLE_BREAKING, RUNNING
+    MENU, READY, PADDLE_APPEARING, PADDLE_BREAKING, RUNNING, INGAMEMENU, SAVE, LOAD
   }
 
   private State currentState;
   private StringDisplay player = new StringDisplay("PLAYER", 64, 150);
   private Digit number1 = new Digit(120, 150, 8, 8, 1);
   private StringDisplay ready = new StringDisplay("READY", 76, 166);
+
+  private int initialScore = 0;
 
   @FXML private MainMenu mainMenu;
   @FXML private ImageView startBackground;
@@ -173,6 +177,9 @@ public class Controller implements Initializable {
                 goReadyState();
                 pressedKeys.remove(KeyCode.ENTER);
                 break;
+              case 1:
+                startLoad();
+                break;
               case 2:
                 startScoreBoard();
                 break;
@@ -200,7 +207,7 @@ public class Controller implements Initializable {
           if (pressedKeys.contains(KeyCode.ENTER)) {
             switch (ingameMenu.getCurrentSelection()) {
               case 0:
-                isRunning = 1;
+                currentState = State.RUNNING;
                 resetAnchorPane();
                 for (Node node : scene.getChildren()) {
                   if (node != mainMenu && node != scoreBoardView && node != scoreBoard) {
@@ -270,8 +277,8 @@ public class Controller implements Initializable {
             int loadedLevel = sc.nextInt();
             int loadedScore = sc.nextInt();
             sc.close();
-            isRunning = 1;
             startGameButtonAction(new ActionEvent(), loadedLevel);
+            goReadyState();
             ScoreDisplay.setScore(loadedScore);
             initialScore = loadedScore;
             pressedKeys.remove(KeyCode.ENTER);
@@ -309,7 +316,7 @@ public class Controller implements Initializable {
                 boolean isBreaking = paddle.updateBreakAnimation();
                 if (!isBreaking) {
                   if (Hp.getHp() <= 0) {
-                    currentState = State.MENU;
+                    startMainMenu();
                     gameOver();
                   }
                   else {
@@ -324,6 +331,15 @@ public class Controller implements Initializable {
                 if (lastTime == 0) lastTime = System.nanoTime();
                 handleIngame();
                 break;
+              case INGAMEMENU:
+                handleIngameMenu();
+                break;
+              case SAVE:
+                handleSave();
+                break;
+              case LOAD:
+                handleLoad();
+                break;
             }
           } catch (IOException e) {
             throw new RuntimeException(e);
@@ -333,7 +349,7 @@ public class Controller implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    currentState = State.MENU;
+    startMainMenu();
     timeline.setCycleCount(Timeline.INDEFINITE);
     mainMenu.setChoices();
     ingameMenu.setChoices();
@@ -406,6 +422,8 @@ public class Controller implements Initializable {
     ball.setDeltaY(1);
     scene.getChildren().add(ball.getImageView());
     BallManager.getBalls().add(ball);
+
+    PowerUpManager.resetPower();
   }
 
   public void gameOver() throws IOException {
@@ -448,7 +466,7 @@ public class Controller implements Initializable {
     }
     BallManager.getBalls().clear();
 
-    currentState = State.MENU;
+    startMainMenu();
     startBackground.setVisible(true);
     backgroundView.setVisible(false);
     spaceShip.setVisible(false);
@@ -476,6 +494,10 @@ public class Controller implements Initializable {
       if (level > 15) {
         gameOver();
       }
+      for (Ball ball : BallManager.getBalls()) {
+        scene.getChildren().remove(ball.getImageView());
+      }
+      BallManager.getBalls().clear();
       newLife();
       EnemiesManager.removeAllEnemies(scene);
       for (Brick brick : BrickManager.getBricks()) {
@@ -523,14 +545,14 @@ public class Controller implements Initializable {
   }
 
   private void startMainMenu() {
-    isRunning = 0;
+    currentState = State.MENU;
     resetAnchorPane();
     mainMenu.setVisible(true);
     startBackground.setVisible(true);
   }
 
   private void startIngameMenu() {
-    isRunning = 2;
+    currentState = State.INGAMEMENU;
     resetAnchorPane();
     ingameMenu.setVisible(true);
     startBackground.setVisible(true);
@@ -544,14 +566,14 @@ public class Controller implements Initializable {
   }
 
   private void startSave()  {
-    isRunning = 3;
+    currentState = State.SAVE;
     resetAnchorPane();
     save.setVisible(true);
     startBackground.setVisible(true);
   }
 
   private void startLoad() {
-    isRunning = 4;
+    currentState = State.LOAD;
     resetAnchorPane();
     load.setVisible(true);
     startBackground.setVisible(true);

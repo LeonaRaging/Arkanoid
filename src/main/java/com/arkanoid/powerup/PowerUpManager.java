@@ -62,6 +62,7 @@ public class PowerUpManager {
         }
         if (powerUp.getType() == 1) {
           powerUpState[1] = 1;
+          paddle.setState(2);
         }
         if (powerUp.getType() == 2) {
           paddle.getRectangle().setWidth(48);
@@ -137,7 +138,6 @@ public class PowerUpManager {
       scene.getChildren().add(projectile1.getImageView());
       scene.getChildren().add(projectile2.getImageView());
 
-      powerUpState[1]--;
       shootCooldown = 30;
       Sound.playShoot();
     }
