@@ -12,6 +12,10 @@ import com.arkanoid.field.Field;
 import com.arkanoid.field.Gate;
 import com.arkanoid.powerup.PowerUp;
 import com.arkanoid.powerup.PowerUpManager;
+import com.arkanoid.Number_and_string_display.Digit;
+import com.arkanoid.Number_and_string_display.Hp;
+import com.arkanoid.Number_and_string_display.ScoreDisplay;
+import com.arkanoid.Number_and_string_display.StringDisplay;
 import com.arkanoid.Number_and_string_display.Hp;
 import com.arkanoid.Number_and_string_display.ScoreDisplay;
 import com.arkanoid.score.ScoreDisplay;
@@ -62,9 +66,14 @@ public class Controller implements Initializable {
 
   private int level;
 
-  private int isRunning = 0;
+  private enum State {
+    MENU, READY, PADDLE_APPEARING, PADDLE_BREAKING, RUNNING
+  }
 
-  private int initialScore = 0;
+  private State currentState;
+  private StringDisplay player = new StringDisplay("PLAYER", 64, 150);
+  private Digit number1 = new Digit(120, 150, 8, 8, 1);
+  private StringDisplay ready = new StringDisplay("READY", 76, 166);
 
   @FXML private MainMenu mainMenu;
   @FXML private ImageView startBackground;
@@ -77,10 +86,25 @@ public class Controller implements Initializable {
   @FXML private Load load;
 
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
+  long lastTime;
+
+  private void goReadyState() {
+      currentState = State.READY;
+      player.show(scene);
+      number1.display(scene);
+      ready.show(scene);
+  }
+
+  private void startPlay() {
+      player.clear(scene);
+      number1.undisplay(scene);
+      ready.clear(scene);
+      currentState = State.PADDLE_APPEARING;
+      pressedKeys.remove(KeyCode.ENTER);
+  }
 
   Timeline timeline = new Timeline(
       new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
-        long lastTime = System.nanoTime();
 
         private void handleIngame() throws IOException {
           if (pressedKeys.contains(KeyCode.ESCAPE)) {
@@ -114,12 +138,21 @@ public class Controller implements Initializable {
             Hp.loseLife();
             hp.updateDisplay();
 
-            if (Hp.getHp() <= 0) {
-              EnemiesManager.isGameOver();
-              gameOver();
-            } else {
-              newLife();
+            for (Ball ball : BallManager.getBalls()) {
+              scene.getChildren().remove(ball.getImageView());
             }
+            BallManager.getBalls().clear();
+
+            for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
+              scene.getChildren().remove(powerUp.getImageView());
+            }
+            for (Entity projectile : PowerUpManager.getProjectiles()) {
+              scene.getChildren().remove(projectile.getImageView());
+            }
+            PowerUpManager.resetPower();
+
+            paddle.startBreakAnimation();
+            currentState = State.PADDLE_BREAKING;
           }
 
           if (score != null) {
@@ -142,11 +175,9 @@ public class Controller implements Initializable {
           if (pressedKeys.contains(KeyCode.ENTER)) {
             switch (MainMenu.getCurrentSelection()) {
               case 0:
-                isRunning = 1;
-                startGameButtonAction(new ActionEvent(), 1);
-                break;
-              case 1:
-                startLoad();
+                startGameButtonAction(new ActionEvent());
+                goReadyState();
+                pressedKeys.remove(KeyCode.ENTER);
                 break;
               case 2:
                 startScoreBoard();
@@ -261,25 +292,46 @@ public class Controller implements Initializable {
         @Override
         public void handle(ActionEvent actionEvent) {
           try {
-            switch(isRunning) {
-              case 0:
+            switch (currentState) {
+              case MENU:
                 handleMainMenu();
                 break;
-              case 1:
+
+              case READY:
+                if (pressedKeys.contains(KeyCode.ENTER)) {
+                  startPlay();
+                }
+                break;
+
+              case PADDLE_APPEARING:
+                boolean isAnimating = paddle.updateAppearAnimation();
+                if (!isAnimating) {
+                  currentState = State.RUNNING;
+                  lastTime = System.nanoTime();
+                }
+                break;
+
+              case PADDLE_BREAKING:
+                boolean isBreaking = paddle.updateBreakAnimation();
+                if (!isBreaking) {
+                  if (Hp.getHp() <= 0) {
+                    currentState = State.MENU;
+                    gameOver();
+                  }
+                  else {
+
+                    newLife();
+                    goReadyState();
+                  }
+                }
+                break;
+
+              case RUNNING:
+                if (lastTime == 0) lastTime = System.nanoTime();
                 handleIngame();
                 break;
-              case 2:
-                handleIngameMenu();
-                break;
-              case 3:
-                handleSave();
-                break;
-              case 4:
-                handleLoad();
-                break;
             }
-          }
-          catch (Exception e) {
+          } catch (IOException e) {
             throw new RuntimeException(e);
           }
         }
@@ -287,6 +339,7 @@ public class Controller implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    currentState = State.MENU;
     timeline.setCycleCount(Timeline.INDEFINITE);
     mainMenu.setChoices();
     ingameMenu.setChoices();
@@ -345,24 +398,12 @@ public class Controller implements Initializable {
   }
 
   private void newLife() {
-    for (Ball ball : BallManager.getBalls()) {
-      scene.getChildren().remove(ball.getImageView());
-    }
-    BallManager.getBalls().clear();
-
-    for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
-      scene.getChildren().remove(powerUp.getImageView());
-    }
-    for (Entity projectile : PowerUpManager.getProjectiles()) {
-      scene.getChildren().remove(projectile.getImageView());
-    }
-
-    PowerUpManager.resetPower();
-
     paddle.getRectangle().setX(112);
     paddle.getRectangle().setY(210);
     paddle.setState(0);
     paddle.getRectangle().setWidth(32);
+
+    paddle.resetAppearAnimation();
 
     Ball ball = new Ball(0, 0, 2.5);
     ball.getCircle().setLayoutX(112);
@@ -413,7 +454,7 @@ public class Controller implements Initializable {
     }
     BallManager.getBalls().clear();
 
-    isRunning = 0;
+    currentState = State.MENU;
     startBackground.setVisible(true);
     backgroundView.setVisible(false);
     spaceShip.setVisible(false);
@@ -449,6 +490,7 @@ public class Controller implements Initializable {
       BrickManager.getBricks().clear();
       BrickManager.createBricks(scene, level);
       initialScore = score.getScore();
+      goReadyState();
     }
   }
 
