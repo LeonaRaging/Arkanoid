@@ -28,17 +28,11 @@ public class BallManager {
 
       if (rightBorder || leftBorder) {
         ball.updateX((rightBorder ? -1 : 1));
-        if (PowerUpManager.powerUpState[0] > 0) {
-          PowerUpManager.powerUpState[0]--;
-        }
         Sound.playBounceField();
       }
 
       if (bottomBorder || topBorder) {
         ball.updateY(1);
-        if (PowerUpManager.powerUpState[0] > 0) {
-          PowerUpManager.powerUpState[0]--;
-        }
         Sound.playBounceField();
       }
 
