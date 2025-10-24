@@ -11,6 +11,7 @@ import com.arkanoid.sound.Sound;
 import java.util.ArrayList;
 import java.util.Random;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
@@ -51,6 +52,36 @@ public class PowerUpManager {
     powerUps.removeIf(powerUp -> {
       if (powerUp.getShape().getBoundsInParent()
           .intersects(paddle.getShape().getBoundsInParent())) {
+        for (int i = 0; i < 4; i++) {
+          if (powerUpState[i] == 1) {
+            switch (i) {
+              case 0:
+                Ball ball = BallManager.getBalls().getFirst();
+                for (ImageView imageView : ball.imageViews) {
+                  scene.getChildren().remove(imageView);
+                }
+                scene.getChildren().add(ball.getImageView());
+                break;
+              case 1:
+                paddle.setState(3);
+                break;
+              case 2:
+                paddle.setState(0);
+                paddle.getRectangle().setWidth(32);
+                break;
+              case 3:
+                while (BallManager.getBalls().size() > 1) {
+                  Ball ball2 = BallManager.getBalls().getFirst();
+                  scene.getChildren().remove(ball2.getImageView());
+                  BallManager.getBalls().remove(ball2);
+                }
+                break;
+            }
+            powerUpState[i] = 0;
+          }
+        }
+
+
         if (powerUp.getType() == 0) {
           if (powerUpState[0] == 0) {
             powerUpState[0] = 1;
@@ -61,7 +92,6 @@ public class PowerUpManager {
           }
         }
         if (powerUp.getType() == 1) {
-          powerUpState[1] = 1;
           paddle.setState(2);
         }
         if (powerUp.getType() == 2) {
@@ -88,6 +118,7 @@ public class PowerUpManager {
             }
           }
         }
+        powerUpState[powerUp.getType()] = 1;
         scene.getChildren().remove(powerUp.getImageView());
         return true;
       }

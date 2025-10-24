@@ -44,6 +44,9 @@ public class BallManager {
       if (ball.getCircle().getBoundsInParent()
           .intersects(Controller.bottomZone.getBoundsInParent())) {
         scene.getChildren().remove(ball.getImageView());
+        for (int i = 0; i < 6; i++) {
+          scene.getChildren().remove(ball.imageViews[i]);
+        }
         return true;
       }
       return false;

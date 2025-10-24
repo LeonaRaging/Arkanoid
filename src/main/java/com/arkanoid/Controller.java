@@ -138,6 +138,9 @@ public class Controller implements Initializable {
 
             for (Ball ball : BallManager.getBalls()) {
               scene.getChildren().remove(ball.getImageView());
+              for (int i = 0; i < 6; i++) {
+                scene.getChildren().remove(ball.imageViews[i]);
+              }
             }
             BallManager.getBalls().clear();
 
@@ -219,6 +222,7 @@ public class Controller implements Initializable {
                 startSave();
                 break;
               case 2:
+                gameOver();
                 startMainMenu();
                 break;
             }
@@ -422,6 +426,12 @@ public class Controller implements Initializable {
     scene.getChildren().add(ball.getImageView());
     BallManager.getBalls().add(ball);
 
+    for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
+      scene.getChildren().remove(powerUp.getImageView());
+    }
+    for (Entity entity : PowerUpManager.getProjectiles()) {
+      scene.getChildren().remove(entity.getImageView());
+    }
     PowerUpManager.resetPower();
   }
 
@@ -461,6 +471,9 @@ public class Controller implements Initializable {
     EnemiesManager.getEnemies().clear();
     for (Ball ball : BallManager.getBalls()) {
       scene.getChildren().remove(ball.getImageView());
+      for (int i = 0; i < 6; i++) {
+        scene.getChildren().remove(ball.imageViews[i]);
+      }
     }
     BallManager.getBalls().clear();
 
@@ -494,6 +507,9 @@ public class Controller implements Initializable {
       }
       for (Ball ball : BallManager.getBalls()) {
         scene.getChildren().remove(ball.getImageView());
+        for (int i = 0; i < 6; i++) {
+          scene.getChildren().remove(ball.imageViews[i]);
+        }
       }
       BallManager.getBalls().clear();
       newLife();
