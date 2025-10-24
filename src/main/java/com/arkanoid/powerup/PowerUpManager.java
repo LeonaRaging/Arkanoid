@@ -35,7 +35,7 @@ public class PowerUpManager {
   public static void createPowerUps(Brick brick, AnchorPane scene) {
     Random rand = new Random();
     PowerUp powerUp = new PowerUp(brick.getRectangle().getX(), brick.getRectangle().getY(),
-        brick.getRectangle().getWidth(), brick.getRectangle().getHeight(), 0);
+        brick.getRectangle().getWidth(), brick.getRectangle().getHeight(), rand.nextInt(4));
     powerUps.add(powerUp);
 
     scene.getChildren().add(powerUp.getImageView());
