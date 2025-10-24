@@ -76,14 +76,13 @@ public class Controller implements Initializable {
   @FXML private MainMenu mainMenu;
   @FXML private ImageView startBackground;
   @FXML private ImageView backgroundView;
-  @FXML private ImageView spaceShip;
+  @FXML private ImageView backgroundView11;
+  @FXML private ImageView backgroundViewother;
   @FXML private ImageView scoreBoardView;
   @FXML private ScoreBoard scoreBoard;
   @FXML private IngameMenu ingameMenu;
   @FXML private Save save;
   @FXML private Load load;
-  @FXML private ImageView backgroundView11;
-  @FXML private ImageView backgroundViewother;
 
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
   long lastTime;
@@ -215,7 +214,9 @@ public class Controller implements Initializable {
                 currentState = State.RUNNING;
                 resetAnchorPane();
                 for (Node node : scene.getChildren()) {
-                  if (node != mainMenu && node != scoreBoardView && node != scoreBoard) {
+                  if (node != mainMenu && node != scoreBoardView && node != scoreBoard
+                      && node != backgroundView11 && node != backgroundViewother
+                      && node != save && node != load && node != ingameMenu) {
                     node.setVisible(true);
                   }
                 }
@@ -524,14 +525,16 @@ public class Controller implements Initializable {
         }
       }
       BallManager.getBalls().clear();
-      if (level==11){
+
+      if (level == 11) {
         backgroundView.setVisible(false);
         backgroundView11.setVisible(true);
       }
-      if (level==12){
+      if (level == 12) {
         backgroundView11.setVisible(false);
         backgroundViewother.setVisible(true);
       }
+      field.changeField(level);
       newLife();
       EnemiesManager.removeAllEnemies(scene);
       for (Brick brick : BrickManager.getBricks()) {

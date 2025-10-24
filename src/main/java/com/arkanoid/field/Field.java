@@ -15,4 +15,12 @@ public class Field extends Entity {
     imageView.setX(this.getRectangle().getX());
     imageView.setY(this.getRectangle().getY());
   }
+
+  public void changeField(int level) {
+    image = new Image(getClass()
+        .getResource("/com/arkanoid/field/" + level + ".png").toExternalForm());
+    imageView.setImage(image);
+    imageView.setX(this.getRectangle().getX());
+    imageView.setY(this.getRectangle().getY());
+  }
 }
