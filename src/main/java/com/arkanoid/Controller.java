@@ -78,7 +78,6 @@ public class Controller implements Initializable {
   @FXML private ImageView backgroundView;
   @FXML private ImageView backgroundView11;
   @FXML private ImageView backgroundViewother;
-  @FXML private ImageView spaceShip;
   @FXML private ImageView scoreBoardView;
   @FXML private ScoreBoard scoreBoard;
   @FXML private IngameMenu ingameMenu;
@@ -215,7 +214,9 @@ public class Controller implements Initializable {
                 currentState = State.RUNNING;
                 resetAnchorPane();
                 for (Node node : scene.getChildren()) {
-                  if (node != mainMenu && node != scoreBoardView && node != scoreBoard) {
+                  if (node != mainMenu && node != scoreBoardView && node != scoreBoard
+                      && node != backgroundView11 && node != backgroundViewother
+                      && node != save && node != load && node != ingameMenu) {
                     node.setVisible(true);
                   }
                 }
@@ -377,7 +378,6 @@ public class Controller implements Initializable {
   void startGameButtonAction(ActionEvent event, int Level) {
     resetAnchorPane();
     backgroundView.setVisible(true);
-    spaceShip.setVisible(true);
 
     ScoreDisplay.setScore(0);
     Hp.resetHp();
@@ -482,7 +482,6 @@ public class Controller implements Initializable {
     startMainMenu();
     startBackground.setVisible(true);
     backgroundView.setVisible(false);
-    spaceShip.setVisible(false);
 
     File file = new File("src/main/resources/com/arkanoid/ui/score.txt");
     FileWriter fileWriter = new FileWriter(file, true);
@@ -515,15 +514,15 @@ public class Controller implements Initializable {
       }
       BallManager.getBalls().clear();
 
-      if (level==11){
+      if (level == 11) {
         backgroundView.setVisible(false);
         backgroundView11.setVisible(true);
       }
-      if (level==12){
+      if (level == 12) {
         backgroundView11.setVisible(false);
         backgroundViewother.setVisible(true);
       }
-      field = new Field(16, 16, 160, 208, Integer.toString(level));
+      field.changeField(level);
       newLife();
       EnemiesManager.removeAllEnemies(scene);
       for (Brick brick : BrickManager.getBricks()) {
