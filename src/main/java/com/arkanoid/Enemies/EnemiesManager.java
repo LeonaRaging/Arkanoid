@@ -1,5 +1,6 @@
 package com.arkanoid.Enemies;
 
+import com.arkanoid.Controller;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
@@ -34,8 +35,12 @@ public class EnemiesManager {
 //        enemies.add(mob6);
 //        scene.getChildren().add(mob6.getImageView());
 
-        GiantCentipedeBoss mob7 = new GiantCentipedeBoss(90, 80, 13, scene);
-        enemies.add(mob7);
+//        GiantCentipedeBoss mob7 = new GiantCentipedeBoss(90, 80, 13, scene);
+//        enemies.add(mob7);
+
+        DohFace mob8 = new DohFace(scene);
+        scene.getChildren().add(mob8.getImageView());
+        enemies.add(mob8);
     }
 
     public static void updateEnemies(AnchorPane scene, double DeltaTime) {

@@ -1,9 +1,12 @@
 package com.arkanoid.Enemies;
+
 import com.arkanoid.Core.Ball;
 import com.arkanoid.Core.BallManager;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
+
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import com.arkanoid.Controller;
@@ -25,18 +28,12 @@ public class GiantCentipedeBoss extends Enemies {
         double speed = 0.058;
 
         GiantCentipedeSegment head = new GiantCentipedeSegment(x, y, r, true, speed);
-//        head.getCircle().setFill(Color.ORANGE);
-//        scene.getChildren().add(head.getCircle());
-//        scene.getChildren().add(head.getImageView());
         GiantCentipede.add(head);
 
         for (int i = 0; i < 7; i++) {
             x -= 2 * r;
             speed -= 0.002;
             GiantCentipedeSegment seg = new GiantCentipedeSegment(x, y, r, false, speed);
-//            seg.getCircle().setFill(Color.ORANGE);
-//            scene.getChildren().add(seg.getCircle());
-//            scene.getChildren().add(seg.getImageView());
             GiantCentipede.add(seg);
         }
 
@@ -47,8 +44,7 @@ public class GiantCentipedeBoss extends Enemies {
     }
 
     public void clear(AnchorPane scene) {
-        for (GiantCentipedeSegment seg: GiantCentipede)
-//            scene.getChildren().remove(seg.getCircle());
+        for (GiantCentipedeSegment seg : GiantCentipede)
             scene.getChildren().remove(seg.getImageView());
         EnemiesManager.setGameOver(true);
     }
@@ -59,23 +55,21 @@ public class GiantCentipedeBoss extends Enemies {
         double fY = 0;
         boolean checkCollision = false;
 
-        for (GiantCentipedeSegment seg: GiantCentipede) {
-            //System.out.println(fX + " " + fY);
+        for (GiantCentipedeSegment seg : GiantCentipede) {
             seg.move(fX, fY, DeltaTime, state);
             fX = seg.getCircle().getCenterX();
             fY = seg.getCircle().getCenterY();
             //System.exit(0);
             if (hitCooldown <= 0) {
                 seg.changeState(0, 0);
-                for (Ball ball: BallManager.getBalls())
+                for (Ball ball : BallManager.getBalls())
                     if (ball.getShape().getBoundsInParent().intersects(seg.getShape().getBoundsInParent())) {
                         checkCollision = true;
                         ball.updateX();
                         ball.updateY();
                         ball.update(scene);
                     }
-            }
-            else {
+            } else {
                 seg.changeState(1, 0);
             }
         }
@@ -90,7 +84,7 @@ public class GiantCentipedeBoss extends Enemies {
             }
         }
 
-        if(state == 0 && hitCooldown <= 0) {
+        if (state == 0 && hitCooldown <= 0) {
             GiantCentipede.get(dropOrder).changeState(0
                     , 2 - (dropCooldown / 33));
         }
@@ -99,7 +93,7 @@ public class GiantCentipedeBoss extends Enemies {
         dropCooldown--;
         stateCooldown--;
 
-        switch(state) {
+        switch (state) {
             case 0:
                 //System.exit(0);
 
@@ -108,30 +102,30 @@ public class GiantCentipedeBoss extends Enemies {
                     double X = GiantCentipede.get(dropOrder).getCircle().getCenterX();
                     double Y = GiantCentipede.get(dropOrder).getCircle().getCenterY();
                     Debris nDeb = new Debris(X, Y, 2);
-                    nDeb.getCircle().setFill(Color.GREEN);
-                    scene.getChildren().add(nDeb.getCircle());
+                    //nDeb.getCircle().setFill(Color.GREEN);
+                    scene.getChildren().add(nDeb.getImageView());
                     EnemiesManager.enemies.add(nDeb);
                     dropOrder++;
                     dropOrder %= GiantCentipede.size();
                 }
 
                 if (stateCooldown <= 0
-                    && GiantCentipede.get(0).getMid()) {
+                        && GiantCentipede.get(0).getMid()) {
                     state = 1;
                     stateCooldown = 200;
                 }
-            break;
+                break;
             case 1:
                 stateCooldown--;
                 if (stateCooldown <= 0) {
                     state = 2;
                 }
-            break;
+                break;
             case 2:
 
-                for (GiantCentipedeSegment seg: GiantCentipede)
+                for (GiantCentipedeSegment seg : GiantCentipede)
                     if (seg.getCircle().getBoundsInParent().intersects(
-                        Controller.paddle.getRectangle().getBoundsInParent())) {
+                            Controller.paddle.getRectangle().getBoundsInParent())) {
                         clear(scene);
                         return true;
                     }
@@ -140,25 +134,25 @@ public class GiantCentipedeBoss extends Enemies {
                 GiantCentipedeSegment last = GiantCentipede.get(GiantCentipede.size() - 1);
 
                 if (last.getCircle().getCenterY() - last.getCircle().getRadius()
-                    > rect.getY() + rect.getHeight()) {
+                        > rect.getY() + rect.getHeight()) {
                     state = 3;
                     stateCooldown = 200;
-                    for (GiantCentipedeSegment seg: GiantCentipede) {
+                    for (GiantCentipedeSegment seg : GiantCentipede) {
                         seg.getCircle().setCenterX(rect.getX()
-                                +  seg.getCircle().getRadius());
+                                + seg.getCircle().getRadius());
                         seg.getCircle().setCenterY(rect.getY()
                                 - seg.getCircle().getRadius());
 
                     }
                 }
-            break;
+                break;
             case 3:
                 stateCooldown--;
                 if (stateCooldown <= 0) {
                     state = 4;
                     GiantCentipede.get(0).setChanged(false);
                 }
-            break;
+                break;
             case 4:
                 if (GiantCentipede.get(0).getMid()) {
                     GiantCentipede.get(0).setChanged(false);
@@ -166,12 +160,15 @@ public class GiantCentipedeBoss extends Enemies {
                     stateCooldown = 200;
                     dropCooldown = 80;
                 }
-            break;
+                break;
+            case 5:
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + state);
         }
 
         return false;
     }
-
 
 
 }
