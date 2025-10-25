@@ -1,5 +1,6 @@
 package com.arkanoid;
 
+import com.arkanoid.Background.BlackChange;
 import com.arkanoid.brick.Brick;
 import com.arkanoid.brick.BrickManager;
 import com.arkanoid.core.Ball;
@@ -61,13 +62,14 @@ public class Controller implements Initializable {
   private int level;
 
   private enum State {
-    MENU, READY, PADDLE_APPEARING, PADDLE_BREAKING, RUNNING, INGAMEMENU, SAVE, LOAD
+    MENU, READY, PADDLE_APPEARING, PADDLE_BREAKING, RUNNING, INGAMEMENU, SAVE, LOAD, PRE_NEWLEVEL
   }
 
   private State currentState;
   private StringDisplay player = new StringDisplay("PLAYER", 64, 150);
   private Digit number1 = new Digit(120, 150, 8, 8, 1);
   private StringDisplay ready = new StringDisplay("READY", 76, 166);
+  private BlackChange black = new BlackChange(0, 0, 256, 224);
 
   private int initialScore = 0;
 
@@ -84,12 +86,16 @@ public class Controller implements Initializable {
 
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
   long lastTime;
-
+  private void goBlack() {
+    currentState = State.PRE_NEWLEVEL;
+    black.startASC();
+  }
   private void goReadyState() {
       currentState = State.READY;
       player.show(scene);
       number1.display(scene);
       ready.show(scene);
+      black.newLevel();
   }
 
   private void startPlay() {
@@ -124,6 +130,10 @@ public class Controller implements Initializable {
           EnemiesManager.updateEnemies(scene, deltaTime);
 
           brickUpdate();
+
+          if (currentState == State.PRE_NEWLEVEL) {
+            return;
+          }
 
           powerUpUpdate();
 
@@ -209,7 +219,6 @@ public class Controller implements Initializable {
           if (pressedKeys.contains(KeyCode.ENTER)) {
             switch (ingameMenu.getCurrentSelection()) {
               case 0:
-                currentState = State.RUNNING;
                 resetAnchorPane();
                 for (Node node : scene.getChildren()) {
                   if (node != mainMenu && node != scoreBoardView && node != scoreBoard
@@ -345,6 +354,38 @@ public class Controller implements Initializable {
               case LOAD:
                 handleLoad();
                 break;
+              case PRE_NEWLEVEL:
+                boolean stillBlack = black.updateASC();
+                if (stillBlack == false) {
+                  level++;
+                  // will replace as boss level later
+                  if (level == 5 || level == 10 || level == 15) {
+                    level++;
+                  }
+                  if (level > 15) {
+                    gameOver();
+                  }
+
+                  if (level == 11) {
+                    backgroundView.setVisible(false);
+                    backgroundView11.setVisible(true);
+                  }
+                  if (level == 12) {
+                    backgroundView11.setVisible(false);
+                    backgroundViewother.setVisible(true);
+                  }
+                  field.changeField(level);
+                  newLife();
+                  for (Brick brick : BrickManager.getBricks()) {
+                    scene.getChildren().remove(brick.getImageView());
+                    scene.getChildren().remove(brick.shadow);
+                  }
+                  BrickManager.getBricks().clear();
+                  BrickManager.createBricks(scene, level);
+                  initialScore = score.getScore();
+                  goReadyState();
+                }
+                break;
             }
           } catch (IOException e) {
             throw new RuntimeException(e);
@@ -360,6 +401,8 @@ public class Controller implements Initializable {
     ingameMenu.setChoices();
     save.setChoices();
     load.setChoices();
+
+    scene.getChildren().add(black.getImageView());
 
     scene.setFocusTraversable(true);
 
@@ -509,14 +552,7 @@ public class Controller implements Initializable {
         BrickManager.update(ball, scene);
       }
     } else {
-      level++;
-      // will replace as boss level later
-      if (level == 5 || level == 10 || level == 15) {
-        level++;
-      }
-      if (level > 15) {
-        gameOver();
-      }
+
       for (Ball ball : BallManager.getBalls()) {
         scene.getChildren().remove(ball.getImageView());
         for (int i = 0; i < 6; i++) {
@@ -525,25 +561,13 @@ public class Controller implements Initializable {
       }
       BallManager.getBalls().clear();
 
-      if (level == 11) {
-        backgroundView.setVisible(false);
-        backgroundView11.setVisible(true);
+      for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
+        scene.getChildren().remove(powerUp.getImageView());
       }
-      if (level == 12) {
-        backgroundView11.setVisible(false);
-        backgroundViewother.setVisible(true);
-      }
-      field.changeField(level);
-      newLife();
+      PowerUpManager.getPowerUps().clear();
+
       EnemiesManager.removeAllEnemies(scene);
-      for (Brick brick : BrickManager.getBricks()) {
-        scene.getChildren().remove(brick.getImageView());
-        scene.getChildren().remove(brick.shadow);
-      }
-      BrickManager.getBricks().clear();
-      BrickManager.createBricks(scene, level);
-      initialScore = score.getScore();
-      goReadyState();
+      goBlack();
     }
   }
 
