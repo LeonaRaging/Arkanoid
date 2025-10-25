@@ -268,7 +268,7 @@ public class DohFace extends Enemies {
                         if (imageState == 3) { // ...and the boss is opening his mouth...
                             BossLaser bossLaser = new BossLaser(imageView.getX() + 76,
                                     imageView.getY() + 51, 8, 0, scene);
-                            EnemiesManager.enemies.add(bossLaser);
+                            EnemiesManager.getEnemies().add(bossLaser);
 
                             for (int i = 0; i < 4; i++) { // ...shoot
                                 if (child[i] != null) {
@@ -277,7 +277,7 @@ public class DohFace extends Enemies {
                                             + child[i].getRectangle().getHeight();
                                     Laser nL = new Laser(X + 5, Y - 10);
                                     scene.getChildren().add(nL.getImageView());
-                                    EnemiesManager.enemies.add(nL);
+                                    EnemiesManager.getEnemies().add(nL);
                                 }
                             }
                         }

@@ -22,7 +22,6 @@
       </ImageView>
       <ImageView fx:id="backgroundView11" fitHeight="224.0" fitWidth="262.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@Background/background.jpg" />
             <Image url="@Background/background_11.gif" />
          </image>
       </ImageView>

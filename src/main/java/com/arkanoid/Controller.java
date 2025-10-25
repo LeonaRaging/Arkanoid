@@ -38,13 +38,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javafx.scene.image.ImageView;
-import com.arkanoid.NumberAndStringDisplay.Hp;
 
 public class Controller implements Initializable {
 

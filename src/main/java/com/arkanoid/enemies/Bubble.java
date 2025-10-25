@@ -44,7 +44,6 @@ public class Bubble extends Enemies {
 
   @Override
   public boolean update(double deltaTime, AnchorPane scene) {
-    System.out.println("Bubble state: " + state);
     switch (state) {
       default:
         break;
