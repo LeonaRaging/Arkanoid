@@ -56,6 +56,7 @@ public class BrickManager {
       for (Brick brick : bricks) {
         scene.getChildren().add(brick.getImageView());
       }
+      Sound.playEndLevel();
     } catch (Exception e) {
       e.printStackTrace();
     }

@@ -1,6 +1,8 @@
 package com.arkanoid.sound;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.media.AudioClip;
+import javafx.util.Duration;
 
 public class Sound {
   private static final AudioClip bouncePaddle = new AudioClip(Sound.class.getResource(
@@ -21,6 +23,15 @@ public class Sound {
       "/com/arkanoid/sound/infinity.wav").toExternalForm());
   private static final AudioClip bubble = new AudioClip(Sound.class.getResource(
       "/com/arkanoid/sound/bubble.wav").toExternalForm());
+  private static final AudioClip endLevel = new AudioClip(Sound.class.getResource(
+      "/com/arkanoid/sound/endLevel.wav").toExternalForm());
+  private static final AudioClip dead = new AudioClip(Sound.class.getResource(
+      "/com/arkanoid/sound/dead.wav").toExternalForm());
+  private static final AudioClip gameOver = new AudioClip(Sound.class.getResource(
+      "/com/arkanoid/sound/gameOver.wav").toExternalForm());
+  private static final double END_LEVEL_DURATION = 3.5;
+  private static volatile boolean endLevelPlaying = false;
+  private static PauseTransition endLevelPause;
 
   public static void playBouncePaddle() {
     bouncePaddle.play();
@@ -57,5 +68,29 @@ public class Sound {
 
   public static void playBubble() {
     bubble.play();
+  }
+
+  public static void playDead() {
+    dead.play();
+  }
+
+  public static void playGameOver() {
+    gameOver.play();
+  }
+
+  public static void playEndLevel() {
+    if (endLevelPause != null) {
+      endLevelPause.stop();
+      endLevelPause = null;
+    }
+    endLevelPlaying = true;
+    endLevel.play();
+    endLevelPause = new PauseTransition(Duration.seconds(END_LEVEL_DURATION));
+    endLevelPause.setOnFinished(event -> endLevelPlaying = false);
+    endLevelPause.play();
+  }
+
+  public static boolean isEndLevelPlaying() {
+    return endLevelPlaying;
   }
 }
