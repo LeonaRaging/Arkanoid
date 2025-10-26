@@ -1,5 +1,6 @@
 package com.arkanoid.core;
 
+import com.arkanoid.powerup.PowerUpManager;
 import java.util.LinkedList;
 import java.util.Deque;
 import java.util.Random;
@@ -79,11 +80,11 @@ public class Ball extends Entity {
     Random rand = new Random();
     deltaX = x * Math.abs(deltaX);
     deltaY += (rand.nextDouble() - 0.5) * 0.3;
-    if (deltaY < 0.75 && deltaY >= 0) {
-      deltaY = 0.75;
-    }
-    if (deltaY > -0.75 && deltaY < 0) {
-      deltaY = -0.75;
+    int sign = (deltaY >= 0) ? 1 : -1;
+    double minSpeed = (PowerUpManager.powerUpState[0] == 1 ? 5 : 2);
+    if (deltaX * deltaX + deltaY * deltaY < minSpeed) {
+      double speed = Math.sqrt(minSpeed - deltaX * deltaX);
+      deltaY = sign * speed;
     }
   }
 
@@ -91,11 +92,10 @@ public class Ball extends Entity {
     Random rand = new Random();
     deltaX += (rand.nextDouble() - 0.5) * 0.3;
     deltaY = y * Math.abs(deltaY);
-    if (deltaX < 0.75 && deltaX >= 0) {
-      deltaX = 0.75;
-    }
-    if (deltaX > -0.75 && deltaX < 0) {
-      deltaX = -0.75;
+    double minSpeed = (PowerUpManager.powerUpState[0] == 1 ? 5 : 2);
+    if (deltaX * deltaX + deltaY * deltaY < minSpeed) {
+      double speed = Math.sqrt(minSpeed - deltaX * deltaX);
+      deltaY = y * speed;
     }
   }
 }

@@ -226,7 +226,15 @@ public class Controller implements Initializable {
                       && node != save && node != load && node != ingameMenu) {
                     node.setVisible(true);
                   }
+                  if (level < 5) {
+                    backgroundView.setVisible(true);
+                  } else if (level == 5) {
+                    backgroundView11.setVisible(true);
+                  } else {
+                    backgroundViewother.setVisible(true);
+                  }
                 }
+                currentState = State.RUNNING;
                 break;
               case 1:
                 startSave();
@@ -374,6 +382,7 @@ public class Controller implements Initializable {
                     backgroundView11.setVisible(false);
                     backgroundViewother.setVisible(true);
                   }
+                  BallManager.isCaught = 0;
                   field.changeField(level);
                   newLife();
                   for (Brick brick : BrickManager.getBricks()) {
@@ -419,7 +428,13 @@ public class Controller implements Initializable {
   void startGameButtonAction(ActionEvent event, int Level) throws FileNotFoundException {
     resetAnchorPane();
     startBackground.setVisible(false);
-    backgroundView.setVisible(true);
+    if (Level <= 5) {
+      backgroundView.setVisible(true);
+    } else if (Level == 5) {
+      backgroundView11.setVisible(true);
+    } else {
+      backgroundViewother.setVisible(true);
+    }
 
     ScoreDisplay.setScore(0);
     Hp.resetHp();

@@ -55,32 +55,32 @@ public class PowerUpManager {
     powerUps.removeIf(powerUp -> {
       if (powerUp.getShape().getBoundsInParent()
           .intersects(paddle.getShape().getBoundsInParent())) {
-        for (int i = 0; i < 4; i++) {
-          if (powerUpState[i] == 1) {
-            switch (i) {
-              case 0:
-                Ball ball = BallManager.getBalls().getFirst();
-                for (ImageView imageView : ball.imageViews) {
-                  scene.getChildren().remove(imageView);
-                }
-                scene.getChildren().add(ball.getImageView());
-                break;
-              case 1:
-                paddle.setState(3);
-                break;
-              case 2:
-                paddle.setState(0);
-                paddle.getRectangle().setWidth(32);
-                break;
-              case 3:
-                while (BallManager.getBalls().size() > 1) {
-                  Ball ball2 = BallManager.getBalls().getFirst();
-                  scene.getChildren().remove(ball2.getImageView());
-                  BallManager.getBalls().remove(ball2);
-                }
-                break;
+        if (powerUp.getType() != 2) {
+          for (int i = 0; i < 4; i++) {
+            if (powerUpState[i] == 1) {
+              switch (i) {
+                case 0:
+                  Ball ball = BallManager.getBalls().getFirst();
+                  for (ImageView imageView : ball.imageViews) {
+                    scene.getChildren().remove(imageView);
+                  }
+                  scene.getChildren().add(ball.getImageView());
+                  break;
+                case 1:
+                  paddle.setState(3);
+                  break;
+                case 2:
+                  break;
+                case 3:
+                  while (BallManager.getBalls().size() > 1) {
+                    Ball ball2 = BallManager.getBalls().getFirst();
+                    scene.getChildren().remove(ball2.getImageView());
+                    BallManager.getBalls().remove(ball2);
+                  }
+                  break;
+              }
+              powerUpState[i] = 0;
             }
-            powerUpState[i] = 0;
           }
         }
 
@@ -97,8 +97,9 @@ public class PowerUpManager {
         }
         if (powerUp.getType() == 1) {
           paddle.setState(2);
+          paddle.getRectangle().setWidth(32);
         }
-        if (powerUp.getType() == 2) {
+        if (powerUp.getType() == 2 && powerUpState[1] == 0) {
           paddle.getRectangle().setWidth(48);
           paddle.setState(1);
           Sound.playPowerUpE();

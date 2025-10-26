@@ -51,6 +51,7 @@ public class Sound {
   }
 
   public static void playInfinity() {
+    infinity.setVolume(0.5);
     infinity.play();
   }
 

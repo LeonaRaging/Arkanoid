@@ -170,11 +170,15 @@ public class Paddle extends Entity {
     if (ball.getCircle().getBoundsInParent().intersects(this.getRectangle().getBoundsInParent())) {
       double distance = ball.getCircle().getLayoutX() - (this.getRectangle().getX()
           + this.getRectangle().getWidth() / 2);
-      if (PowerUpManager.powerUpState[0] == 1) {
-        distance *= 2;
-      }
       ball.setDeltaX(distance / 10);
-      ball.setDeltaY(-Math.abs(ball.getDeltaY()));
+
+      if (PowerUpManager.powerUpState[0] == 1) {
+          double speed = Math.sqrt(5 - Math.abs(ball.getDeltaX()) * Math.abs(ball.getDeltaX()));
+          ball.setDeltaY(-speed);
+      } else {
+        ball.setDeltaY(-Math.abs(ball.getDeltaY()));
+      }
+
       Sound.playBouncePaddle();
     }
   }
