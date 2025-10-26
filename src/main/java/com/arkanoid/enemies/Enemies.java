@@ -147,14 +147,14 @@ public class Enemies extends Entity {
   }
 
   public boolean outScene() {
-      Rectangle rect = Controller.field.getRectangle();
-      if (this.getShape() instanceof Rectangle rec) {
-          return rec.getX() > rect.getX() + rect.getWidth();
-      }
-      if (this.getShape() instanceof Circle cir) {
-          return cir.getCenterX() - cir.getRadius() > rect.getX() + rect.getWidth();
-      }
-      return false;
+    Rectangle rect = Controller.field.getRectangle();
+    if (this.getShape() instanceof Rectangle rec) {
+      return rec.getX() > rect.getX() + rect.getWidth();
+    }
+    if (this.getShape() instanceof Circle cir) {
+      return cir.getCenterX() - cir.getRadius() > rect.getX() + rect.getWidth();
+    }
+    return false;
   }
 }
 

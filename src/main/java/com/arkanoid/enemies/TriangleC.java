@@ -42,17 +42,17 @@ public class TriangleC extends Enemies {
         double oldY = this.getRectangle().getY();
         this.getRectangle().setY(this.getRectangle().getY() + fallSpeed * deltaTime);
         if (this.checkCollisionEnemy()
-                || this.checkCollisionScene()
-                || this.checkCollisionBrick()) {
-            this.getRectangle().setY(oldY);
+            || this.checkCollisionScene()
+            || this.checkCollisionBrick()) {
+          this.getRectangle().setY(oldY);
         }
 
         double changeX = amplitude * Math.sin(swingSpeed * totalTime);
         double oldX = this.getRectangle().getX();
         this.getRectangle().setX(baseX + changeX);
         if (this.checkCollisionEnemy()
-                || this.checkCollisionScene()
-                || this.checkCollisionBrick()) {
+            || this.checkCollisionScene()
+            || this.checkCollisionBrick()) {
           this.getRectangle().setX(oldX);
           totalTime = totalTime - deltaTime;
         }

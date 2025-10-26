@@ -78,6 +78,8 @@ public class PowerUpManager {
                     BallManager.getBalls().remove(ball2);
                   }
                   break;
+                default:
+                  break;
               }
               powerUpState[i] = 0;
             }

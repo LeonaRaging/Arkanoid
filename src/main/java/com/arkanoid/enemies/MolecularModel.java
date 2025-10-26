@@ -1,9 +1,8 @@
 package com.arkanoid.enemies;
 
-import com.arkanoid.Controller;
-import com.arkanoid.sound.Sound;
 import com.arkanoid.core.Ball;
 import com.arkanoid.core.BallManager;
+import com.arkanoid.sound.Sound;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 

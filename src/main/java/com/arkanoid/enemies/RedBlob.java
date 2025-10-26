@@ -88,7 +88,7 @@ public class RedBlob extends Enemies {
           moveCooldown = imageCooldown * 12;
         } else {
           if (transformCooldown <= 0 && imageState == 9 && imageCooldown == 1
-          && this.getCircle().getCenterY() - this.getCircle().getRadius()
+              && this.getCircle().getCenterY() - this.getCircle().getRadius()
               >= Controller.field.getRectangle().getY()) {
             state = 2;
             imageCooldown = 20;

@@ -18,10 +18,10 @@ public class Gate extends Entity {
   public Gate(int x, int y, int w, int h, String name) {
     super(x, y, w, h);
     for (int i = 0; i < 5; i++) {
-        image[i] = new Image(getClass()
-            .getResource("/com/arkanoid/field/" + name + i + ".png").toExternalForm());
-        image[i] = new Image(getClass()
-            .getResource("/com/arkanoid/field/" + name + i + ".png").toExternalForm());
+      image[i] = new Image(getClass()
+          .getResource("/com/arkanoid/field/gate/" + name + i + ".png").toExternalForm());
+      image[i] = new Image(getClass()
+          .getResource("/com/arkanoid/field/gate/" + name + i + ".png").toExternalForm());
     }
     state = frame = 0;
     imageView.setImage(image[frame]);

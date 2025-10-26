@@ -1,6 +1,6 @@
 package com.arkanoid;
 
-import com.arkanoid.Background.BlackChange;
+import com.arkanoid.background.BlackChange;
 import com.arkanoid.brick.Brick;
 import com.arkanoid.brick.BrickManager;
 import com.arkanoid.core.Ball;
@@ -11,12 +11,12 @@ import com.arkanoid.enemies.Enemies;
 import com.arkanoid.enemies.EnemiesManager;
 import com.arkanoid.field.Field;
 import com.arkanoid.field.Gate;
+import com.arkanoid.numberandstringdisplay.Digit;
+import com.arkanoid.numberandstringdisplay.Hp;
+import com.arkanoid.numberandstringdisplay.ScoreDisplay;
+import com.arkanoid.numberandstringdisplay.StringDisplay;
 import com.arkanoid.powerup.PowerUp;
 import com.arkanoid.powerup.PowerUpManager;
-import com.arkanoid.NumberAndStringDisplay.Digit;
-import com.arkanoid.NumberAndStringDisplay.Hp;
-import com.arkanoid.NumberAndStringDisplay.ScoreDisplay;
-import com.arkanoid.NumberAndStringDisplay.StringDisplay;
 import com.arkanoid.ui.IngameMenu;
 import com.arkanoid.ui.Load;
 import com.arkanoid.ui.MainMenu;
@@ -39,11 +39,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import javafx.scene.image.ImageView;
 
 public class Controller implements Initializable {
 
@@ -73,37 +73,49 @@ public class Controller implements Initializable {
 
   private int initialScore = 0;
 
-  @FXML private MainMenu mainMenu;
-  @FXML private ImageView startBackground;
-  @FXML private ImageView backgroundView;
-  @FXML private ImageView backgroundView11;
-  @FXML private ImageView backgroundViewother;
-  @FXML private ImageView scoreBoardView;
-  @FXML private ScoreBoard scoreBoard;
-  @FXML private IngameMenu ingameMenu;
-  @FXML private Save save;
-  @FXML private Load load;
+  @FXML
+  private MainMenu mainMenu;
+  @FXML
+  private ImageView startBackground;
+  @FXML
+  private ImageView backgroundView;
+  @FXML
+  private ImageView backgroundView11;
+  @FXML
+  private ImageView backgroundViewother;
+  @FXML
+  private ImageView scoreBoardView;
+  @FXML
+  private ScoreBoard scoreBoard;
+  @FXML
+  private IngameMenu ingameMenu;
+  @FXML
+  private Save save;
+  @FXML
+  private Load load;
 
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
   long lastTime;
+
   private void goBlack() {
     currentState = State.PRE_NEWLEVEL;
-    black.startASC();
+    black.startAsc();
   }
+
   private void goReadyState() {
-      currentState = State.READY;
-      player.show(scene);
-      number1.display(scene);
-      ready.show(scene);
-      black.newLevel();
+    currentState = State.READY;
+    player.show(scene);
+    number1.display(scene);
+    ready.show(scene);
+    black.newLevel();
   }
 
   private void startPlay() {
-      player.clear(scene);
-      number1.undisplay(scene);
-      ready.clear(scene);
-      currentState = State.PADDLE_APPEARING;
-      pressedKeys.remove(KeyCode.ENTER);
+    player.clear(scene);
+    number1.undisplay(scene);
+    ready.clear(scene);
+    currentState = State.PADDLE_APPEARING;
+    pressedKeys.remove(KeyCode.ENTER);
   }
 
   Timeline timeline = new Timeline(
@@ -195,6 +207,8 @@ public class Controller implements Initializable {
               case 2:
                 startScoreBoard();
                 break;
+              default:
+                break;
             }
             pressedKeys.remove(KeyCode.ENTER);
           }
@@ -243,6 +257,8 @@ public class Controller implements Initializable {
                 gameOver();
                 startMainMenu();
                 break;
+              default:
+                break;
             }
             pressedKeys.remove(KeyCode.ENTER);
           }
@@ -264,7 +280,8 @@ public class Controller implements Initializable {
             pressedKeys.remove(KeyCode.DOWN);
           }
           if (pressedKeys.contains(KeyCode.ENTER)) {
-            File file = new File("src/main/resources/com/arkanoid/ui/save" + Save.getCurrentSelection() + ".txt");
+            File file = new File(
+                "src/main/resources/com/arkanoid/ui/save" + Save.getCurrentSelection() + ".txt");
             FileWriter fileWriter = new FileWriter(file);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.append(Integer.toString(level));
@@ -294,7 +311,8 @@ public class Controller implements Initializable {
             pressedKeys.remove(KeyCode.DOWN);
           }
           if (pressedKeys.contains(KeyCode.ENTER)) {
-            File file = new File("src/main/resources/com/arkanoid/ui/save" + Load.getCurrentSelection() + ".txt");
+            File file = new File(
+                "src/main/resources/com/arkanoid/ui/save" + Load.getCurrentSelection() + ".txt");
             Scanner sc = new Scanner(file);
             int loadedLevel = sc.nextInt();
             int loadedScore = sc.nextInt();
@@ -340,8 +358,7 @@ public class Controller implements Initializable {
                   if (Hp.getHp() <= 0) {
                     startMainMenu();
                     gameOver();
-                  }
-                  else {
+                  } else {
 
                     newLife();
                     goReadyState();
@@ -350,7 +367,9 @@ public class Controller implements Initializable {
                 break;
 
               case RUNNING:
-                if (lastTime == 0) lastTime = System.nanoTime();
+                if (lastTime == 0) {
+                  lastTime = System.nanoTime();
+                }
                 handleIngame();
                 break;
               case INGAMEMENU:
@@ -363,7 +382,7 @@ public class Controller implements Initializable {
                 handleLoad();
                 break;
               case PRE_NEWLEVEL:
-                boolean stillBlack = black.updateASC();
+                boolean stillBlack = black.updateAsc();
                 if (stillBlack == false) {
                   level++;
                   // will replace as boss level later
@@ -394,6 +413,8 @@ public class Controller implements Initializable {
                   initialScore = score.getScore();
                   goReadyState();
                 }
+                break;
+              default:
                 break;
             }
           } catch (IOException e) {
@@ -516,7 +537,7 @@ public class Controller implements Initializable {
     for (Entity projectile : PowerUpManager.getProjectiles()) {
       scene.getChildren().remove(projectile.getImageView());
     }
-    for (Enemies enemy :  EnemiesManager.getEnemies()) {
+    for (Enemies enemy : EnemiesManager.getEnemies()) {
       scene.getChildren().remove(enemy.getImageView());
     }
     scene.getChildren().remove(paddle.getImageView());
@@ -604,7 +625,7 @@ public class Controller implements Initializable {
       if (ball1.ballType > 0) {
         for (Ball ball : BallManager.getBalls()) {
           if (ball.ballType == 0 && ball1.getCircle().getBoundsInParent()
-                  .intersects(ball.getCircle().getBoundsInParent())) {
+              .intersects(ball.getCircle().getBoundsInParent())) {
             scene.getChildren().remove(ball1.getImageView());
             return true;
           }
@@ -647,7 +668,7 @@ public class Controller implements Initializable {
     scoreBoardView.setVisible(true);
   }
 
-  private void startSave()  {
+  private void startSave() {
     currentState = State.SAVE;
     resetAnchorPane();
     save.setVisible(true);

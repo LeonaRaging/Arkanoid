@@ -45,8 +45,6 @@ public class Bubble extends Enemies {
   @Override
   public boolean update(double deltaTime, AnchorPane scene) {
     switch (state) {
-      default:
-        break;
       case 0: // spawn
         imageCooldown--;
         remainingTime--;
@@ -214,6 +212,8 @@ public class Bubble extends Enemies {
           imageCooldown = 20;
           return true;
         }
+        break;
+      default:
         break;
     }
 

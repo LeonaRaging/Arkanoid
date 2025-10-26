@@ -44,7 +44,8 @@ public class Brick extends Entity {
     imageView.setImage(images[0]);
     imageView.setX(this.getRectangle().getX());
     imageView.setY(this.getRectangle().getY());
-    Image image = new Image(getClass().getResource("/com/arkanoid/brick/shadow.png").toExternalForm());
+    Image image = new Image(getClass()
+        .getResource("/com/arkanoid/brick/shadow.png").toExternalForm());
     shadow.setImage(image);
     shadow.setX(this.getRectangle().getX() + this.getRectangle().getWidth() / 2);
     shadow.setY(this.getRectangle().getY() + this.getRectangle().getHeight());

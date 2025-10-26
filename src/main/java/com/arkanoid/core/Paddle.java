@@ -33,23 +33,23 @@ public class Paddle extends Entity {
     for (int i = 0; i < 2; i++) {
       for (int j = 0; j < 4; j++) {
         images[i][j] = new Image(
-            getClass().getResource("/com/arkanoid/paddle/paddle" + i + j + ".png")
+            getClass().getResource("/com/arkanoid/paddle/paddle/paddle" + i + j + ".png")
                 .toExternalForm());
       }
     }
 
     for (int i = 0; i < 10; i++) {
-      String imagePath = "/com/arkanoid/paddle/paddleForm" + (i + 1) + ".png";
+      String imagePath = "/com/arkanoid/paddle/paddleform/paddleForm" + (i + 1) + ".png";
       appearImages[i] = new Image(getClass().getResource(imagePath).toExternalForm());
     }
 
     for (int i = 0; i < 15; i++) {
-      String imagePath = "/com/arkanoid/paddle/paddleBreak" + i + ".png";
+      String imagePath = "/com/arkanoid/paddle/paddlebreak/paddleBreak" + i + ".png";
       breakImages[i] = new Image(getClass().getResource(imagePath).toExternalForm());
     }
 
     for (int i = 0; i < 14; i++) {
-      String imagePath = "/com/arkanoid/paddle/paddlePowerUp" + i + ".png";
+      String imagePath = "/com/arkanoid/paddle/paddlepowerup/paddlePowerUp" + i + ".png";
       powerUpImages[i] = new Image(getClass().getResource(imagePath).toExternalForm());
     }
 
@@ -77,7 +77,7 @@ public class Paddle extends Entity {
     breakCooldown--;
     if (breakCooldown <= 0) {
       imageView.setX(this.getRectangle().getX());
-      imageView.setY(this.getRectangle().getY()-5);
+      imageView.setY(this.getRectangle().getY() - 5);
       imageView.setImage(breakImages[breakFrame]);
       breakFrame++;
       breakCooldown = BREAK_FRAME_DELAY;
@@ -107,7 +107,7 @@ public class Paddle extends Entity {
     appearCooldown--;
     if (appearCooldown <= 0) {
       imageView.setX(this.getRectangle().getX());
-      imageView.setY(this.getRectangle().getY()-5);
+      imageView.setY(this.getRectangle().getY() - 5);
       imageView.setImage(appearImages[appearFrame]);
       appearFrame++;
       appearCooldown = APPEAR_FRAME_DELAY;
@@ -159,7 +159,9 @@ public class Paddle extends Entity {
         }
       } else {
         powerUpCooldown--;
-        if (powerUpCooldown == 0) state = 0;
+        if (powerUpCooldown == 0) {
+          state = 0;
+        }
       }
     }
     imageView.setX(this.getRectangle().getX());
@@ -173,8 +175,8 @@ public class Paddle extends Entity {
       ball.setDeltaX(distance / 10);
 
       if (PowerUpManager.powerUpState[0] == 1) {
-          double speed = Math.sqrt(5 - Math.abs(ball.getDeltaX()) * Math.abs(ball.getDeltaX()));
-          ball.setDeltaY(-speed);
+        double speed = Math.sqrt(5 - Math.abs(ball.getDeltaX()) * Math.abs(ball.getDeltaX()));
+        ball.setDeltaY(-speed);
       } else {
         ball.setDeltaY(-Math.abs(ball.getDeltaY()));
       }

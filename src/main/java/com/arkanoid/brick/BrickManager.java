@@ -2,14 +2,13 @@ package com.arkanoid.brick;
 
 import static com.arkanoid.Controller.field;
 
+import com.arkanoid.numberandstringdisplay.ScoreDisplay;
 import com.arkanoid.core.Ball;
 import com.arkanoid.core.Entity;
 import com.arkanoid.powerup.PowerUpManager;
-import com.arkanoid.NumberAndStringDisplay.ScoreDisplay;
 import com.arkanoid.sound.Sound;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javafx.scene.layout.AnchorPane;

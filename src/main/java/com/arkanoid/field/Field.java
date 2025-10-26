@@ -10,7 +10,7 @@ public class Field extends Entity {
   public Field(int x, int y, int w, int h, String name) {
     super(x, y, w, h);
     image = new Image(getClass()
-        .getResource("/com/arkanoid/field/" + name + ".png").toExternalForm());
+        .getResource("/com/arkanoid/field/field/" + name + ".png").toExternalForm());
     imageView.setImage(image);
     imageView.setX(this.getRectangle().getX());
     imageView.setY(this.getRectangle().getY());
@@ -18,7 +18,7 @@ public class Field extends Entity {
 
   public void changeField(int level) {
     image = new Image(getClass()
-        .getResource("/com/arkanoid/field/" + level + ".png").toExternalForm());
+        .getResource("/com/arkanoid/field/field/" + level + ".png").toExternalForm());
     imageView.setImage(image);
     imageView.setX(this.getRectangle().getX());
     imageView.setY(this.getRectangle().getY());

@@ -1,8 +1,8 @@
 package com.arkanoid.core;
 
 import com.arkanoid.powerup.PowerUpManager;
-import java.util.LinkedList;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Random;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,15 +11,16 @@ import javafx.scene.layout.AnchorPane;
 public class Ball extends Entity {
 
   public class Pos {
-    public double x;
-    public double y;
+    public double xpos;
+    public double ypos;
+
     Pos(double x, double y) {
-      this.x = x;
-      this.y = y;
+      this.xpos = x;
+      this.ypos = y;
     }
 
     public double distance(Pos o) {
-      return Math.abs(x - o.x) + Math.abs(y - o.y);
+      return Math.abs(xpos - o.xpos) + Math.abs(ypos - o.ypos);
     }
   }
 
@@ -70,8 +71,8 @@ public class Ball extends Entity {
     }
     int i = 0;
     for (Pos newPos : deque) {
-      imageViews[i].setX(newPos.x);
-      imageViews[i].setY(newPos.y);
+      imageViews[i].setX(newPos.xpos);
+      imageViews[i].setY(newPos.ypos);
       i++;
     }
   }
