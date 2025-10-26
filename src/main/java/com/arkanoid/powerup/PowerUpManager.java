@@ -88,10 +88,11 @@ public class PowerUpManager {
         if (powerUp.getType() == 0) {
           if (powerUpState[0] == 0) {
             powerUpState[0] = 1;
+            Ball ball = BallManager.getBalls().getFirst();
+            scene.getChildren().remove(ball.getImageView());
             for (int i = 0; i < 6; i++) {
-              scene.getChildren().add(BallManager.getBalls().getFirst().imageViews[i]);
+              scene.getChildren().add(ball.imageViews[i]);
             }
-            scene.getChildren().remove(BallManager.getBalls().getFirst().getImageView());
           }
         }
         if (powerUp.getType() == 1) {

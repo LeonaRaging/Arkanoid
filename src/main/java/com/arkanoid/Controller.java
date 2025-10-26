@@ -580,8 +580,10 @@ public class Controller implements Initializable {
 
   private void ballUpdate() {
     for (Ball ball : BallManager.getBalls()) {
-      scene.getChildren().remove(ball.getImageView());
-      scene.getChildren().add(ball.getImageView());
+      if (PowerUpManager.powerUpState[0] != 1) {
+        scene.getChildren().remove(ball.getImageView());
+        scene.getChildren().add(ball.getImageView());
+      }
     }
     BallManager.getBalls().removeIf(ball1 -> {
       if (ball1.ballType > 0) {

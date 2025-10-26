@@ -63,6 +63,7 @@ public class BrickManager {
   }
 
   public static boolean update(Entity entity, AnchorPane scene) {
+    PowerUpManager.powerUpCooldown--;
     AtomicBoolean check = new AtomicBoolean(false);
     bricks.removeIf(brick -> {
       if (brick.checkCollisionBrick(entity)) {
@@ -75,19 +76,18 @@ public class BrickManager {
           }
         }
       }
+
       if (brick.getHp() == 0) {
         BrickManager.brickRemain--;
         scene.getChildren().remove(brick.getImageView());
         scene.getChildren().remove(brick.shadow);
-        Random rand = new Random();
-        if (rand.nextDouble() <= 0.25 && PowerUpManager.powerUpCooldown <= 0) {
+        if (PowerUpManager.powerUpCooldown <= 0) {
           PowerUpManager.createPowerUps(brick, scene);
-          PowerUpManager.powerUpCooldown = 30;
+          PowerUpManager.powerUpCooldown = 500;
         }
         ScoreDisplay.addScore(brick.getScore());
         return true;
       }
-      PowerUpManager.powerUpCooldown--;
       return false;
     });
     return check.get();
