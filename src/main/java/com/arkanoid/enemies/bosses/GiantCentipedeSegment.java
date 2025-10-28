@@ -103,7 +103,7 @@ public class GiantCentipedeSegment extends Enemies {
             deltaX = (realfX - X) / dis;
             deltaY = (realfY - Y) / dis;
           }
-          // System.out.println(this.getCircle().getCenterX() + " " + this.getCircle().getCenterY());
+
           double nSpeed = 4;
           this.getCircle().setCenterX(this.getCircle().getCenterX() + nSpeed * deltaX);
           this.getCircle().setCenterY(this.getCircle().getCenterY() + nSpeed * deltaY);

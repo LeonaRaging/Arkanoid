@@ -63,11 +63,13 @@ public class TriangleC extends Enemies {
           imageState = 0;
           moveCooldown = imageCooldown * 12;
         } else {
-          imageCooldown--;
-          if (imageCooldown == 0) {
-            imageState++;
-            imageState %= 8;
-            imageCooldown = 20;
+          if (oldX != this.getRectangle().getX() || oldY != this.getRectangle().getY()) {
+            imageCooldown--;
+            if (imageCooldown == 0) {
+              imageState++;
+              imageState %= 8;
+              imageCooldown = 20;
+            }
           }
         }
         break;
@@ -91,6 +93,6 @@ public class TriangleC extends Enemies {
         - images[state][imageState].getWidth() / 2);
     imageView.setY(this.getRectangle().getY() + this.getRectangle().getHeight() / 2
         - images[state][imageState].getHeight() / 2);
-    return false;
+    return outScene();
   }
 }

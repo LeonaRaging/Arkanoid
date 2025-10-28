@@ -1,12 +1,14 @@
 package com.arkanoid.enemies.bosses;
 
 import com.arkanoid.Controller;
+import com.arkanoid.brick.BrickManager;
 import com.arkanoid.core.Ball;
 import com.arkanoid.core.BallManager;
 import com.arkanoid.enemies.Enemies;
 import com.arkanoid.enemies.EnemiesManager;
 import java.util.ArrayList;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 
@@ -19,61 +21,65 @@ public class GiantCentipedeBoss extends Enemies {
   int dropOrder = 0;
   int stateCooldown = 200;
   int state = 0;
+  boolean isHit = false;
 
   public GiantCentipedeBoss(double x, double y, double r, AnchorPane scene) {
-    super(x, y, r);
-    double speed = 0.058;
+      super(x, y, r);
+      double speed = 0.058;
 
-    GiantCentipedeSegment head = new GiantCentipedeSegment(x, y, r, true, speed);
-    GiantCentipede.add(head);
+      GiantCentipedeSegment head = new GiantCentipedeSegment(x, y, r, true, speed);
+      GiantCentipede.add(head);
 
-    for (int i = 0; i < 7; i++) {
-      x -= 2 * r;
-      speed -= 0.002;
-      GiantCentipedeSegment seg = new GiantCentipedeSegment(x, y, r, false, speed);
-      GiantCentipede.add(seg);
-    }
+      for (int i = 0; i < 7; i++) {
+          x -= 2 * r;
+          speed -= 0.002;
+          GiantCentipedeSegment seg = new GiantCentipedeSegment(x, y, r, false, speed);
+          GiantCentipede.add(seg);
+      }
 
-    for (int i = 7; i >= 0; i--) {
-      GiantCentipedeSegment seg = GiantCentipede.get(i);
-      scene.getChildren().add(seg.getImageView());
-    }
+      for (int i = 7; i >= 0; i--) {
+          GiantCentipedeSegment seg = GiantCentipede.get(i);
+          scene.getChildren().add(seg.getImageView());
+      }
+
+      Rectangle rect = Controller.field.getRectangle();
+      state = 3;
+      stateCooldown = 200;
+      for (GiantCentipedeSegment seg : GiantCentipede) {
+          seg.getCircle().setCenterX(rect.getX()
+                  + seg.getCircle().getRadius());
+          seg.getCircle().setCenterY(rect.getY()
+                  - seg.getCircle().getRadius());
+      }
   }
 
+  @Override
   public void clear(AnchorPane scene) {
     for (GiantCentipedeSegment seg : GiantCentipede) {
       scene.getChildren().remove(seg.getImageView());
     }
-    EnemiesManager.setGameOver(true);
+    BrickManager.brickRemain--;
   }
 
   @Override
   public boolean update(double deltaTime, AnchorPane scene) {
     double fx = 0;
     double fy = 0;
-    boolean checkCollision = false;
+    isHit = false;
 
     for (GiantCentipedeSegment seg : GiantCentipede) {
       seg.move(fx, fy, deltaTime, state);
       fx = seg.getCircle().getCenterX();
       fy = seg.getCircle().getCenterY();
-      // System.exit(0);
       if (hitCooldown <= 0) {
         seg.changeState(0, 0);
-        for (Ball ball : BallManager.getBalls()) {
-          if (ball.getShape().getBoundsInParent()
-              .intersects(seg.getShape().getBoundsInParent())) {
-            checkCollision = true;
-            BallManager.checkCollisionScene(this.getRectangle());
-            ball.update(scene);
-          }
-        }
+        checkCollision(seg.getCircle());
       } else {
         seg.changeState(1, 0);
       }
     }
 
-    if (checkCollision) {
+    if (isHit) {
       hp--;
       hitCooldown = 30;
 
@@ -94,16 +100,14 @@ public class GiantCentipedeBoss extends Enemies {
 
     switch (state) {
       case 0:
-        // System.exit(0);
 
         if (dropCooldown == 0) {
           dropCooldown = 80;
           double xpos = GiantCentipede.get(dropOrder).getCircle().getCenterX();
           double ypos = GiantCentipede.get(dropOrder).getCircle().getCenterY();
           Debris ndeb = new Debris(xpos, ypos, 2);
-          // nDeb.getCircle().setFill(Color.GREEN);
           scene.getChildren().add(ndeb.getImageView());
-          EnemiesManager.enemies.add(ndeb);
+          EnemiesManager.addEnemy(ndeb);
           dropOrder++;
           dropOrder %= GiantCentipede.size();
         }
@@ -125,8 +129,8 @@ public class GiantCentipedeBoss extends Enemies {
         for (GiantCentipedeSegment seg : GiantCentipede) {
           if (seg.getCircle().getBoundsInParent().intersects(
               Controller.paddle.getRectangle().getBoundsInParent())) {
-            clear(scene);
-            return true;
+            EnemiesManager.setGameOver(true);
+            break;
           }
         }
 
@@ -170,5 +174,27 @@ public class GiantCentipedeBoss extends Enemies {
     return false;
   }
 
+    void checkCollision(Circle circle) {
+        for (Ball ball : BallManager.getBalls()) {
+            if (circle.getBoundsInParent().intersects(ball.getShape().getBoundsInParent())) {
+                boolean rightBorder =
+                        ball.getCircle().getCenterX() >= circle.getCenterX();
+                boolean leftBorder =
+                        ball.getCircle().getCenterX() <= circle.getCenterX();
+                boolean bottomBorder =
+                        ball.getCircle().getCenterY() >= circle.getCenterY();
+                boolean topBorder =
+                        ball.getCircle().getCenterY() <= circle.getCenterY();
 
+                if (rightBorder || leftBorder) {
+                    ball.updateX((leftBorder ? -1 : 1));
+                }
+
+                if (bottomBorder || topBorder) {
+                    ball.updateY((topBorder ? -1 : 1));
+                }
+                isHit = true;
+            }
+        }
+    }
 }

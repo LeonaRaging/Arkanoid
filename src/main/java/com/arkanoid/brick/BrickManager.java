@@ -26,6 +26,11 @@ public class BrickManager {
     bricks.clear();
     brickRemain = 0;
 
+    if (level == 5 || level == 15) {
+        brickRemain = 1;
+        return;
+    }
+
     File file = new File("src/main/resources/com/arkanoid/Level/level" + level + ".txt");
     try {
       Scanner sc = new Scanner(file);

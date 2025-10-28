@@ -69,7 +69,11 @@ public class MiniDohFace extends Enemies {
     deathCooldown = 12;
   }
 
-  public boolean isReadyShoot() {
+  public boolean isDeath() {
+    return isDeath;
+  }
+
+    public boolean isReadyShoot() {
     return readyShoot;
   }
 

@@ -146,6 +146,10 @@ public class Enemies extends Entity {
     return false;
   }
 
+  public void clear(AnchorPane scene) {
+      scene.getChildren().remove(this.getImageView());
+  }
+
   public boolean outScene() {
     Rectangle rect = Controller.field.getRectangle();
     if (this.getShape() instanceof Rectangle rec) {

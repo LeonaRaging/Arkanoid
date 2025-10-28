@@ -38,11 +38,10 @@ public class DohFace extends Enemies {
   public DohFace(AnchorPane scene) {
     super(0, 0, 44, 91);
     Rectangle rect = Controller.field.getRectangle();
-    double xpos = rect.getX() + rect.getWidth() / 2;
-    double ypos = rect.getY() + rect.getHeight() / 2;
-    this.getRectangle().setX(xpos - this.getRectangle().getWidth() / 2);
-    this.getRectangle().setY(ypos - this.getRectangle().getHeight() / 2);
-    System.out.println(this.getRectangle().getX() + " " + this.getRectangle().getY());
+    double xPos = rect.getX() + rect.getWidth() / 2;
+    double yPos = rect.getY() + rect.getHeight() / 2;
+    this.getRectangle().setX(xPos - this.getRectangle().getWidth() / 2);
+    this.getRectangle().setY(yPos - this.getRectangle().getHeight() / 2);
 
     // hitbox = rectangle 44x91, image -> bottom + 1 pixel
 
@@ -84,15 +83,13 @@ public class DohFace extends Enemies {
     for (Ball ball : BallManager.getBalls()) {
       ball.setDeltaX(0);
       ball.setDeltaY(0);
-      scene.getChildren().remove(ball.getImageView());
     }
   }
 
   public void showBalls(AnchorPane scene) {
     for (Ball ball : BallManager.getBalls()) {
       ball.setDeltaX(1);
-      ball.setDeltaY(1);
-      scene.getChildren().add(ball.getImageView());
+      ball.setDeltaY(-1);
     }
   }
 
@@ -118,7 +115,6 @@ public class DohFace extends Enemies {
         imageView.setY(this.getRectangle().getY()
             + this.getRectangle().getHeight() / 2
             - imageView.getImage().getHeight() / 2);
-
         checkCollision();
 
         if (state == 4) {
@@ -186,14 +182,13 @@ public class DohFace extends Enemies {
         break;
       case 1: // Roar + Ball spawn
         imageCooldown--;
-        if (imageCooldown == 0) {
+        if (imageCooldown <= 0) {
           imageState++;
           imageCooldown = 20;
 
           if (imageState > 5) {
             stateCooldown--;
             if (stateCooldown > 0) {
-              stateCooldown--;
               imageState = 0;
             } else {
               // Ball should spawn here <-------
@@ -201,6 +196,7 @@ public class DohFace extends Enemies {
               state = 2;
               stateCooldown = 400;
               imageState = 0;
+              imageCooldown = 20;
             }
           }
         }
@@ -266,16 +262,16 @@ public class DohFace extends Enemies {
             if (imageState == 3) { // ...and the boss is opening his mouth...
               BossLaser bossLaser = new BossLaser(imageView.getX() + 76,
                   imageView.getY() + 51, 8, 0, scene);
-              EnemiesManager.getEnemies().add(bossLaser);
+              EnemiesManager.addEnemy(bossLaser);
 
               for (int i = 0; i < 4; i++) { // ...shoot
-                if (child[i] != null) {
+                if (child[i] != null && !child[i].isDeath()) {
                   double xpos = child[i].getRectangle().getX();
                   double ypos = child[i].getRectangle().getY()
                       + child[i].getRectangle().getHeight();
                   Laser nl = new Laser(xpos + 5, ypos - 10);
                   scene.getChildren().add(nl.getImageView());
-                  EnemiesManager.getEnemies().add(nl);
+                  EnemiesManager.addEnemy(nl);
                 }
               }
             }
@@ -325,7 +321,6 @@ public class DohFace extends Enemies {
         break;
       case 6: // Shoot laser (from eyes)
         imageView.setImage(images[4][imageState + imageDisplay]);
-        System.out.println("bruh");
         imageView.setY(this.getRectangle().getY() - 20);
         imageView.setX(this.getRectangle().getX()
             + this.getRectangle().getWidth() / 2 - 80);
@@ -375,7 +370,7 @@ public class DohFace extends Enemies {
           for (int i = 0; i < 2; i++) {
             BossLaser bossLaser = new BossLaser(eyes[i].getX(),
                 eyes[i].getY(), eyes[i].getWidth(), 1, scene);
-            EnemiesManager.enemies.add(bossLaser);
+            EnemiesManager.addEnemy(bossLaser);
           }
         }
 

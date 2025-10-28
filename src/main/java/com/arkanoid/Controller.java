@@ -59,7 +59,7 @@ public class Controller implements Initializable {
   private ScoreDisplay score;
   private Hp hp;
 
-  private int level;
+  private static int level;
 
   private enum State {
     MENU, READY, PADDLE_APPEARING, PADDLE_BREAKING, RUNNING, INGAMEMENU, SAVE, LOAD, PRE_NEWLEVEL
@@ -153,28 +153,10 @@ public class Controller implements Initializable {
 
           gateUpdate();
 
-          if (BallManager.checkCollisionBottomZone(scene)) {
-            Hp.loseLife();
-            hp.updateDisplay();
-
-            for (Ball ball : BallManager.getBalls()) {
-              scene.getChildren().remove(ball.getImageView());
-              for (int i = 0; i < 6; i++) {
-                scene.getChildren().remove(ball.imageViews[i]);
-              }
-            }
-            BallManager.getBalls().clear();
-
-            for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
-              scene.getChildren().remove(powerUp.getImageView());
-            }
-            for (Entity projectile : PowerUpManager.getProjectiles()) {
-              scene.getChildren().remove(projectile.getImageView());
-            }
-            PowerUpManager.resetPower();
-
-            paddle.startBreakAnimation();
-            currentState = State.PADDLE_BREAKING;
+          if (BallManager.checkCollisionBottomZone(scene)
+                || EnemiesManager.isGameOver()) {
+            EnemiesManager.setGameOver(false);
+            startPaddleBreaking();
           }
 
           if (score != null) {
@@ -386,7 +368,7 @@ public class Controller implements Initializable {
                 if (stillBlack == false) {
                   level++;
                   // will replace as boss level later
-                  if (level == 5 || level == 10 || level == 15) {
+                  if (level == 10) {
                     level++;
                   }
                   if (level > 15) {
@@ -447,6 +429,7 @@ public class Controller implements Initializable {
 
   @FXML
   void startGameButtonAction(ActionEvent event, int Level) throws FileNotFoundException {
+    Level = 15;
     resetAnchorPane();
     startBackground.setVisible(false);
     if (Level <= 5) {
@@ -588,7 +571,7 @@ public class Controller implements Initializable {
         BrickManager.update(ball, scene);
       }
     } else {
-
+      System.out.println("trollvn");
       for (Ball ball : BallManager.getBalls()) {
         scene.getChildren().remove(ball.getImageView());
         for (int i = 0; i < 6; i++) {
@@ -680,5 +663,33 @@ public class Controller implements Initializable {
     resetAnchorPane();
     load.setVisible(true);
     startBackground.setVisible(true);
+  }
+
+  public void startPaddleBreaking() {
+      Hp.loseLife();
+      hp.updateDisplay();
+
+      for (Ball ball : BallManager.getBalls()) {
+          scene.getChildren().remove(ball.getImageView());
+          for (int i = 0; i < 6; i++) {
+              scene.getChildren().remove(ball.imageViews[i]);
+          }
+      }
+      BallManager.getBalls().clear();
+
+      for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
+          scene.getChildren().remove(powerUp.getImageView());
+      }
+      for (Entity projectile : PowerUpManager.getProjectiles()) {
+          scene.getChildren().remove(projectile.getImageView());
+      }
+      PowerUpManager.resetPower();
+
+      paddle.startBreakAnimation();
+      currentState = State.PADDLE_BREAKING;
+  }
+
+  public static int getLevel() {
+    return level;
   }
 }

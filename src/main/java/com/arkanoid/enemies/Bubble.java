@@ -16,6 +16,7 @@ public class Bubble extends Enemies {
   private int state = 0;
   private int imageState;
   private int imageCooldown;
+  private boolean isDead = false;
 
   public Bubble(double x, double y, double w, double h) {
     super(x, y, w, h);
@@ -93,7 +94,7 @@ public class Bubble extends Enemies {
           state = 7;
           imageState = 3;
           imageCooldown = 20;
-          remainingTime = imageCooldown * 4;
+          remainingTime = imageCooldown * 4 + 150;
         }
         break;
       case 3: // catching
@@ -184,6 +185,7 @@ public class Bubble extends Enemies {
           imageState = 3;
           imageCooldown = 20;
           remainingTime = imageCooldown * 4;
+          isDead = true;
 
           Ball ball = new Ball(0, 0, 2.5);
           ball.getCircle()
@@ -201,16 +203,29 @@ public class Bubble extends Enemies {
         remainingTime--;
         imageCooldown--;
         if (imageCooldown == 0) {
-          imageState--;
-          imageCooldown = 20;
+          if (imageState > 0) {
+            imageState--;
+            imageCooldown = 20;
+          }
+          else {
+            imageCooldown = -1;
+            Sound.playBubble();
+            scene.getChildren().remove(this.getImageView());
+          }
         }
 
         if (remainingTime == 0) {
-          Sound.playBubble();
-          state = 0;
-          imageState = 0;
-          imageCooldown = 20;
-          return true;
+          if (!isDead) {
+            Sound.playBubble();
+            scene.getChildren().add(this.getImageView());
+            state = 0;
+            imageState = 0;
+            imageCooldown = 20;
+            teleport();
+          }
+          else {
+            return true;
+          }
         }
         break;
       default:
@@ -264,7 +279,7 @@ public class Bubble extends Enemies {
         Math.random() * (rect.getHeight() / 2 - this.getRectangle().getHeight()) + rect.getY();
     this.getRectangle().setX(x);
     this.getRectangle().setY(y);
-    while (this.checkCollisionBrick()) {
+    while (this.checkCollisionBrick() || this.checkCollisionEnemy()) {
       x = Math.random() * (rect.getWidth() - this.getRectangle().getWidth()) + rect.getX();
       y = Math.random() * (rect.getHeight() / 2 - this.getRectangle().getHeight()) + rect.getY();
       this.getRectangle().setX(x);

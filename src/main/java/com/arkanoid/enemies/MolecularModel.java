@@ -121,6 +121,6 @@ public class MolecularModel extends Enemies {
     imageView.setX(this.getCircle().getCenterX() - images[state][imageState].getWidth() / 2);
     imageView.setY(this.getCircle().getCenterY() - images[state][imageState].getHeight() / 2);
 
-    return false;
+    return outScene();
   }
 }

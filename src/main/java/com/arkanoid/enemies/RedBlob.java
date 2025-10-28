@@ -154,6 +154,6 @@ public class RedBlob extends Enemies {
     imageView.setX(this.getCircle().getCenterX() - this.getCircle().getRadius());
     imageView.setY(this.getCircle().getCenterY() - this.getCircle().getRadius());
 
-    return false;
+    return this.outScene();
   }
 }
