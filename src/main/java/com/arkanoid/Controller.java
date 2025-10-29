@@ -17,6 +17,8 @@ import com.arkanoid.numberandstringdisplay.ScoreDisplay;
 import com.arkanoid.numberandstringdisplay.StringDisplay;
 import com.arkanoid.powerup.PowerUp;
 import com.arkanoid.powerup.PowerUpManager;
+import com.arkanoid.sound.Sound;
+import com.arkanoid.ui.GameOver;
 import com.arkanoid.ui.IngameMenu;
 import com.arkanoid.ui.Load;
 import com.arkanoid.ui.MainMenu;
@@ -61,8 +63,10 @@ public class Controller implements Initializable {
 
   private static int level;
 
+  private boolean isGameOver;
+
   private enum State {
-    MENU, READY, PADDLE_APPEARING, PADDLE_BREAKING, RUNNING, INGAMEMENU, SAVE, LOAD, PRE_NEWLEVEL
+    MENU, READY, PADDLE_APPEARING, PADDLE_BREAKING, RUNNING, INGAMEMENU, SAVE, LOAD, PRE_NEWLEVEL, GAMEOVER
   }
 
   private State currentState;
@@ -86,6 +90,8 @@ public class Controller implements Initializable {
   @FXML
   private ImageView scoreBoardView;
   @FXML
+  private ImageView gameOverScreen;
+  @FXML
   private ScoreBoard scoreBoard;
   @FXML
   private IngameMenu ingameMenu;
@@ -93,6 +99,8 @@ public class Controller implements Initializable {
   private Save save;
   @FXML
   private Load load;
+  @FXML
+  private GameOver gameOverMenu;
 
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
   long lastTime;
@@ -219,16 +227,17 @@ public class Controller implements Initializable {
                 for (Node node : scene.getChildren()) {
                   if (node != mainMenu && node != scoreBoardView && node != scoreBoard
                       && node != backgroundView11 && node != backgroundViewother
-                      && node != save && node != load && node != ingameMenu) {
+                      && node != save && node != load && node != ingameMenu
+                      && node != gameOverScreen && node != gameOverMenu) {
                     node.setVisible(true);
                   }
-                  if (level < 5) {
-                    backgroundView.setVisible(true);
-                  } else if (level == 5) {
-                    backgroundView11.setVisible(true);
-                  } else {
-                    backgroundViewother.setVisible(true);
-                  }
+                }
+                if (level < 5) {
+                  backgroundView.setVisible(true);
+                } else if (level == 5) {
+                  backgroundView11.setVisible(true);
+                } else {
+                  backgroundViewother.setVisible(true);
                 }
                 currentState = State.RUNNING;
                 break;
@@ -312,6 +321,35 @@ public class Controller implements Initializable {
           }
         }
 
+        private void handleGameOver() throws FileNotFoundException {
+          gameOverMenu.update();
+          if (pressedKeys.contains(KeyCode.UP)) {
+            gameOverMenu.moveSelector(-1);
+            pressedKeys.remove(KeyCode.UP);
+          }
+
+          if (pressedKeys.contains(KeyCode.DOWN)) {
+            gameOverMenu.moveSelector(1);
+            pressedKeys.remove(KeyCode.DOWN);
+          }
+
+          if (pressedKeys.contains(KeyCode.ENTER)) {
+            switch (gameOverMenu.getCurrentSelection()) {
+              case 0:
+                startGameButtonAction(new ActionEvent(), level);
+                goReadyState();
+                break;
+              case 1:
+                startMainMenu();
+                currentState = State.MENU;
+                break;
+              default:
+                break;
+            }
+            pressedKeys.remove(KeyCode.ENTER);
+          }
+        }
+
         @Override
         public void handle(ActionEvent actionEvent) {
           try {
@@ -321,7 +359,7 @@ public class Controller implements Initializable {
                 break;
 
               case READY:
-                if (pressedKeys.contains(KeyCode.ENTER)) {
+                if (pressedKeys.contains(KeyCode.ENTER) && !Sound.isEndLevelPlaying()) {
                   startPlay();
                 }
                 break;
@@ -338,10 +376,9 @@ public class Controller implements Initializable {
                 boolean isBreaking = paddle.updateBreakAnimation();
                 if (!isBreaking) {
                   if (Hp.getHp() <= 0) {
-                    startMainMenu();
-                    gameOver();
+                    goBlack();
+                    isGameOver = true;
                   } else {
-
                     newLife();
                     goReadyState();
                   }
@@ -366,35 +403,41 @@ public class Controller implements Initializable {
               case PRE_NEWLEVEL:
                 boolean stillBlack = black.updateAsc();
                 if (stillBlack == false) {
-                  level++;
-                  // will replace as boss level later
-                  if (level == 10) {
-                    level++;
-                  }
-                  if (level > 15) {
+                  if (isGameOver) {
+                    startGameOver();
+                    Sound.playGameOver();
                     gameOver();
-                  }
+                  } else {
+                    level++;
+                    if (level > 15) {
+                      gameOver();
+                      startMainMenu();
+                    }
 
-                  if (level == 11) {
-                    backgroundView.setVisible(false);
-                    backgroundView11.setVisible(true);
+                    if (level == 11) {
+                      backgroundView.setVisible(false);
+                      backgroundView11.setVisible(true);
+                    }
+                    if (level == 12) {
+                      backgroundView11.setVisible(false);
+                      backgroundViewother.setVisible(true);
+                    }
+                    BallManager.isCaught = 0;
+                    field.changeField(level);
+                    newLife();
+                    for (Brick brick : BrickManager.getBricks()) {
+                      scene.getChildren().remove(brick.getImageView());
+                      scene.getChildren().remove(brick.shadow);
+                    }
+                    BrickManager.getBricks().clear();
+                    BrickManager.createBricks(scene, level);
+                    initialScore = score.getScore();
+                    goReadyState();
                   }
-                  if (level == 12) {
-                    backgroundView11.setVisible(false);
-                    backgroundViewother.setVisible(true);
-                  }
-                  BallManager.isCaught = 0;
-                  field.changeField(level);
-                  newLife();
-                  for (Brick brick : BrickManager.getBricks()) {
-                    scene.getChildren().remove(brick.getImageView());
-                    scene.getChildren().remove(brick.shadow);
-                  }
-                  BrickManager.getBricks().clear();
-                  BrickManager.createBricks(scene, level);
-                  initialScore = score.getScore();
-                  goReadyState();
                 }
+                break;
+              case GAMEOVER:
+                handleGameOver();
                 break;
               default:
                 break;
@@ -413,6 +456,7 @@ public class Controller implements Initializable {
     ingameMenu.setChoices();
     save.setChoices();
     load.setChoices();
+    gameOverMenu.setChoices();
 
     scene.getChildren().add(black.getImageView());
 
@@ -429,7 +473,7 @@ public class Controller implements Initializable {
 
   @FXML
   void startGameButtonAction(ActionEvent event, int Level) throws FileNotFoundException {
-    Level = 15;
+    isGameOver = false;
     resetAnchorPane();
     startBackground.setVisible(false);
     if (Level <= 5) {
@@ -552,10 +596,6 @@ public class Controller implements Initializable {
     }
     BallManager.getBalls().clear();
 
-    startMainMenu();
-    startBackground.setVisible(true);
-    backgroundView.setVisible(false);
-
     File file = new File("src/main/resources/com/arkanoid/ui/score.txt");
     FileWriter fileWriter = new FileWriter(file, true);
     BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -571,7 +611,7 @@ public class Controller implements Initializable {
         BrickManager.update(ball, scene);
       }
     } else {
-      System.out.println("trollvn");
+
       for (Ball ball : BallManager.getBalls()) {
         scene.getChildren().remove(ball.getImageView());
         for (int i = 0; i < 6; i++) {
@@ -665,6 +705,13 @@ public class Controller implements Initializable {
     startBackground.setVisible(true);
   }
 
+  private void startGameOver() {
+    currentState = State.GAMEOVER;
+    resetAnchorPane();
+    gameOverMenu.setVisible(true);
+    gameOverScreen.setVisible(true);
+  }
+
   public void startPaddleBreaking() {
       Hp.loseLife();
       hp.updateDisplay();
@@ -687,6 +734,7 @@ public class Controller implements Initializable {
 
       paddle.startBreakAnimation();
       currentState = State.PADDLE_BREAKING;
+      Sound.playDead();
   }
 
   public static int getLevel() {
