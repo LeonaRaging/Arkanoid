@@ -9,14 +9,17 @@ public class StringDisplay {
   int x;
   int y;
   int spacing = 8;
+  boolean type;
 
-  public StringDisplay(String variable, int x, int y) {
+  public StringDisplay(String variable, int x, int y,boolean type) {
+    //0 blue 1 green
+    this.type = type;
     this.variable = variable;
     this.x = x;
     this.y = y;
     this.showString = new Letter[variable.length()];
     for (int i = 0; i < variable.length(); i++) {
-      showString[i] = new Letter(x + i * spacing, y, 8, 8, variable.charAt(i));
+      showString[i] = new Letter(x + i * spacing, y, 8, 8, variable.charAt(i), type);
     }
   }
 
@@ -27,7 +30,7 @@ public class StringDisplay {
   public void setX(int x) {
     this.x = x;
     for (int i = 0; i < variable.length(); i++) {
-      showString[i] = new Letter(x + i * spacing, y, 8, 8, variable.charAt(i));
+      showString[i] = new Letter(x + i * spacing, y, 8, 8, variable.charAt(i), type);
     }
   }
 
@@ -38,7 +41,7 @@ public class StringDisplay {
   public void setY(int y) {
     this.y = y;
     for (int i = 0; i < variable.length(); i++) {
-      showString[i] = new Letter(x + i * spacing, y, 8, 8, variable.charAt(i));
+      showString[i] = new Letter(x + i * spacing, y, 8, 8, variable.charAt(i), type);
     }
   }
 
@@ -49,7 +52,7 @@ public class StringDisplay {
   public void setVariable(String variable) {
     this.variable = variable;
     for (int i = 0; i < variable.length(); i++) {
-      showString[i] = new Letter(x + i * spacing, y, 8, 8, variable.charAt(i));
+      showString[i] = new Letter(x + i * spacing, y, 8, 8, variable.charAt(i), type);
     }
   }
 

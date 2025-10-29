@@ -11,15 +11,12 @@ import com.arkanoid.enemies.Enemies;
 import com.arkanoid.enemies.EnemiesManager;
 import com.arkanoid.field.Field;
 import com.arkanoid.field.Gate;
-import com.arkanoid.numberandstringdisplay.Digit;
-import com.arkanoid.numberandstringdisplay.Hp;
-import com.arkanoid.numberandstringdisplay.ScoreDisplay;
-import com.arkanoid.numberandstringdisplay.StringDisplay;
+import com.arkanoid.numberandstringdisplay.*;
 import com.arkanoid.powerup.PowerUp;
 import com.arkanoid.powerup.PowerUpManager;
 import com.arkanoid.sound.Sound;
-import com.arkanoid.ui.GameOver;
 import com.arkanoid.ui.IngameMenu;
+import com.arkanoid.ui.GameOver;
 import com.arkanoid.ui.Load;
 import com.arkanoid.ui.MainMenu;
 import com.arkanoid.ui.Save;
@@ -59,6 +56,7 @@ public class Controller implements Initializable {
   public static Gate[] gates = new Gate[4];
 
   private ScoreDisplay score;
+  private LevelDisplay lv;
   private Hp hp;
 
   private static int level;
@@ -70,10 +68,15 @@ public class Controller implements Initializable {
   }
 
   private State currentState;
-  private StringDisplay player = new StringDisplay("PLAYER", 64, 150);
+  private StringDisplay player = new StringDisplay("PLAYER", 64, 150, false);
   private Digit number1 = new Digit(120, 150, 8, 8, 1);
-  private StringDisplay ready = new StringDisplay("READY", 76, 166);
+  private StringDisplay ready = new StringDisplay("READY", 76, 166, false);
   private BlackChange black = new BlackChange(0, 0, 256, 224);
+
+  private StringDisplay round = new StringDisplay("ROUND", 200,160, true);
+  private StringDisplay highScore = new StringDisplay("SCORE", 210,20, true);
+  private StringDisplay HighScore = new StringDisplay("HIGH", 200, 12, true);
+  private ScoreDisplay maxscore;
 
   private int initialScore = 0;
 
@@ -101,7 +104,6 @@ public class Controller implements Initializable {
   private Load load;
   @FXML
   private GameOver gameOverMenu;
-
   public static final Set<KeyCode> pressedKeys = new HashSet<>();
   long lastTime;
 
@@ -127,338 +129,351 @@ public class Controller implements Initializable {
   }
 
   Timeline timeline = new Timeline(
-      new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+          new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
 
-        private void handleIngame() throws IOException {
-          if (pressedKeys.contains(KeyCode.ESCAPE)) {
-            startIngameMenu();
-            return;
-          }
+            private void handleIngame() throws IOException {
+              if (pressedKeys.contains(KeyCode.ESCAPE)) {
+                startIngameMenu();
+                return;
+              }
 
-          paddle.update(field.getRectangle());
+              paddle.update(field.getRectangle());
 
-          for (Ball ball : BallManager.getBalls()) {
-            paddle.checkCollisionPaddle(ball);
-            ball.update(scene);
-          }
+              for (Ball ball : BallManager.getBalls()) {
+                paddle.checkCollisionPaddle(ball);
+                ball.update(scene);
+              }
 
-          long currentTime = System.nanoTime();
-          double deltaTime = (currentTime - lastTime) / 1_000_000_000.0;
-          lastTime = currentTime;
+              long currentTime = System.nanoTime();
+              double deltaTime = (currentTime - lastTime) / 1_000_000_000.0;
+              lastTime = currentTime;
 
-          EnemiesManager.update(scene);
-          EnemiesManager.updateEnemies(scene, deltaTime);
+              EnemiesManager.update(scene);
+              EnemiesManager.updateEnemies(scene, deltaTime);
 
-          brickUpdate();
+              brickUpdate();
 
-          if (currentState == State.PRE_NEWLEVEL) {
-            return;
-          }
+              if (currentState == State.PRE_NEWLEVEL) {
+                return;
+              }
 
-          powerUpUpdate();
+              powerUpUpdate();
 
-          ballUpdate();
+              ballUpdate();
 
-          gateUpdate();
+              gateUpdate();
 
-          if (BallManager.checkCollisionBottomZone(scene)
-                || EnemiesManager.isGameOver()) {
-            EnemiesManager.setGameOver(false);
-            startPaddleBreaking();
-          }
+              if (BallManager.checkCollisionBottomZone(scene)) {
+                Hp.loseLife();
+                hp.updateDisplay();
 
-          if (score != null) {
-            score.reup();
-          }
-        }
-
-        private void handleMainMenu() throws FileNotFoundException {
-          mainMenu.update();
-          if (pressedKeys.contains(KeyCode.UP)) {
-            mainMenu.moveSelector(-1);
-            pressedKeys.remove(KeyCode.UP);
-          }
-
-          if (pressedKeys.contains(KeyCode.DOWN)) {
-            mainMenu.moveSelector(1);
-            pressedKeys.remove(KeyCode.DOWN);
-          }
-
-          if (pressedKeys.contains(KeyCode.ENTER)) {
-            switch (MainMenu.getCurrentSelection()) {
-              case 0:
-                startGameButtonAction(new ActionEvent(), 1);
-                goReadyState();
-                pressedKeys.remove(KeyCode.ENTER);
-                break;
-              case 1:
-                startLoad();
-                break;
-              case 2:
-                startScoreBoard();
-                break;
-              default:
-                break;
-            }
-            pressedKeys.remove(KeyCode.ENTER);
-          }
-
-          if (pressedKeys.contains(KeyCode.ESCAPE)) {
-            startMainMenu();
-          }
-        }
-
-        private void handleIngameMenu() throws IOException {
-          ingameMenu.update();
-          if (pressedKeys.contains(KeyCode.UP)) {
-            ingameMenu.moveSelector(-1);
-            pressedKeys.remove(KeyCode.UP);
-          }
-
-          if (pressedKeys.contains(KeyCode.DOWN)) {
-            ingameMenu.moveSelector(1);
-            pressedKeys.remove(KeyCode.DOWN);
-          }
-
-          if (pressedKeys.contains(KeyCode.ENTER)) {
-            switch (ingameMenu.getCurrentSelection()) {
-              case 0:
-                resetAnchorPane();
-                for (Node node : scene.getChildren()) {
-                  if (node != mainMenu && node != scoreBoardView && node != scoreBoard
-                      && node != backgroundView11 && node != backgroundViewother
-                      && node != save && node != load && node != ingameMenu
-                      && node != gameOverScreen && node != gameOverMenu) {
-                    node.setVisible(true);
+                for (Ball ball : BallManager.getBalls()) {
+                  scene.getChildren().remove(ball.getImageView());
+                  for (int i = 0; i < 6; i++) {
+                    scene.getChildren().remove(ball.imageViews[i]);
                   }
                 }
-                if (level < 5) {
-                  backgroundView.setVisible(true);
-                } else if (level == 5) {
-                  backgroundView11.setVisible(true);
-                } else {
-                  backgroundViewother.setVisible(true);
+                BallManager.getBalls().clear();
+
+                for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
+                  scene.getChildren().remove(powerUp.getImageView());
                 }
-                currentState = State.RUNNING;
-                break;
-              case 1:
-                startSave();
-                break;
-              case 2:
-                gameOver();
-                startMainMenu();
-                break;
-              default:
-                break;
+                for (Entity projectile : PowerUpManager.getProjectiles()) {
+                  scene.getChildren().remove(projectile.getImageView());
+                }
+                PowerUpManager.resetPower();
+
+                paddle.startBreakAnimation();
+                currentState = State.PADDLE_BREAKING;
+                Sound.playDead();
+              }
+
+              if (score != null) {
+                score.reup();
+              }
             }
-            pressedKeys.remove(KeyCode.ENTER);
-          }
 
-          if (pressedKeys.contains(KeyCode.ESCAPE)) {
-            startIngameMenu();
-            pressedKeys.remove(KeyCode.ESCAPE);
-          }
-        }
+            private void handleMainMenu() throws FileNotFoundException {
+              mainMenu.update();
+              if (pressedKeys.contains(KeyCode.UP)) {
+                mainMenu.moveSelector(-1);
+                pressedKeys.remove(KeyCode.UP);
+              }
 
-        private void handleSave() throws IOException {
-          save.update();
-          if (pressedKeys.contains(KeyCode.UP)) {
-            save.moveSelector(-1);
-            pressedKeys.remove(KeyCode.UP);
-          }
-          if (pressedKeys.contains(KeyCode.DOWN)) {
-            save.moveSelector(1);
-            pressedKeys.remove(KeyCode.DOWN);
-          }
-          if (pressedKeys.contains(KeyCode.ENTER)) {
-            File file = new File(
-                "src/main/resources/com/arkanoid/ui/save" + Save.getCurrentSelection() + ".txt");
-            FileWriter fileWriter = new FileWriter(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.append(Integer.toString(level));
-            bufferedWriter.newLine();
-            bufferedWriter.append(Integer.toString(initialScore));
-            bufferedWriter.close();
-            fileWriter.close();
+              if (pressedKeys.contains(KeyCode.DOWN)) {
+                mainMenu.moveSelector(1);
+                pressedKeys.remove(KeyCode.DOWN);
+              }
 
-            startIngameMenu();
-            pressedKeys.remove(KeyCode.ENTER);
-          }
-
-          if (pressedKeys.contains(KeyCode.ESCAPE)) {
-            startIngameMenu();
-            pressedKeys.remove(KeyCode.ESCAPE);
-          }
-        }
-
-        private void handleLoad() throws IOException {
-          load.update();
-          if (pressedKeys.contains(KeyCode.UP)) {
-            load.moveSelector(-1);
-            pressedKeys.remove(KeyCode.UP);
-          }
-          if (pressedKeys.contains(KeyCode.DOWN)) {
-            load.moveSelector(1);
-            pressedKeys.remove(KeyCode.DOWN);
-          }
-          if (pressedKeys.contains(KeyCode.ENTER)) {
-            File file = new File(
-                "src/main/resources/com/arkanoid/ui/save" + Load.getCurrentSelection() + ".txt");
-            Scanner sc = new Scanner(file);
-            int loadedLevel = sc.nextInt();
-            int loadedScore = sc.nextInt();
-            sc.close();
-            startGameButtonAction(new ActionEvent(), loadedLevel);
-            goReadyState();
-            ScoreDisplay.setScore(loadedScore);
-            initialScore = loadedScore;
-            pressedKeys.remove(KeyCode.ENTER);
-          }
-
-          if (pressedKeys.contains(KeyCode.ESCAPE)) {
-            startMainMenu();
-            pressedKeys.remove(KeyCode.ESCAPE);
-          }
-        }
-
-        private void handleGameOver() throws FileNotFoundException {
-          gameOverMenu.update();
-          if (pressedKeys.contains(KeyCode.UP)) {
-            gameOverMenu.moveSelector(-1);
-            pressedKeys.remove(KeyCode.UP);
-          }
-
-          if (pressedKeys.contains(KeyCode.DOWN)) {
-            gameOverMenu.moveSelector(1);
-            pressedKeys.remove(KeyCode.DOWN);
-          }
-
-          if (pressedKeys.contains(KeyCode.ENTER)) {
-            switch (gameOverMenu.getCurrentSelection()) {
-              case 0:
-                startGameButtonAction(new ActionEvent(), level);
-                goReadyState();
-                break;
-              case 1:
-                startMainMenu();
-                currentState = State.MENU;
-                break;
-              default:
-                break;
-            }
-            pressedKeys.remove(KeyCode.ENTER);
-          }
-        }
-
-        @Override
-        public void handle(ActionEvent actionEvent) {
-          try {
-            switch (currentState) {
-              case MENU:
-                handleMainMenu();
-                break;
-
-              case READY:
-                if (pressedKeys.contains(KeyCode.ENTER) && !Sound.isEndLevelPlaying()) {
-                  startPlay();
-                  if (level == 5) {
-                    Sound.playGiantCentipedeMusic();
-                  }
-                  if (level == 15) {
-                    Sound.playDohFaceMusic();
-                  }
-                }
-                break;
-
-              case PADDLE_APPEARING:
-                boolean isAnimating = paddle.updateAppearAnimation();
-                if (!isAnimating) {
-                  currentState = State.RUNNING;
-                  lastTime = System.nanoTime();
-                }
-                break;
-
-              case PADDLE_BREAKING:
-                boolean isBreaking = paddle.updateBreakAnimation();
-                if (!isBreaking) {
-                  if (Hp.getHp() <= 0) {
-                    goBlack();
-                    isGameOver = true;
-                  } else {
-                    newLife();
+              if (pressedKeys.contains(KeyCode.ENTER)) {
+                switch (MainMenu.getCurrentSelection()) {
+                  case 0:
+                    startGameButtonAction(new ActionEvent(), 1);
                     goReadyState();
-                  }
+                    pressedKeys.remove(KeyCode.ENTER);
+                    break;
+                  case 1:
+                    startLoad();
+                    break;
+                  case 2:
+                    startScoreBoard();
+                    break;
+                  default:
+                    break;
                 }
-                break;
+                pressedKeys.remove(KeyCode.ENTER);
+              }
 
-              case RUNNING:
-                if (lastTime == 0) {
-                  lastTime = System.nanoTime();
-                }
-                handleIngame();
-                break;
-              case INGAMEMENU:
-                handleIngameMenu();
-                break;
-              case SAVE:
-                handleSave();
-                break;
-              case LOAD:
-                handleLoad();
-                break;
-              case PRE_NEWLEVEL:
-                boolean stillBlack = black.updateAsc();
-                if (stillBlack == false) {
-                  if (isGameOver) {
-                    startGameOver();
-                    Sound.playGameOver();
-                    gameOver();
-                  } else {
-                    if (level == 5) {
-                      Sound.stopGiantCentipedeMusic();
-                    }
-                    if (level == 15) {
-                      Sound.stopDohFaceMusic();
-                    }
-                    level++;
-                    if (level > 15) {
-                      gameOver();
-                      startMainMenu();
-                    }
+              if (pressedKeys.contains(KeyCode.ESCAPE)) {
+                startMainMenu();
+              }
+            }
 
-                    if (level == 11) {
-                      backgroundView.setVisible(false);
+            private void handleIngameMenu() throws IOException {
+              ingameMenu.update();
+              if (pressedKeys.contains(KeyCode.UP)) {
+                ingameMenu.moveSelector(-1);
+                pressedKeys.remove(KeyCode.UP);
+              }
+
+              if (pressedKeys.contains(KeyCode.DOWN)) {
+                ingameMenu.moveSelector(1);
+                pressedKeys.remove(KeyCode.DOWN);
+              }
+
+              if (pressedKeys.contains(KeyCode.ENTER)) {
+                switch (ingameMenu.getCurrentSelection()) {
+                  case 0:
+                    resetAnchorPane();
+                    for (Node node : scene.getChildren()) {
+                      if (node != mainMenu && node != scoreBoardView && node != scoreBoard
+                              && node != backgroundView11 && node != backgroundViewother
+                              && node != save && node != load && node != ingameMenu) {
+                        node.setVisible(true);
+                      }
+                    }
+                    if (level < 5) {
+                      backgroundView.setVisible(true);
+                    } else if (level == 5) {
                       backgroundView11.setVisible(true);
-                    }
-                    if (level == 12) {
-                      backgroundView11.setVisible(false);
+                    } else {
                       backgroundViewother.setVisible(true);
                     }
-                    BallManager.isCaught = 0;
-                    field.changeField(level);
-                    newLife();
-                    for (Brick brick : BrickManager.getBricks()) {
-                      scene.getChildren().remove(brick.getImageView());
-                      scene.getChildren().remove(brick.shadow);
-                    }
-                    BrickManager.getBricks().clear();
-                    BrickManager.createBricks(scene, level);
-                    initialScore = score.getScore();
-                    goReadyState();
-                  }
+                    currentState = State.RUNNING;
+                    break;
+                  case 1:
+                    startSave();
+                    break;
+                  case 2:
+                    gameOver();
+                    startMainMenu();
+                    break;
+                  default:
+                    break;
                 }
-                break;
-              case GAMEOVER:
-                handleGameOver();
-                break;
-              default:
-                break;
+                pressedKeys.remove(KeyCode.ENTER);
+              }
+
+              if (pressedKeys.contains(KeyCode.ESCAPE)) {
+                startIngameMenu();
+                pressedKeys.remove(KeyCode.ESCAPE);
+              }
             }
-          } catch (IOException e) {
-            throw new RuntimeException(e);
-          }
-        }
-      }));
+
+            private void handleSave() throws IOException {
+              save.update();
+              if (pressedKeys.contains(KeyCode.UP)) {
+                save.moveSelector(-1);
+                pressedKeys.remove(KeyCode.UP);
+              }
+              if (pressedKeys.contains(KeyCode.DOWN)) {
+                save.moveSelector(1);
+                pressedKeys.remove(KeyCode.DOWN);
+              }
+              if (pressedKeys.contains(KeyCode.ENTER)) {
+                File file = new File(
+                        "src/main/resources/com/arkanoid/ui/save" + Save.getCurrentSelection() + ".txt");
+                FileWriter fileWriter = new FileWriter(file);
+                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                bufferedWriter.append(Integer.toString(level));
+                bufferedWriter.newLine();
+                bufferedWriter.append(Integer.toString(initialScore));
+                bufferedWriter.close();
+                fileWriter.close();
+
+                startIngameMenu();
+                pressedKeys.remove(KeyCode.ENTER);
+              }
+
+              if (pressedKeys.contains(KeyCode.ESCAPE)) {
+                startIngameMenu();
+                pressedKeys.remove(KeyCode.ESCAPE);
+              }
+            }
+
+            private void handleLoad() throws IOException {
+              load.update();
+              if (pressedKeys.contains(KeyCode.UP)) {
+                load.moveSelector(-1);
+                pressedKeys.remove(KeyCode.UP);
+              }
+              if (pressedKeys.contains(KeyCode.DOWN)) {
+                load.moveSelector(1);
+                pressedKeys.remove(KeyCode.DOWN);
+              }
+              if (pressedKeys.contains(KeyCode.ENTER)) {
+                File file = new File(
+                        "src/main/resources/com/arkanoid/ui/save" + Load.getCurrentSelection() + ".txt");
+                Scanner sc = new Scanner(file);
+                int loadedLevel = sc.nextInt();
+                int loadedScore = sc.nextInt();
+                sc.close();
+                startGameButtonAction(new ActionEvent(), loadedLevel);
+                goReadyState();
+                ScoreDisplay.setScore(loadedScore);
+                initialScore = loadedScore;
+                pressedKeys.remove(KeyCode.ENTER);
+              }
+
+              if (pressedKeys.contains(KeyCode.ESCAPE)) {
+                startMainMenu();
+                pressedKeys.remove(KeyCode.ESCAPE);
+              }
+            }
+
+            private void handleGameOver() throws FileNotFoundException {
+              gameOverMenu.update();
+              if (pressedKeys.contains(KeyCode.UP)) {
+                gameOverMenu.moveSelector(-1);
+                pressedKeys.remove(KeyCode.UP);
+              }
+
+              if (pressedKeys.contains(KeyCode.DOWN)) {
+                gameOverMenu.moveSelector(1);
+                pressedKeys.remove(KeyCode.DOWN);
+              }
+
+              if (pressedKeys.contains(KeyCode.ENTER)) {
+                switch (gameOverMenu.getCurrentSelection()) {
+                  case 0:
+                    startGameButtonAction(new ActionEvent(), level);
+                    goReadyState();
+                    break;
+                  case 1:
+                    startMainMenu();
+                    currentState = State.MENU;
+                    break;
+                  default:
+                    break;
+                }
+                pressedKeys.remove(KeyCode.ENTER);
+              }
+            }
+
+            @Override
+            public void handle(ActionEvent actionEvent) {
+              try {
+                switch (currentState) {
+                  case MENU:
+                    handleMainMenu();
+                    break;
+
+                  case READY:
+                    if (pressedKeys.contains(KeyCode.ENTER) && !Sound.isEndLevelPlaying()) {
+                      startPlay();
+                    }
+                    break;
+
+                  case PADDLE_APPEARING:
+                    boolean isAnimating = paddle.updateAppearAnimation();
+                    if (!isAnimating) {
+                      currentState = State.RUNNING;
+                      lastTime = System.nanoTime();
+                    }
+                    break;
+
+                  case PADDLE_BREAKING:
+                    boolean isBreaking = paddle.updateBreakAnimation();
+                    if (!isBreaking) {
+                      if (Hp.getHp() <= 0) {
+                        goBlack();
+                        isGameOver = true;
+                      } else {
+                        newLife();
+                        goReadyState();
+                      }
+                    }
+                    break;
+
+                  case RUNNING:
+                    if (lastTime == 0) {
+                      lastTime = System.nanoTime();
+                    }
+                    handleIngame();
+                    break;
+                  case INGAMEMENU:
+                    handleIngameMenu();
+                    break;
+                  case SAVE:
+                    handleSave();
+                    break;
+                  case LOAD:
+                    handleLoad();
+                    break;
+                  case PRE_NEWLEVEL:
+                    boolean stillBlack = black.updateAsc();
+                    if (stillBlack == false) {
+                      if (isGameOver) {
+                        startGameOver();
+                        Sound.playGameOver();
+                        gameOver();
+                      } else {
+                        level++;
+                        // will replace as boss level later
+                        if (level == 5 || level == 10 || level == 15) {
+                          level++;
+                        }
+                        if (level > 15) {
+                          gameOver();
+                          startMainMenu();
+                        }
+
+                        if (level == 11) {
+                          backgroundView.setVisible(false);
+                          backgroundView11.setVisible(true);
+                        }
+                        if (level == 12) {
+                          backgroundView11.setVisible(false);
+                          backgroundViewother.setVisible(true);
+                        }
+                        BallManager.isCaught = 0;
+                        field.changeField(level);
+                        newLife();
+                        for (Brick brick : BrickManager.getBricks()) {
+                          scene.getChildren().remove(brick.getImageView());
+                          scene.getChildren().remove(brick.shadow);
+                        }
+                        BrickManager.getBricks().clear();
+                        BrickManager.createBricks(scene, level);
+                        lv.clear(scene);
+                        lv = new LevelDisplay(level);
+                        lv.showLevel(scene);
+                        initialScore = score.getScore();
+                        goReadyState();
+                      }
+                    }
+                    break;
+                  case GAMEOVER:
+                    handleGameOver();
+                    break;
+                  default:
+                    break;
+                }
+              } catch (IOException e) {
+                throw new RuntimeException(e);
+              }
+            }
+          }));
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -488,9 +503,9 @@ public class Controller implements Initializable {
     isGameOver = false;
     resetAnchorPane();
     startBackground.setVisible(false);
-    if (Level < 5) {
+    if (Level <= 5) {
       backgroundView.setVisible(true);
-    } else if (Level == 5 || Level == 15) {
+    } else if (Level == 5) {
       backgroundView11.setVisible(true);
     } else {
       backgroundViewother.setVisible(true);
@@ -526,8 +541,18 @@ public class Controller implements Initializable {
 
     BrickManager.createBricks(scene, level);
 
-    score = new ScoreDisplay(0);
+    score = new ScoreDisplay(200, 50, 0);
+    maxscore = new ScoreDisplay(200, 28, 0);
+    round = new StringDisplay("ROUND", 200,160, true);
+    highScore = new StringDisplay("SCORE", 210,20, true);
+    HighScore = new StringDisplay("HIGH", 200, 12, true);
     score.showScore(scene);
+    round.show(scene);
+    highScore.show(scene);
+    HighScore.show(scene);
+    maxscore.showScore(scene);
+    lv = new LevelDisplay(level);
+    lv.showLevel(scene);
     hp = new Hp(scene);
     EnemiesManager.isGameOver();
 
@@ -582,7 +607,8 @@ public class Controller implements Initializable {
     scene.getChildren().remove(paddle.getImageView());
     scene.getChildren().remove(field.getImageView());
     scene.getChildren().remove(outline.getImageView());
-
+    //lv.clear(scene);
+    player.clear(scene);
     for (int i = 0; i < 4; i++) {
       scene.getChildren().remove(gates[i].getImageView());
     }
@@ -593,6 +619,11 @@ public class Controller implements Initializable {
     clear hp and score
      */
     score.clear(scene);
+    highScore.clear(scene);
+    HighScore.clear(scene);
+    maxscore.clear(scene);
+    round.clear(scene);
+    lv.clear(scene);
     hp.clear(scene);
 
     EnemiesManager.isGameOver();
@@ -660,7 +691,7 @@ public class Controller implements Initializable {
       if (ball1.ballType > 0) {
         for (Ball ball : BallManager.getBalls()) {
           if (ball.ballType == 0 && ball1.getCircle().getBoundsInParent()
-              .intersects(ball.getCircle().getBoundsInParent())) {
+                  .intersects(ball.getCircle().getBoundsInParent())) {
             scene.getChildren().remove(ball1.getImageView());
             return true;
           }
@@ -723,36 +754,65 @@ public class Controller implements Initializable {
     gameOverMenu.setVisible(true);
     gameOverScreen.setVisible(true);
   }
-
   public void startPaddleBreaking() {
-      Sound.stopGiantCentipedeMusic();
-      Sound.stopDohFaceMusic();
 
-      Hp.loseLife();
-      hp.updateDisplay();
+    Sound.stopGiantCentipedeMusic();
 
-      for (Ball ball : BallManager.getBalls()) {
-          scene.getChildren().remove(ball.getImageView());
-          for (int i = 0; i < 6; i++) {
-              scene.getChildren().remove(ball.imageViews[i]);
-          }
+    Sound.stopDohFaceMusic();
+
+
+
+    Hp.loseLife();
+
+    hp.updateDisplay();
+
+
+
+    for (Ball ball : BallManager.getBalls()) {
+
+      scene.getChildren().remove(ball.getImageView());
+
+      for (int i = 0; i < 6; i++) {
+
+        scene.getChildren().remove(ball.imageViews[i]);
+
       }
-      BallManager.getBalls().clear();
 
-      for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
-          scene.getChildren().remove(powerUp.getImageView());
-      }
-      for (Entity projectile : PowerUpManager.getProjectiles()) {
-          scene.getChildren().remove(projectile.getImageView());
-      }
-      PowerUpManager.resetPower();
+    }
 
-      paddle.startBreakAnimation();
-      currentState = State.PADDLE_BREAKING;
-      Sound.playDead();
+    BallManager.getBalls().clear();
+
+
+
+    for (PowerUp powerUp : PowerUpManager.getPowerUps()) {
+
+      scene.getChildren().remove(powerUp.getImageView());
+
+    }
+
+    for (Entity projectile : PowerUpManager.getProjectiles()) {
+
+      scene.getChildren().remove(projectile.getImageView());
+
+    }
+
+    PowerUpManager.resetPower();
+
+
+
+    paddle.startBreakAnimation();
+
+    currentState = State.PADDLE_BREAKING;
+
+    Sound.playDead();
+
   }
 
+
+
   public static int getLevel() {
+
     return level;
+
   }
 }
