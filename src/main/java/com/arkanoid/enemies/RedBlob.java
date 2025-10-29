@@ -81,7 +81,7 @@ public class RedBlob extends Enemies {
         moveCooldown--;
         transformCooldown--;
 
-        if (this.checkCollisionBall()) {
+        if (this.checkCollisionBall() || this.checkCollisionProjectile(scene)) {
           state = 1;
           imageCooldown = 20;
           imageState = 0;
@@ -125,7 +125,7 @@ public class RedBlob extends Enemies {
         }
         break;
       case 2: // transform
-        if (this.checkCollisionBall()) {
+        if (this.checkCollisionBall() || this.checkCollisionProjectile(scene)) {
           state = 1;
           imageCooldown = 20;
           imageState = 0;

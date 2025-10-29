@@ -27,7 +27,6 @@ public class BrickManager {
     brickRemain = 0;
 
     if (level == 5 || level == 15) {
-        brickRemain = 1;
         return;
     }
 

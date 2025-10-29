@@ -6,6 +6,7 @@ import com.arkanoid.brick.BrickManager;
 import com.arkanoid.core.Ball;
 import com.arkanoid.core.BallManager;
 import com.arkanoid.core.Entity;
+import com.arkanoid.powerup.PowerUpManager;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -39,6 +40,18 @@ public class Enemies extends Entity {
   public boolean checkCollisionBall() {
     for (Ball ball : BallManager.getBalls()) {
       if (ball.getShape().getBoundsInParent().intersects(this.getShape().getBoundsInParent())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean checkCollisionProjectile(AnchorPane scene) {
+    for (Entity projectile : PowerUpManager.getProjectiles()) {
+      if (this.getShape().getBoundsInParent().
+              intersects(projectile.getShape().getBoundsInParent())) {
+        PowerUpManager.getProjectiles().remove(projectile);
+        scene.getChildren().remove(projectile.getImageView());
         return true;
       }
     }
@@ -153,10 +166,10 @@ public class Enemies extends Entity {
   public boolean outScene() {
     Rectangle rect = Controller.field.getRectangle();
     if (this.getShape() instanceof Rectangle rec) {
-      return rec.getX() > rect.getX() + rect.getWidth();
+      return rec.getY() > rect.getY() + rect.getHeight();
     }
     if (this.getShape() instanceof Circle cir) {
-      return cir.getCenterX() - cir.getRadius() > rect.getX() + rect.getWidth();
+      return cir.getCenterY() - cir.getRadius() > rect.getY() + rect.getHeight();
     }
     return false;
   }

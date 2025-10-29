@@ -59,7 +59,7 @@ public class MiniDohFace extends Enemies {
         throw new IllegalStateException("Unexpected value: " + type);
     }
     targetX = rect.getX() + targetX - this.getRectangle().getWidth() / 2;
-    targetY = rect.getY() + targetY - this.getRectangle().getHeight() / 2;
+    targetY = rect.getY() + targetY - this.getRectangle().getHeight() / 2 - 30;
 
     moveCooldown = 0;
   }
