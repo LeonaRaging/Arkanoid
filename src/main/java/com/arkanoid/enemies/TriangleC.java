@@ -57,7 +57,7 @@ public class TriangleC extends Enemies {
           totalTime = totalTime - deltaTime;
         }
 
-        if (this.checkCollisionBall()) {
+        if (this.checkCollisionBall() || this.checkCollisionProjectile(scene)) {
           state = 1;
           imageCooldown = 20;
           imageState = 0;

@@ -35,7 +35,7 @@ public class MolecularModel extends Enemies {
   public boolean update(double deltaTime, AnchorPane scene) {
     switch (state) {
       case 0:
-        if (this.checkCollisionBall()) {
+        if (this.checkCollisionBall() || this.checkCollisionProjectile(scene)) {
           state = 1;
           imageCooldown = 20;
           imageState = 0;

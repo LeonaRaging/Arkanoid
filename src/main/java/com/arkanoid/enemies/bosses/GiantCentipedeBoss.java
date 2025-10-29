@@ -16,7 +16,7 @@ import javafx.scene.shape.Rectangle;
 public class GiantCentipedeBoss extends Enemies {
 
   public static ArrayList<GiantCentipedeSegment> GiantCentipede = new ArrayList<>();
-  int hp = 20;
+  int hp = 40;
   int hitCooldown = 0;
   int dropCooldown = 80;
   int dropOrder = 0;
@@ -50,7 +50,7 @@ public class GiantCentipedeBoss extends Enemies {
           seg.getCircle().setCenterX(rect.getX()
                   + seg.getCircle().getRadius());
           seg.getCircle().setCenterY(rect.getY()
-                  - seg.getCircle().getRadius());
+                  - seg.getCircle().getRadius() - 40);
       }
   }
 
@@ -144,11 +144,11 @@ public class GiantCentipedeBoss extends Enemies {
             > rect.getY() + rect.getHeight()) {
           state = 3;
           stateCooldown = 200;
+          double spawnX = rect.getX() + Math.random() * rect.getWidth();
           for (GiantCentipedeSegment seg : GiantCentipede) {
-            seg.getCircle().setCenterX(rect.getX()
-                + seg.getCircle().getRadius());
+            seg.getCircle().setCenterX(spawnX);
             seg.getCircle().setCenterY(rect.getY()
-                - seg.getCircle().getRadius());
+                - seg.getCircle().getRadius() - 40);
 
           }
         }

@@ -61,7 +61,7 @@ public class MiniSaturn extends Enemies {
 
         moveCooldown--;
 
-        if (this.checkCollisionBall()) {
+        if (this.checkCollisionBall() || this.checkCollisionProjectile(scene)) {
           state = 1;
           imageCooldown = 20;
           imageState = 0;

@@ -21,7 +21,7 @@ public class DohFace extends Enemies {
    * Very hard challenge.
    */
 
-  private int hp = 2;
+  private int hp = 40;
   private int state;
   private int stateCooldown;
   private MiniDohFace[] child = new MiniDohFace[4];
@@ -42,7 +42,7 @@ public class DohFace extends Enemies {
     double xPos = rect.getX() + rect.getWidth() / 2;
     double yPos = rect.getY() + rect.getHeight() / 2;
     this.getRectangle().setX(xPos - this.getRectangle().getWidth() / 2);
-    this.getRectangle().setY(yPos - this.getRectangle().getHeight() / 2);
+    this.getRectangle().setY(yPos - this.getRectangle().getHeight() / 2 - 30);
 
     // hitbox = rectangle 44x91, image -> bottom + 1 pixel
 
@@ -89,9 +89,20 @@ public class DohFace extends Enemies {
 
   public void showBalls(AnchorPane scene) {
     for (Ball ball : BallManager.getBalls()) {
-      ball.setDeltaX(1);
-      ball.setDeltaY(-1);
+      ball.setDeltaX(0.3);
+      ball.setDeltaY(-0.3);
     }
+  }
+
+  @Override
+  public void clear(AnchorPane scene) {
+    for (int i = 0; i < 4; ++i) {
+      if (child[i] != null) {
+        child[i].clear(scene);
+        child[i] = null;
+      }
+    }
+    scene.getChildren().remove(this.getImageView());
   }
 
   @Override

@@ -590,9 +590,6 @@ public class Controller implements Initializable {
     for (Entity projectile : PowerUpManager.getProjectiles()) {
       scene.getChildren().remove(projectile.getImageView());
     }
-    for (Enemies enemy : EnemiesManager.getEnemies()) {
-      scene.getChildren().remove(enemy.getImageView());
-    }
     scene.getChildren().remove(paddle.getImageView());
     scene.getChildren().remove(field.getImageView());
     scene.getChildren().remove(outline.getImageView());
@@ -602,7 +599,7 @@ public class Controller implements Initializable {
       scene.getChildren().remove(gates[i].getImageView());
     }
 
-    EnemiesManager.removeAllEnemies(scene);
+    EnemiesManager.clear(scene);
 
     /*
     clear hp and score
@@ -619,7 +616,6 @@ public class Controller implements Initializable {
     BrickManager.getBricks().clear();
     PowerUpManager.getPowerUps().clear();
     PowerUpManager.getProjectiles().clear();
-    EnemiesManager.getEnemies().clear();
     for (Ball ball : BallManager.getBalls()) {
       scene.getChildren().remove(ball.getImageView());
       for (int i = 0; i < 6; i++) {
@@ -657,7 +653,7 @@ public class Controller implements Initializable {
       }
       PowerUpManager.getPowerUps().clear();
 
-      EnemiesManager.removeAllEnemies(scene);
+      EnemiesManager.clear(scene);
       goBlack();
     }
   }

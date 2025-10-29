@@ -40,12 +40,14 @@ public class EnemiesManager {
     switch (Controller.getLevel()) {
         case 5:
             if (enemies.isEmpty()) {
+                BrickManager.brickRemain++;
                 GiantCentipedeBoss bossLevel5 = new GiantCentipedeBoss(90, 80, 13, scene);
                 enemies.add(bossLevel5);
             }
             break;
         case 15:
             if (enemies.isEmpty()) {
+                BrickManager.brickRemain++;
                 DohFace bossLevel15 = new DohFace(scene);
                 scene.getChildren().add(bossLevel15.getImageView());
                 enemies.add(bossLevel15);
@@ -104,37 +106,31 @@ public class EnemiesManager {
       newEnemies.add(enemy);
   }
 
+  // remove all enemies
+  public static void clear(AnchorPane scene) {
+      for (Enemies enemy : enemies) {
+          enemy.clear(scene);
+      }
+      for (Enemies enemy : newEnemies) {
+          enemy.clear(scene);
+      }
+      enemies.clear();
+      newEnemies.clear();
+  }
+
   public static void updateEnemies(AnchorPane scene, double deltaTime) {
     deadCooldown--;
-//    System.out.println(deadCooldown);
-    double fieldTopY = 16; // in field
 
     enemies.removeIf(e -> {
       if (e.update(deltaTime, scene)) {
         e.clear(scene);
         return true;
       }
-
-      double enemyBottomY = e.getImageView().getY()
-          + e.getImageView().getBoundsInLocal().getHeight();
-
-      if (enemyBottomY < fieldTopY) {
-        e.getImageView().setVisible(false);
-      } else {
-        e.getImageView().setVisible(true);
-      }
       return false;
     });
 
     enemies.addAll(newEnemies);
     newEnemies.clear();
-  }
-
-  public static void removeAllEnemies(AnchorPane scene) {
-    enemies.removeIf(e -> {
-      scene.getChildren().remove(e.getImageView());
-      return true;
-    });
   }
 
   public static boolean isGameOver() {

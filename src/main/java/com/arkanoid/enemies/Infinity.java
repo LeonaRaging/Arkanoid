@@ -39,7 +39,6 @@ public class Infinity extends Enemies {
 
   @Override
   public boolean update(double deltaTime, AnchorPane scene) {
-    System.out.println(state);
     if (isLeft(Controller.gates[2].getRectangle())) {
       deltaX = 0.2;
     }
@@ -53,7 +52,7 @@ public class Infinity extends Enemies {
           moveCooldown = 450;
         }
 
-        if (this.checkCollisionBall()) {
+        if (this.checkCollisionBall() || this.checkCollisionProjectile(scene)) {
           state = 1;
           imageCooldown = 20;
           imageState = 0;
@@ -93,6 +92,7 @@ public class Infinity extends Enemies {
         }
         break;
       case 2:
+        this.checkCollisionProjectile(scene);
         Rectangle rectangle = new Rectangle(this.getRectangle().getX() - 6,
             this.getRectangle().getY() - 6,
             this.getRectangle().getWidth() + 6, this.getRectangle().getHeight() + 6);
