@@ -2,6 +2,8 @@ package com.arkanoid.sound;
 
 import javafx.animation.PauseTransition;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
 public class Sound {
@@ -29,6 +31,16 @@ public class Sound {
       "/com/arkanoid/sound/dead.wav").toExternalForm());
   private static final AudioClip gameOver = new AudioClip(Sound.class.getResource(
       "/com/arkanoid/sound/gameOver.wav").toExternalForm());
+  private static final AudioClip serpentHit = new AudioClip(Sound.class.getResource(
+      "/com/arkanoid/sound/serpentHit.wav").toExternalForm());
+  private static final AudioClip serpentDrop = new AudioClip(Sound.class.getResource(
+      "/com/arkanoid/sound/serpentDrop.wav").toExternalForm());
+  private static final Media giantCentipedeMedia = new Media(Sound.class.getResource(
+      "/com/arkanoid/sound/giantCentipede.m4a").toExternalForm());
+  private static final MediaPlayer giantCentipedeMusic = new MediaPlayer(giantCentipedeMedia);
+  private static final Media dohFaceMedia = new Media(Sound.class.getResource
+      ("/com/arkanoid/sound/dohFace.m4a").toExternalForm());
+  public static final MediaPlayer dohFaceMusic = new MediaPlayer(dohFaceMedia);
   private static final double END_LEVEL_DURATION = 3.5;
   private static volatile boolean endLevelPlaying = false;
   private static PauseTransition endLevelPause;
@@ -92,5 +104,31 @@ public class Sound {
 
   public static boolean isEndLevelPlaying() {
     return endLevelPlaying;
+  }
+
+  public static void playBossHit() {
+    serpentHit.play();
+  }
+
+  public static void playSerpentDrop() {
+    serpentDrop.play();
+  }
+
+  public static void playGiantCentipedeMusic() {
+    giantCentipedeMusic.setCycleCount(MediaPlayer.INDEFINITE);
+    giantCentipedeMusic.play();
+  }
+
+  public static void stopGiantCentipedeMusic() {
+    giantCentipedeMusic.stop();
+  }
+
+  public static void playDohFaceMusic() {
+    dohFaceMusic.setCycleCount(MediaPlayer.INDEFINITE);
+    dohFaceMusic.play();
+  }
+
+  public static void stopDohFaceMusic() {
+    dohFaceMusic.stop();
   }
 }

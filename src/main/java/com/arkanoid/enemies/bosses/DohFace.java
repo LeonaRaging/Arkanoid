@@ -5,6 +5,7 @@ import com.arkanoid.core.Ball;
 import com.arkanoid.core.BallManager;
 import com.arkanoid.enemies.Enemies;
 import com.arkanoid.enemies.EnemiesManager;
+import com.arkanoid.sound.Sound;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -122,6 +123,7 @@ public class DohFace extends Enemies {
         }
 
         if (isHit) {
+          Sound.playBossHit();
           hp--;
           if (hp <= 0) {
             state = 5;

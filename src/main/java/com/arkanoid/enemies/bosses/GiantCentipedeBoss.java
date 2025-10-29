@@ -6,6 +6,7 @@ import com.arkanoid.core.Ball;
 import com.arkanoid.core.BallManager;
 import com.arkanoid.enemies.Enemies;
 import com.arkanoid.enemies.EnemiesManager;
+import com.arkanoid.sound.Sound;
 import java.util.ArrayList;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
@@ -80,6 +81,7 @@ public class GiantCentipedeBoss extends Enemies {
     }
 
     if (isHit) {
+      Sound.playBossHit();
       hp--;
       hitCooldown = 30;
 
@@ -102,6 +104,7 @@ public class GiantCentipedeBoss extends Enemies {
       case 0:
 
         if (dropCooldown == 0) {
+          Sound.playSerpentDrop();
           dropCooldown = 80;
           double xpos = GiantCentipede.get(dropOrder).getCircle().getCenterX();
           double ypos = GiantCentipede.get(dropOrder).getCircle().getCenterY();

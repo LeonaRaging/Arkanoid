@@ -4,6 +4,7 @@ import com.arkanoid.Controller;
 import com.arkanoid.core.Ball;
 import com.arkanoid.core.BallManager;
 import com.arkanoid.enemies.Enemies;
+import com.arkanoid.sound.Sound;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 
@@ -64,6 +65,7 @@ public class MiniDohFace extends Enemies {
   }
 
   public void setDeath() {
+    Sound.playExplode();
     isDeath = true;
     state = 0;
     deathCooldown = 12;

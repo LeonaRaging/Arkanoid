@@ -361,6 +361,12 @@ public class Controller implements Initializable {
               case READY:
                 if (pressedKeys.contains(KeyCode.ENTER) && !Sound.isEndLevelPlaying()) {
                   startPlay();
+                  if (level == 5) {
+                    Sound.playGiantCentipedeMusic();
+                  }
+                  if (level == 15) {
+                    Sound.playDohFaceMusic();
+                  }
                 }
                 break;
 
@@ -408,6 +414,12 @@ public class Controller implements Initializable {
                     Sound.playGameOver();
                     gameOver();
                   } else {
+                    if (level == 5) {
+                      Sound.stopGiantCentipedeMusic();
+                    }
+                    if (level == 15) {
+                      Sound.stopDohFaceMusic();
+                    }
                     level++;
                     if (level > 15) {
                       gameOver();
@@ -476,9 +488,9 @@ public class Controller implements Initializable {
     isGameOver = false;
     resetAnchorPane();
     startBackground.setVisible(false);
-    if (Level <= 5) {
+    if (Level < 5) {
       backgroundView.setVisible(true);
-    } else if (Level == 5) {
+    } else if (Level == 5 || Level == 15) {
       backgroundView11.setVisible(true);
     } else {
       backgroundViewother.setVisible(true);
@@ -713,6 +725,9 @@ public class Controller implements Initializable {
   }
 
   public void startPaddleBreaking() {
+      Sound.stopGiantCentipedeMusic();
+      Sound.stopDohFaceMusic();
+
       Hp.loseLife();
       hp.updateDisplay();
 
