@@ -11,10 +11,7 @@ import com.arkanoid.enemies.Enemies;
 import com.arkanoid.enemies.EnemiesManager;
 import com.arkanoid.field.Field;
 import com.arkanoid.field.Gate;
-import com.arkanoid.numberandstringdisplay.Digit;
-import com.arkanoid.numberandstringdisplay.Hp;
-import com.arkanoid.numberandstringdisplay.ScoreDisplay;
-import com.arkanoid.numberandstringdisplay.StringDisplay;
+import com.arkanoid.numberandstringdisplay.*;
 import com.arkanoid.powerup.PowerUp;
 import com.arkanoid.powerup.PowerUpManager;
 import com.arkanoid.sound.Sound;
@@ -59,6 +56,7 @@ public class Controller implements Initializable {
   public static Gate[] gates = new Gate[4];
 
   private ScoreDisplay score;
+  private LevelDisplay lv;
   private Hp hp;
 
   private static int level;
@@ -70,10 +68,15 @@ public class Controller implements Initializable {
   }
 
   private State currentState;
-  private StringDisplay player = new StringDisplay("PLAYER", 64, 150);
+  private StringDisplay player = new StringDisplay("PLAYER", 64, 150, false);
   private Digit number1 = new Digit(120, 150, 8, 8, 1);
-  private StringDisplay ready = new StringDisplay("READY", 76, 166);
+  private StringDisplay ready = new StringDisplay("READY", 76, 166, false);
   private BlackChange black = new BlackChange(0, 0, 256, 224);
+
+  private StringDisplay round = new StringDisplay("ROUND", 200,160, true);
+  private StringDisplay highScore = new StringDisplay("SCORE", 210,20, true);
+  private StringDisplay HighScore = new StringDisplay("HIGH", 200, 12, true);
+  private ScoreDisplay maxscore;
 
   private int initialScore = 0;
 
@@ -488,6 +491,7 @@ public class Controller implements Initializable {
     isGameOver = false;
     resetAnchorPane();
     startBackground.setVisible(false);
+    Level = 15;
     if (Level < 5) {
       backgroundView.setVisible(true);
     } else if (Level == 5 || Level == 15) {
@@ -526,8 +530,18 @@ public class Controller implements Initializable {
 
     BrickManager.createBricks(scene, level);
 
-    score = new ScoreDisplay(0);
+    score = new ScoreDisplay(200, 50, 0);
+    maxscore = new ScoreDisplay(200, 28, 0);
+    round = new StringDisplay("ROUND", 200,160, true);
+    highScore = new StringDisplay("SCORE", 210,20, true);
+    HighScore = new StringDisplay("HIGH", 200, 12, true);
     score.showScore(scene);
+    round.show(scene);
+    highScore.show(scene);
+    HighScore.show(scene);
+    maxscore.showScore(scene);
+    lv = new LevelDisplay(level);
+    lv.showLevel(scene);
     hp = new Hp(scene);
     EnemiesManager.isGameOver();
 
@@ -582,7 +596,8 @@ public class Controller implements Initializable {
     scene.getChildren().remove(paddle.getImageView());
     scene.getChildren().remove(field.getImageView());
     scene.getChildren().remove(outline.getImageView());
-
+    //lv.clear(scene);
+    player.clear(scene);
     for (int i = 0; i < 4; i++) {
       scene.getChildren().remove(gates[i].getImageView());
     }
@@ -593,6 +608,11 @@ public class Controller implements Initializable {
     clear hp and score
      */
     score.clear(scene);
+    highScore.clear(scene);
+    HighScore.clear(scene);
+    maxscore.clear(scene);
+    round.clear(scene);
+    lv.clear(scene);
     hp.clear(scene);
 
     EnemiesManager.isGameOver();
