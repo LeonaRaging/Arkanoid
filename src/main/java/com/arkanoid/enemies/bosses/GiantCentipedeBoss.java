@@ -8,6 +8,8 @@ import com.arkanoid.enemies.Enemies;
 import com.arkanoid.enemies.EnemiesManager;
 import com.arkanoid.sound.Sound;
 import java.util.ArrayList;
+import java.util.Random;
+
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -16,7 +18,7 @@ import javafx.scene.shape.Rectangle;
 public class GiantCentipedeBoss extends Enemies {
 
   public static ArrayList<GiantCentipedeSegment> GiantCentipede = new ArrayList<>();
-  int hp = 40;
+  int hp = 30;
   int hitCooldown = 0;
   int dropCooldown = 80;
   int dropOrder = 0;
@@ -144,7 +146,8 @@ public class GiantCentipedeBoss extends Enemies {
             > rect.getY() + rect.getHeight()) {
           state = 3;
           stateCooldown = 200;
-          double spawnX = rect.getX() + Math.random() * rect.getWidth();
+          Random X = new Random();
+          double spawnX = rect.getX() + X.nextDouble() * rect.getWidth();
           for (GiantCentipedeSegment seg : GiantCentipede) {
             seg.getCircle().setCenterX(spawnX);
             seg.getCircle().setCenterY(rect.getY()

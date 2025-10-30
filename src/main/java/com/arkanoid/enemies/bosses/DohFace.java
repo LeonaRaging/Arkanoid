@@ -21,7 +21,7 @@ public class DohFace extends Enemies {
    * Very hard challenge.
    */
 
-  private int hp = 40;
+  private int hp = 20;
   private int state;
   private int stateCooldown;
   private MiniDohFace[] child = new MiniDohFace[4];
@@ -82,16 +82,21 @@ public class DohFace extends Enemies {
 
   public void hideBalls(AnchorPane scene) {
     for (Ball ball : BallManager.getBalls()) {
-      ball.setDeltaX(0);
-      ball.setDeltaY(0);
+      scene.getChildren().remove(ball.getImageView());
     }
+    BallManager.getBalls().clear();
+    BallManager.isCaught++;
   }
 
   public void showBalls(AnchorPane scene) {
-    for (Ball ball : BallManager.getBalls()) {
-      ball.setDeltaX(0.3);
-      ball.setDeltaY(-0.3);
-    }
+    Ball ball = new Ball(0, 0, 2.5);
+    ball.getCircle().setLayoutX(112);
+    ball.getCircle().setLayoutY(200);
+    ball.setDeltaX(0.3);
+    ball.setDeltaY(0.3);
+    scene.getChildren().add(ball.getImageView());
+    BallManager.getBalls().add(ball);
+    BallManager.isCaught--;
   }
 
   @Override
