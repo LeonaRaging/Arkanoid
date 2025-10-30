@@ -491,6 +491,7 @@ public class Controller implements Initializable {
     isGameOver = false;
     resetAnchorPane();
     startBackground.setVisible(false);
+    Level = 15;
     if (Level < 5) {
       backgroundView.setVisible(true);
     } else if (Level == 5 || Level == 15) {

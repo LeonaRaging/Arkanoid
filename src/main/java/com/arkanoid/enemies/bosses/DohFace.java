@@ -1,6 +1,7 @@
 package com.arkanoid.enemies.bosses;
 
 import com.arkanoid.Controller;
+import com.arkanoid.brick.BrickManager;
 import com.arkanoid.core.Ball;
 import com.arkanoid.core.BallManager;
 import com.arkanoid.enemies.Enemies;
@@ -449,7 +450,8 @@ public class DohFace extends Enemies {
             for (Firework firework : fireworks) {
               scene.getChildren().remove(firework.getImageView());
             }
-            EnemiesManager.setGameOver(true);
+            //EnemiesManager.setGameOver(true);
+            BrickManager.brickRemain--;
             return true;
           }
         }
