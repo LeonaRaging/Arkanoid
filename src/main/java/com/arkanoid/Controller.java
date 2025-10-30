@@ -38,6 +38,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -55,7 +56,7 @@ public class Controller implements Initializable {
   private static Field outline;
   public static Gate[] gates = new Gate[4];
 
-  private ScoreDisplay score;
+  public static ScoreDisplay score;
   private LevelDisplay lv;
   private Hp hp;
 
@@ -64,7 +65,8 @@ public class Controller implements Initializable {
   private boolean isGameOver;
 
   private enum State {
-    MENU, READY, PADDLE_APPEARING, PADDLE_BREAKING, RUNNING, INGAMEMENU, SAVE, LOAD, PRE_NEWLEVEL, GAMEOVER
+    MENU, READY, PADDLE_APPEARING, PADDLE_BREAKING, RUNNING, INGAMEMENU,
+    SAVE, LOAD, PRE_NEWLEVEL, GAMEOVER, OPENING, ENDING
   }
 
   private State currentState;
@@ -190,9 +192,8 @@ public class Controller implements Initializable {
           if (pressedKeys.contains(KeyCode.ENTER)) {
             switch (MainMenu.getCurrentSelection()) {
               case 0:
-                startGameButtonAction(new ActionEvent(), 1);
-                goReadyState();
-                pressedKeys.remove(KeyCode.ENTER);
+                currentState = State.OPENING;
+                Sound.playOpeningVideo(scene);
                 break;
               case 1:
                 startLoad();
@@ -227,17 +228,17 @@ public class Controller implements Initializable {
             switch (ingameMenu.getCurrentSelection()) {
               case 0:
                 resetAnchorPane();
-                for (Node node : scene.getChildren()) {
+                for (Node node : scene.getChildren())
                   if (node != mainMenu && node != scoreBoardView && node != scoreBoard
                       && node != backgroundView11 && node != backgroundViewother
                       && node != save && node != load && node != ingameMenu
-                      && node != gameOverScreen && node != gameOverMenu) {
+                      && node != gameOverScreen && node != gameOverMenu
+                      && node != black.getImageView()) {
                     node.setVisible(true);
                   }
-                }
                 if (level < 5) {
                   backgroundView.setVisible(true);
-                } else if (level == 5) {
+                } else if (level == 5 || level == 15) {
                   backgroundView11.setVisible(true);
                 } else {
                   backgroundViewother.setVisible(true);
@@ -313,7 +314,7 @@ public class Controller implements Initializable {
             sc.close();
             startGameButtonAction(new ActionEvent(), loadedLevel);
             goReadyState();
-            ScoreDisplay.setScore(loadedScore);
+            score.setScore(loadedScore);
             initialScore = loadedScore;
             pressedKeys.remove(KeyCode.ENTER);
           }
@@ -425,8 +426,9 @@ public class Controller implements Initializable {
                     }
                     level++;
                     if (level > 15) {
-                      gameOver();
-                      startMainMenu();
+                      currentState = State.ENDING;
+                      Sound.playEndingVideo(scene);
+                      return;
                     }
 
                     if (level == 11) {
@@ -437,6 +439,8 @@ public class Controller implements Initializable {
                       backgroundView11.setVisible(false);
                       backgroundViewother.setVisible(true);
                     }
+                    Hp.resetHp();
+                    hp.updateDisplay();
                     BallManager.isCaught = 0;
                     field.changeField(level);
                     newLife();
@@ -446,6 +450,9 @@ public class Controller implements Initializable {
                     }
                     BrickManager.getBricks().clear();
                     BrickManager.createBricks(scene, level);
+                    lv.clear(scene);
+                    lv = new LevelDisplay(level);
+                    lv.showLevel(scene);
                     initialScore = score.getScore();
                     goReadyState();
                   }
@@ -453,6 +460,23 @@ public class Controller implements Initializable {
                 break;
               case GAMEOVER:
                 handleGameOver();
+                break;
+              case ENDING:
+                if (!Sound.isEndingVideoPlaying() || pressedKeys.contains(KeyCode.ENTER)) {
+                  startMainMenu();
+                  currentState = State.MENU;
+                  pressedKeys.remove(KeyCode.ENTER);
+                  Sound.stopEndingVideo(scene);
+                }
+                break;
+              case OPENING:
+                if (!Sound.isOpeningVideoPlaying() || pressedKeys.contains(KeyCode.ENTER)) {
+                  startGameButtonAction(new ActionEvent(), 1);
+                  goReadyState();
+                  currentState = State.READY;
+                  pressedKeys.remove(KeyCode.ENTER);
+                  Sound.stopOpeningVideo(scene);
+                }
                 break;
               default:
                 break;
@@ -490,7 +514,6 @@ public class Controller implements Initializable {
   void startGameButtonAction(ActionEvent event, int Level) throws FileNotFoundException {
     isGameOver = false;
     resetAnchorPane();
-    startBackground.setVisible(false);
     if (Level < 5) {
       backgroundView.setVisible(true);
     } else if (Level == 5 || Level == 15) {
@@ -499,7 +522,6 @@ public class Controller implements Initializable {
       backgroundViewother.setVisible(true);
     }
 
-    ScoreDisplay.setScore(0);
     Hp.resetHp();
 
     field = new Field(16, 16, 160, 208, Integer.toString(Level));
@@ -522,15 +544,24 @@ public class Controller implements Initializable {
     newLife();
 
     level = Level;
-    ScoreDisplay.setScore(0);
     Hp.resetHp();
 
     newLife();
 
     BrickManager.createBricks(scene, level);
 
+    File file = new File("src/main/resources/com/arkanoid/ui/score.txt");
+    Scanner sc = new Scanner(file);
+    int highscore = 0;
+    while (sc.hasNextInt()) {
+      int temp = sc.nextInt();
+      if (temp > highscore) {
+        highscore = temp;
+      }
+    }
+
     score = new ScoreDisplay(200, 50, 0);
-    maxscore = new ScoreDisplay(200, 28, 0);
+    maxscore = new ScoreDisplay(200, 28, highscore);
     round = new StringDisplay("ROUND", 200,160, true);
     highScore = new StringDisplay("SCORE", 210,20, true);
     HighScore = new StringDisplay("HIGH", 200, 12, true);

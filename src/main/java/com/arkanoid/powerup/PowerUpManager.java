@@ -64,6 +64,7 @@ public class PowerUpManager {
                   for (ImageView imageView : ball.imageViews) {
                     scene.getChildren().remove(imageView);
                   }
+                  scene.getChildren().remove(ball.getImageView());
                   scene.getChildren().add(ball.getImageView());
                   break;
                 case 1:

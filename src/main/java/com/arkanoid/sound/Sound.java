@@ -1,9 +1,11 @@
 package com.arkanoid.sound;
 
 import javafx.animation.PauseTransition;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 
 public class Sound {
@@ -41,6 +43,20 @@ public class Sound {
   private static final Media dohFaceMedia = new Media(Sound.class.getResource
       ("/com/arkanoid/sound/dohFace.m4a").toExternalForm());
   public static final MediaPlayer dohFaceMusic = new MediaPlayer(dohFaceMedia);
+  private static final Media endingMedia = new Media(Sound.class.getResource
+      ("/com/arkanoid/video/ending.mp4").toExternalForm());
+  private static final MediaPlayer endingVideo = new MediaPlayer(endingMedia);
+  private static final MediaView endingVideoView = new MediaView(endingVideo);
+  private static final Media openingMedia = new Media(Sound.class.getResource
+      ("/com/arkanoid/video/opening.mp4").toExternalForm());
+  private static final MediaPlayer openingVideo = new MediaPlayer(openingMedia);
+  private static final MediaView openingVideoView = new MediaView(openingVideo);
+  private static final double OPENING_VIDEO_DURATION = 65.0;
+  private static PauseTransition openingVideoPause;
+  private static volatile boolean openingVideoPlaying = false;
+  private static final double ENDING_VIDEO_DURATION = 60.0;
+  private static PauseTransition endingVideoPause;
+  private static volatile boolean endingVideoPlaying = false;
   private static final double END_LEVEL_DURATION = 3.5;
   private static volatile boolean endLevelPlaying = false;
   private static PauseTransition endLevelPause;
@@ -130,5 +146,69 @@ public class Sound {
 
   public static void stopDohFaceMusic() {
     dohFaceMusic.stop();
+  }
+
+  public static void playEndingVideo(AnchorPane scene) {
+    if (endingVideoPause != null) {
+      endingVideoPause.stop();
+      endingVideoPause = null;
+    }
+    endingVideoView.setLayoutX(0);
+    endingVideoView.setLayoutY(0);
+    scene.getChildren().add(endingVideoView);
+    endingVideoPlaying = true;
+    endingVideo.play();
+    endingVideoPause = new PauseTransition(Duration.seconds(ENDING_VIDEO_DURATION));
+    endingVideoPause.setOnFinished(event -> {
+        scene.getChildren().remove(endingVideoView);
+        endingVideoPlaying = false;
+    });
+    endingVideoPause.play();
+  }
+
+  public static boolean isEndingVideoPlaying() {
+    return endingVideoPlaying;
+  }
+
+  public static void stopEndingVideo(AnchorPane scene) {
+    if (endingVideoPause != null) {
+      endingVideoPause.stop();
+      endingVideoPause = null;
+    }
+    scene.getChildren().remove(endingVideoView);
+    endingVideoPlaying = false;
+    endingVideo.stop();
+  }
+
+  public static void playOpeningVideo(AnchorPane scene) {
+    if (openingVideoPause != null) {
+      openingVideoPause.stop();
+      openingVideoPause = null;
+    }
+    openingVideoView.setLayoutX(0);
+    openingVideoView.setLayoutY(0);
+    scene.getChildren().add(openingVideoView);
+    openingVideoPlaying = true;
+    openingVideo.play();
+    openingVideoPause = new PauseTransition(Duration.seconds(OPENING_VIDEO_DURATION));
+    openingVideoPause.setOnFinished(event -> {
+        scene.getChildren().remove(openingVideoView);
+        openingVideoPlaying = false;
+    });
+    openingVideoPause.play();
+  }
+
+  public static boolean isOpeningVideoPlaying() {
+    return openingVideoPlaying;
+  }
+
+  public static void stopOpeningVideo(AnchorPane scene) {
+    if (openingVideoPause != null) {
+      openingVideoPause.stop();
+      openingVideoPause = null;
+    }
+    scene.getChildren().remove(openingVideoView);
+    openingVideoPlaying = false;
+    openingVideo.stop();
   }
 }

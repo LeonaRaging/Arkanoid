@@ -1,6 +1,7 @@
 package com.arkanoid.brick;
 
 import static com.arkanoid.Controller.field;
+import static com.arkanoid.Controller.score;
 
 import com.arkanoid.numberandstringdisplay.ScoreDisplay;
 import com.arkanoid.core.Ball;
@@ -89,7 +90,7 @@ public class BrickManager {
           PowerUpManager.createPowerUps(brick, scene);
           PowerUpManager.powerUpCooldown = 500;
         }
-        ScoreDisplay.addScore(brick.getScore());
+        score.addScore(brick.getScore());
         return true;
       }
       return false;

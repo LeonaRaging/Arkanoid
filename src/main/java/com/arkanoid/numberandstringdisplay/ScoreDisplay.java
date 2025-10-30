@@ -4,7 +4,7 @@ import javafx.scene.layout.AnchorPane;
 
 public class ScoreDisplay {
 
-  private static int score; // max <1e6
+  private int score; // max <1e6
   private Digit[] digit = new Digit[6];
 
   public ScoreDisplay(int startX, int y, int score) {
@@ -32,15 +32,15 @@ public class ScoreDisplay {
     }
   }
 
-  public static int getScore() {
+  public int getScore() {
     return score;
   }
 
-  public static void addScore(int points) {
+  public void addScore(int points) {
     score += points;
   }
 
-  public static void setScore(int newScore) {
+  public void setScore(int newScore) {
     score = newScore;
   }
 
