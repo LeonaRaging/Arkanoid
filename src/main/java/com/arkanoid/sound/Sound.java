@@ -9,6 +9,7 @@ import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 
 public class Sound {
+
   private static final AudioClip bouncePaddle = new AudioClip(Sound.class.getResource(
       "/com/arkanoid/sound/bouncePaddle.wav").toExternalForm());
   private static final AudioClip bounceBrick = new AudioClip(Sound.class.getResource(
@@ -160,8 +161,8 @@ public class Sound {
     endingVideo.play();
     endingVideoPause = new PauseTransition(Duration.seconds(ENDING_VIDEO_DURATION));
     endingVideoPause.setOnFinished(event -> {
-        scene.getChildren().remove(endingVideoView);
-        endingVideoPlaying = false;
+      scene.getChildren().remove(endingVideoView);
+      endingVideoPlaying = false;
     });
     endingVideoPause.play();
   }
@@ -192,8 +193,8 @@ public class Sound {
     openingVideo.play();
     openingVideoPause = new PauseTransition(Duration.seconds(OPENING_VIDEO_DURATION));
     openingVideoPause.setOnFinished(event -> {
-        scene.getChildren().remove(openingVideoView);
-        openingVideoPlaying = false;
+      scene.getChildren().remove(openingVideoView);
+      openingVideoPlaying = false;
     });
     openingVideoPause.play();
   }

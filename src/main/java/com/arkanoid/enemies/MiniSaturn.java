@@ -91,9 +91,9 @@ public class MiniSaturn extends Enemies {
             BrickManager.getBricks().removeIf(brick -> {
               if (this.getCircle().getBoundsInParent()
                   .intersects(brick.getShape().getBoundsInParent())) {
-                BrickManager.brickRemain--;
+                BrickManager.setBrickRemain(BrickManager.getBrickRemain() - 1);
                 scene.getChildren().remove(brick.getImageView());
-                scene.getChildren().remove(brick.shadow);
+                scene.getChildren().remove(brick.getShadow());
                 PowerUpManager.createPowerUps(brick, scene);
                 return true;
               }

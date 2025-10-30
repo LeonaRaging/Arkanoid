@@ -12,15 +12,14 @@ public class Letter extends Entity {
     super(x, y, w, h);
     if (type == false) {
       image = new Image(
-              getClass().getResource("/com/arkanoid/number_and_alphabet/blue/" + letter + ".png")
-                      .toExternalForm());
-    }
-    else {
+          getClass().getResource("/com/arkanoid/number_and_alphabet/blue/" + letter + ".png")
+              .toExternalForm());
+    } else {
       int num = letter - 'A';
       num = num + 225;
       image = new Image(
-              getClass().getResource("/com/arkanoid/number_and_alphabet/green/tile" + num + ".png")
-                      .toExternalForm());
+          getClass().getResource("/com/arkanoid/number_and_alphabet/green/tile" + num + ".png")
+              .toExternalForm());
     }
     imageView.setImage(image);
     imageView.setX(this.getRectangle().getX());
@@ -29,8 +28,8 @@ public class Letter extends Entity {
 
   public void change(char newletter) {
     image = new Image(
-            getClass().getResource("/com/arkanoid/number_and_alphabet/blue" + newletter + ".png")
-                    .toExternalForm());
+        getClass().getResource("/com/arkanoid/number_and_alphabet/blue" + newletter + ".png")
+            .toExternalForm());
     imageView.setImage(image);
     imageView.setX(this.getRectangle().getX());
     imageView.setY(this.getRectangle().getY());

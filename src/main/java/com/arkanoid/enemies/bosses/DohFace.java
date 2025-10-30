@@ -93,7 +93,7 @@ public class DohFace extends Enemies {
       scene.getChildren().remove(ball.getImageView());
     }
     BallManager.getBalls().clear();
-    BallManager.isCaught++;
+    BallManager.setIsCaught(BallManager.getIsCaught() + 1);
   }
 
   public void showBalls(AnchorPane scene) {
@@ -104,7 +104,7 @@ public class DohFace extends Enemies {
     ball.setDeltaY(-1);
     scene.getChildren().add(ball.getImageView());
     BallManager.getBalls().add(ball);
-    BallManager.isCaught--;
+    BallManager.setIsCaught(BallManager.getIsCaught() - 1);
   }
 
   @Override
@@ -462,7 +462,7 @@ public class DohFace extends Enemies {
           for (Firework firework : fireworks) {
             scene.getChildren().remove(firework.getImageView());
           }
-          BrickManager.brickRemain--;
+          BrickManager.setBrickRemain(BrickManager.getBrickRemain() - 1);
           return true;
         }
 
@@ -476,7 +476,7 @@ public class DohFace extends Enemies {
             for (Firework firework : fireworks) {
               scene.getChildren().remove(firework.getImageView());
             }
-            BrickManager.brickRemain--;
+            BrickManager.setBrickRemain(BrickManager.getBrickRemain() - 1);
             return true;
           }
         }

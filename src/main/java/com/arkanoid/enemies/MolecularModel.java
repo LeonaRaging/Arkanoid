@@ -77,7 +77,7 @@ public class MolecularModel extends Enemies {
               .setLayoutY(this.getCircle().getCenterY() - 2 * this.getCircle().getRadius());
           ball1.setDeltaX(-1);
           ball1.setDeltaY(-1);
-          ball1.ballType = 1;
+          ball1.setBallType(1);
           BallManager.getBalls().add(ball1);
           scene.getChildren().add(ball1.getImageView());
           // Ball 2 (1, -1)
@@ -88,7 +88,7 @@ public class MolecularModel extends Enemies {
               .setLayoutY(this.getCircle().getCenterY() - 2 * this.getCircle().getRadius());
           ball2.setDeltaX(1);
           ball2.setDeltaY(-1);
-          ball2.ballType = 2;
+          ball2.setBallType(2);
           BallManager.getBalls().add(ball2);
           scene.getChildren().add(ball2.getImageView());
           // Ball 3 (1, 1)
@@ -99,7 +99,7 @@ public class MolecularModel extends Enemies {
               .setLayoutY(this.getCircle().getCenterY() + 2 * this.getCircle().getRadius());
           ball3.setDeltaX(1);
           ball3.setDeltaY(1);
-          ball3.ballType = 3;
+          ball3.setBallType(3);
           BallManager.getBalls().add(ball3);
           scene.getChildren().add(ball3.getImageView());
         }

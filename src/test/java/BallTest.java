@@ -22,7 +22,7 @@ class BallTest {
     void testInitialBallState() {
         assertEquals(0, ball.getShape().getLayoutX(), "Initial X position should be 100");
         assertEquals(0, ball.getShape().getLayoutY(), "Initial Y position should be 100");
-        assertEquals(0, ball.ballType, "Initial ball type should be 0");
+        assertEquals(0, ball.getBallType(), "Initial ball type should be 0");
     }
 
     @Test
@@ -43,8 +43,8 @@ class BallTest {
 
     @Test
     void testBallTypeChange() {
-        assertEquals(0, ball.ballType, "Initial ball type should be 0");
-        ball.ballType = 1;
-        assertEquals(1, ball.ballType, "Ball type should change to 1");
+        assertEquals(0, ball.getBallType(), "Initial ball type should be 0");
+        ball.setBallType(1);
+        assertEquals(1, ball.getBallType(), "Ball type should change to 1");
     }
 }

@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
-public class Load extends MainMenu{
+public class Load extends MainMenu {
   @Override
   public void setChoices() {
     currentSelection = 0;

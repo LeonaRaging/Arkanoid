@@ -61,7 +61,7 @@ public class PowerUpManager {
               switch (i) {
                 case 0:
                   Ball ball = BallManager.getBalls().getFirst();
-                  for (ImageView imageView : ball.imageViews) {
+                  for (ImageView imageView : ball.getImageViews()) {
                     scene.getChildren().remove(imageView);
                   }
                   scene.getChildren().remove(ball.getImageView());
@@ -94,7 +94,7 @@ public class PowerUpManager {
             Ball ball = BallManager.getBalls().getFirst();
             scene.getChildren().remove(ball.getImageView());
             for (int i = 0; i < 6; i++) {
-              scene.getChildren().add(ball.imageViews[i]);
+              scene.getChildren().add(ball.getImageViews()[i]);
             }
           }
         }

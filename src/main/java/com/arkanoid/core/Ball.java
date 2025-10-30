@@ -11,8 +11,8 @@ import javafx.scene.layout.AnchorPane;
 public class Ball extends Entity {
 
   public class Pos {
-    public double xpos;
-    public double ypos;
+    private double xpos;
+    private double ypos;
 
     Pos(double x, double y) {
       this.xpos = x;
@@ -27,8 +27,21 @@ public class Ball extends Entity {
   Deque<Pos> deque = new LinkedList<>();
   private Image[] images = new Image[4];
   private Image[] imagesPowerUp = new Image[3];
-  public ImageView[] imageViews = new ImageView[6];
-  public int ballType = 0;
+  private ImageView[] imageViews = new ImageView[6];
+  private int ballType = 0;
+  Random rand = new Random();
+
+  public ImageView[] getImageViews() {
+    return imageViews;
+  }
+
+  public int getBallType() {
+    return ballType;
+  }
+
+  public void setBallType(int ballType) {
+    this.ballType = ballType;
+  }
 
   public Ball(double x, double y, double r) {
     super(x, y, r);
@@ -78,7 +91,6 @@ public class Ball extends Entity {
   }
 
   public void updateX(double x) {
-    Random rand = new Random();
     deltaX = x * Math.abs(deltaX);
     deltaY += (rand.nextDouble() - 0.5) * 0.3;
     int sign = (deltaY >= 0) ? 1 : -1;
@@ -90,7 +102,6 @@ public class Ball extends Entity {
   }
 
   public void updateY(double y) {
-    Random rand = new Random();
     deltaX += (rand.nextDouble() - 0.5) * 0.3;
     deltaY = y * Math.abs(deltaY);
     double minSpeed = (PowerUpManager.powerUpState[0] == 1 ? 5 : 2);

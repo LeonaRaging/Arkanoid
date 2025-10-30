@@ -123,8 +123,7 @@ public class Paddle extends Entity {
     }
   }
 
-  public void update(Rectangle rect) {
-
+  private void updateBall(Rectangle rect) {
     double xpos = this.getRectangle().getX();
 
     if (Controller.pressedKeys.contains(KeyCode.RIGHT)) {
@@ -142,7 +141,9 @@ public class Paddle extends Entity {
     } else {
       this.getRectangle().setX(xpos);
     }
+  }
 
+  private void updateCurrentAnimation() {
     imageCooldown--;
     if (imageCooldown == 0) {
       imageState++;
@@ -166,6 +167,11 @@ public class Paddle extends Entity {
     }
     imageView.setX(this.getRectangle().getX());
     imageView.setY(this.getRectangle().getY());
+  }
+
+  public void update(Rectangle rect) {
+    updateBall(rect);
+    updateCurrentAnimation();
   }
 
   public void checkCollisionPaddle(Ball ball) {

@@ -81,7 +81,7 @@ public class Bubble extends Enemies {
             }
             return false;
           });
-          BallManager.isCaught++;
+          BallManager.setIsCaught(BallManager.getIsCaught() + 1);
 
           state = 3;
           imageState = 0;
@@ -196,7 +196,7 @@ public class Bubble extends Enemies {
           ball.setDeltaY(-1);
           BallManager.getBalls().add(ball);
           scene.getChildren().add(ball.getImageView());
-          BallManager.isCaught--;
+          BallManager.setIsCaught(BallManager.getIsCaught() - 1);
         }
         break;
       case 7: // disappear
@@ -206,8 +206,7 @@ public class Bubble extends Enemies {
           if (imageState > 0) {
             imageState--;
             imageCooldown = 20;
-          }
-          else {
+          } else {
             imageCooldown = -1;
             Sound.playBubble();
             scene.getChildren().remove(this.getImageView());
@@ -222,8 +221,7 @@ public class Bubble extends Enemies {
             imageState = 0;
             imageCooldown = 20;
             teleport();
-          }
-          else {
+          } else {
             return true;
           }
         }

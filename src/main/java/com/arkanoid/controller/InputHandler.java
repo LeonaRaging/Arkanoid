@@ -1,13 +1,15 @@
 package com.arkanoid.controller;
 
+import static com.arkanoid.ui.MainMenu.getCurrentSelection;
+
 import com.arkanoid.Controller;
 import com.arkanoid.sound.Sound;
 import com.arkanoid.ui.*;
+import java.io.*;
+import java.util.Scanner;
 import javafx.event.ActionEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import java.io.*;
-import java.util.Scanner;
 
 public class InputHandler {
 
@@ -48,7 +50,7 @@ public class InputHandler {
     }
 
     if (Controller.pressedKeys.contains(KeyCode.ENTER)) {
-      switch (MainMenu.getCurrentSelection()) {
+      switch (getCurrentSelection()) {
         case 0:
           stateManager.setCurrentState(GameStateManager.State.OPENING);
           Sound.playOpeningVideo(scene);
@@ -83,7 +85,7 @@ public class InputHandler {
     }
 
     if (Controller.pressedKeys.contains(KeyCode.ENTER)) {
-      switch (ingameMenu.getCurrentSelection()) {
+      switch (getCurrentSelection()) {
         case 0:
           uiManager.resumeGame();
           break;
@@ -118,14 +120,13 @@ public class InputHandler {
     }
     if (Controller.pressedKeys.contains(KeyCode.ENTER)) {
       File file = new File(
-          "src/main/resources/com/arkanoid/ui/save" + Save.getCurrentSelection() + ".txt");
+          "src/main/resources/com/arkanoid/ui/save" + getCurrentSelection() + ".txt");
       FileWriter fileWriter = new FileWriter(file);
-      BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-      bufferedWriter.append(Integer.toString(Controller.getLevel()));
-      bufferedWriter.newLine();
-      bufferedWriter.append(Integer.toString(controller.getInitialScore()));
-      bufferedWriter.close();
-      fileWriter.close();
+      try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+        bufferedWriter.append(Integer.toString(Controller.getLevel()));
+        bufferedWriter.newLine();
+        bufferedWriter.append(Integer.toString(controller.getInitialScore()));
+      }
 
       uiManager.startIngameMenu();
       Controller.pressedKeys.remove(KeyCode.ENTER);
@@ -149,7 +150,7 @@ public class InputHandler {
     }
     if (Controller.pressedKeys.contains(KeyCode.ENTER)) {
       File file = new File(
-          "src/main/resources/com/arkanoid/ui/save" + Load.getCurrentSelection() + ".txt");
+          "src/main/resources/com/arkanoid/ui/save" + getCurrentSelection() + ".txt");
       Scanner sc = new Scanner(file);
       int loadedLevel = sc.nextInt();
       int loadedScore = sc.nextInt();
@@ -180,7 +181,7 @@ public class InputHandler {
     }
 
     if (Controller.pressedKeys.contains(KeyCode.ENTER)) {
-      switch (gameOverMenu.getCurrentSelection()) {
+      switch (getCurrentSelection()) {
         case 0:
           controller.startGameButtonAction(new ActionEvent(), Controller.getLevel());
           stateManager.goReadyState();

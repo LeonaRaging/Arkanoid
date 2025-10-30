@@ -62,7 +62,7 @@ public class GiantCentipedeBoss extends Enemies {
       scene.getChildren().remove(seg.getImageView());
     }
     GiantCentipede.clear();
-    BrickManager.brickRemain--;
+    BrickManager.setBrickRemain(BrickManager.getBrickRemain() - 1);
   }
 
   @Override

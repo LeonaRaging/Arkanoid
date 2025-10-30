@@ -302,7 +302,7 @@ public class Controller implements Initializable {
     for (Ball ball : BallManager.getBalls()) {
       scene.getChildren().remove(ball.getImageView());
       for (int i = 0; i < 6; i++) {
-        scene.getChildren().remove(ball.imageViews[i]);
+        scene.getChildren().remove(ball.getImageViews()[i]);
       }
     }
     BallManager.getBalls().clear();

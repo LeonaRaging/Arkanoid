@@ -48,8 +48,8 @@ public class Enemies extends Entity {
 
   public boolean checkCollisionProjectile(AnchorPane scene) {
     for (Entity projectile : PowerUpManager.getProjectiles()) {
-      if (this.getShape().getBoundsInParent().
-              intersects(projectile.getShape().getBoundsInParent())) {
+      if (this.getShape().getBoundsInParent()
+              .intersects(projectile.getShape().getBoundsInParent())) {
         PowerUpManager.getProjectiles().remove(projectile);
         scene.getChildren().remove(projectile.getImageView());
         return true;
@@ -160,7 +160,7 @@ public class Enemies extends Entity {
   }
 
   public void clear(AnchorPane scene) {
-      scene.getChildren().remove(this.getImageView());
+    scene.getChildren().remove(this.getImageView());
   }
 
   public boolean outScene() {

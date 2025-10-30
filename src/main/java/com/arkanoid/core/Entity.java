@@ -54,6 +54,7 @@ public class Entity {
   }
 
   public void update(AnchorPane scene) {
+    // to be implemented by subclasses
   }
 
 }

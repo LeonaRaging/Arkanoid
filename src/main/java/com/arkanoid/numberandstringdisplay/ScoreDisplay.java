@@ -9,8 +9,6 @@ public class ScoreDisplay {
 
   public ScoreDisplay(int startX, int y, int score) {
     this.score = score;
-    //int startX = 200;
-    //int y = 50;
     int width = 8;
     int height = 8;
     int spacing = 8;

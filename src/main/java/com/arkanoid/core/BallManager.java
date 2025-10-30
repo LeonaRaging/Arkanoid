@@ -1,15 +1,26 @@
 package com.arkanoid.core;
 
 import com.arkanoid.Controller;
-import com.arkanoid.powerup.PowerUpManager;
 import com.arkanoid.sound.Sound;
 import java.util.ArrayList;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 
 public class BallManager {
+  private BallManager() {
+    throw new IllegalStateException("Utility class");
+  }
+
   private static ArrayList<Ball> balls = new ArrayList<>();
-  public static int isCaught = 0;
+  private static int isCaught = 0;
+
+  public static int getIsCaught() {
+    return isCaught;
+  }
+
+  public static void setIsCaught(int isCaught) {
+    BallManager.isCaught = isCaught;
+  }
 
   public static ArrayList<Ball> getBalls() {
     return balls;
@@ -45,7 +56,7 @@ public class BallManager {
           .intersects(Controller.bottomZone.getBoundsInParent())) {
         scene.getChildren().remove(ball.getImageView());
         for (int i = 0; i < 6; i++) {
-          scene.getChildren().remove(ball.imageViews[i]);
+          scene.getChildren().remove(ball.getImageViews()[i]);
         }
         return true;
       }

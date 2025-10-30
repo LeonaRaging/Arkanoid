@@ -9,8 +9,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 
 public class Brick extends Entity {
+
   private Image[] images = new Image[6];
-  public ImageView shadow = new ImageView();
+  private ImageView shadow = new ImageView();
   protected int hp; // The brick will be destroyed when it runs out of hp
   private int hitCooldown;
   private int score;
@@ -60,6 +61,29 @@ public class Brick extends Entity {
     return this.score;
   }
 
+  public ImageView getShadow() {
+    return this.shadow;
+  }
+
+  private void ballUpdate(Ball ball) {
+    Rectangle rect = (Rectangle) shape;
+    boolean rightBorder = ball.getCircle().getLayoutX()
+        >= (rect.getX() + rect.getWidth() - ball.getCircle().getRadius());
+    boolean leftBorder = ball.getCircle().getLayoutX()
+        <= (rect.getX() + ball.getCircle().getRadius());
+    boolean bottomBorder = ball.getCircle().getLayoutY()
+        >= (rect.getY() + rect.getHeight() - ball.getCircle().getRadius());
+    boolean topBorder = ball.getCircle().getLayoutY()
+        <= (rect.getY() + ball.getCircle().getRadius());
+
+    if (rightBorder || leftBorder) {
+      ball.updateX(rightBorder ? 1 : -1);
+    }
+    if (bottomBorder || topBorder) {
+      ball.updateY(bottomBorder ? 1 : -1);
+    }
+  }
+
   public boolean checkCollisionBrick(Entity entity) {
     Rectangle rect = (Rectangle) shape;
 
@@ -70,26 +94,8 @@ public class Brick extends Entity {
 
     if (entity.getShape().getBoundsInParent().intersects(rect.getBoundsInParent())) {
 
-      if (entity instanceof Ball ball) {
-
-        if (PowerUpManager.powerUpState[0] == 0 || hp > 3) {
-
-          boolean rightBorder = ball.getCircle().getLayoutX()
-              >= (rect.getX() + rect.getWidth() - ball.getCircle().getRadius());
-          boolean leftBorder = ball.getCircle().getLayoutX()
-              <= (rect.getX() + ball.getCircle().getRadius());
-          boolean bottomBorder = ball.getCircle().getLayoutY()
-              >= (rect.getY() + rect.getHeight() - ball.getCircle().getRadius());
-          boolean topBorder = ball.getCircle().getLayoutY()
-              <= (rect.getY() + ball.getCircle().getRadius());
-
-          if (rightBorder || leftBorder) {
-            ball.updateX(rightBorder ? 1 : -1);
-          }
-          if (bottomBorder || topBorder) {
-            ball.updateY(bottomBorder ? 1 : -1);
-          }
-        }
+      if (entity instanceof Ball ball && (PowerUpManager.powerUpState[0] == 0 || hp > 3)) {
+        ballUpdate(ball);
       }
 
       this.hp--;

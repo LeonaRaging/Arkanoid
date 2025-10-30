@@ -11,8 +11,8 @@ public class StringDisplay {
   int spacing = 8;
   boolean type;
 
-  public StringDisplay(String variable, int x, int y,boolean type) {
-    //0 blue 1 green
+  public StringDisplay(String variable, int x, int y, boolean type) {
+    // 0 blue 1 green
     this.type = type;
     this.variable = variable;
     this.x = x;
