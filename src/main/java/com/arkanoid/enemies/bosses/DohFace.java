@@ -24,7 +24,7 @@ public class DohFace extends Enemies {
    * Very hard challenge.
    */
 
-  private int hp = 1;
+  private int hp = 10;
   private int state;
   private int stateCooldown;
   private MiniDohFace[] child = new MiniDohFace[4];
