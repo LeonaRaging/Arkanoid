@@ -17,7 +17,7 @@ public class MiniDohFace extends Enemies {
   private double focusY;
   private int deathCooldown;
   private int moveCooldown;
-  private double speed = 0.2;
+  private double speed = 0.3;
   private boolean isDeath = false;
   private boolean readyShoot;
   private final Image[][] images = new Image[2][8];
@@ -133,7 +133,6 @@ public class MiniDohFace extends Enemies {
               break;
             case 1:
               focusX += rect.getWidth() / 2;
-              System.out.println(focusX + " " + focusY);
               break;
             case 2:
               focusY += rect.getHeight() / 2;
@@ -145,6 +144,8 @@ public class MiniDohFace extends Enemies {
             default:
               throw new IllegalStateException("Unexpected value: " + type);
           }
+
+          focusY = Math.min(focusY, 190 - this.getRectangle().getHeight());
 
           moveCooldown = 100;
         }

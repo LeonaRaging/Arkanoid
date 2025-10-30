@@ -18,7 +18,7 @@ import javafx.scene.shape.Rectangle;
 public class GiantCentipedeBoss extends Enemies {
 
   public static ArrayList<GiantCentipedeSegment> GiantCentipede = new ArrayList<>();
-  int hp = 30;
+  int hp = 20;
   int hitCooldown = 0;
   int dropCooldown = 80;
   int dropOrder = 0;
@@ -61,6 +61,7 @@ public class GiantCentipedeBoss extends Enemies {
     for (GiantCentipedeSegment seg : GiantCentipede) {
       scene.getChildren().remove(seg.getImageView());
     }
+    GiantCentipede.clear();
     BrickManager.brickRemain--;
   }
 

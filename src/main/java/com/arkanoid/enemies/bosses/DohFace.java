@@ -7,10 +7,12 @@ import com.arkanoid.core.BallManager;
 import com.arkanoid.enemies.Enemies;
 import com.arkanoid.enemies.EnemiesManager;
 import com.arkanoid.sound.Sound;
+
 import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.Color;
 
 public class DohFace extends Enemies {
   /*
@@ -22,7 +24,7 @@ public class DohFace extends Enemies {
    * Very hard challenge.
    */
 
-  private int hp = 20;
+  private int hp = 10;
   private int state;
   private int stateCooldown;
   private MiniDohFace[] child = new MiniDohFace[4];
@@ -36,6 +38,7 @@ public class DohFace extends Enemies {
   private Rectangle[] eyes = new Rectangle[2];
   public static ArrayList<Firework> fireworks = new ArrayList<>();
   private int fireworkCooldown = 30;
+  private Rectangle endGame;
 
   public DohFace(AnchorPane scene) {
     super(0, 0, 44, 91);
@@ -69,6 +72,10 @@ public class DohFace extends Enemies {
           "/com/arkanoid/Enemy/DohFace/DohFace4" + i + ".png").toExternalForm());
     }
 
+    endGame = new Rectangle(0, 0, 300, 300);
+    endGame.setFill(Color.WHITE);
+    endGame.setOpacity(0);
+
     for (int i = 0; i < 4; i++) {
       child[i] = null;
     }
@@ -93,8 +100,8 @@ public class DohFace extends Enemies {
     Ball ball = new Ball(0, 0, 2.5);
     ball.getCircle().setLayoutX(112);
     ball.getCircle().setLayoutY(200);
-    ball.setDeltaX(0.3);
-    ball.setDeltaY(0.3);
+    ball.setDeltaX(-1);
+    ball.setDeltaY(-1);
     scene.getChildren().add(ball.getImageView());
     BallManager.getBalls().add(ball);
     BallManager.isCaught--;
@@ -108,6 +115,10 @@ public class DohFace extends Enemies {
         child[i] = null;
       }
     }
+    for (Firework firework : fireworks) {
+      firework.clear(scene);
+    }
+    fireworks.clear();
     scene.getChildren().remove(this.getImageView());
   }
 
@@ -359,7 +370,7 @@ public class DohFace extends Enemies {
                 hideBalls(scene);
                 state = 7;
                 imageState -= 8;
-                imageCooldown = 5;
+                imageCooldown = 10;
               }
               this.getRectangle().setX(this.getRectangle().getX() - 5);
               this.getRectangle().setWidth(this.getRectangle().getWidth() + 10);
@@ -400,7 +411,7 @@ public class DohFace extends Enemies {
 
         if (imageCooldown <= 0) {
           imageState -= 8;
-          imageCooldown = 5;
+          imageCooldown = 10;
 
           if (imageState < 0) {
             state = 8;
@@ -433,6 +444,12 @@ public class DohFace extends Enemies {
           scene.getChildren().add(nf.getImageView());
         }
 
+        if (scene.getChildren().contains(endGame)) {
+            scene.getChildren().remove(endGame);
+        }
+        endGame.setOpacity(endGame.getOpacity() + 0.002);
+        scene.getChildren().add(endGame);
+
         fireworks.removeIf(firework -> {
           if (firework.move()) {
             scene.getChildren().remove(firework.getImageView());
@@ -440,6 +457,15 @@ public class DohFace extends Enemies {
           }
           return false;
         });
+
+        if (endGame.getOpacity() == 1) {
+          for (Firework firework : fireworks) {
+            scene.getChildren().remove(firework.getImageView());
+          }
+          BrickManager.brickRemain--;
+          return true;
+        }
+
 
         if (imageState < 0 || imageState > 34) {
           imageDisplay *= -1;
@@ -450,7 +476,6 @@ public class DohFace extends Enemies {
             for (Firework firework : fireworks) {
               scene.getChildren().remove(firework.getImageView());
             }
-            //EnemiesManager.setGameOver(true);
             BrickManager.brickRemain--;
             return true;
           }
