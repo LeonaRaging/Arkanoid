@@ -123,6 +123,7 @@ trouble when his face gets big.
 <img width="1148" height="1006" alt="image" src="https://github.com/user-attachments/assets/f375ea00-c78a-4ad2-950b-add1b5b75d83" />
 
 ### Video Demo
+Full gameplay available at: https://www.youtube.com/watch?v=VRjX2IPqAfM
 
 ## Future Improvements
 1. **Additional game modes**
